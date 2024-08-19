@@ -7,8 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   mode: 'development',
   entry: {
-    'home': './src/js/main.js',
-    'pg': './src/pages/create.js'
+    'home': './src/js/main.js'
   },
   output: {
     filename: 'main.js',
@@ -22,14 +21,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ 
       inject: true,
-      chunks: ['home'],
+      chunks: ['main'],
       template: './src/index.html',
       filename: 'index.html'
     }),
     new HtmlWebpackPlugin({
         inject: true,
-        chunks: ['pg'],
-        template: './src/pages/create.html',
+        chunks: ['main'],
+        template: './src/create.html',
         filename: 'create.html'
     })
   ],

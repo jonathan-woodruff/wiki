@@ -11,7 +11,6 @@ const button = document.getElementById('button');
 // Write your code here:
 const doButtonStuff = async () => {
   try {
-    alert('hi');
     await onAddDummy();
   } catch(error) {
     const errorMessage = error.response.data.error; //error from axios
