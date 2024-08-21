@@ -7,10 +7,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   mode: 'development',
   entry: {
-    'home': './src/js/main.js'
+    'home': './src/index.js',
+    'create-wiki': './src/create-wiki.js'
   },
   output: {
-    filename: 'main.js',
+    filename: '[name]/output.js',
     path: path.resolve(__dirname, 'dist')
   },
   devServer: {
@@ -20,17 +21,15 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ 
-      inject: true,
-      chunks: ['main'],
-      template: './src/index.html',
-      filename: 'index.html'
-    }),
-    new HtmlWebpackPlugin({
-        inject: true,
-        chunks: ['main'],
-        template: './src/create.html',
-        filename: 'create.html'
-    })
+        template: './src/index.html',
+        filename: 'index.html',
+        chunks: ['home']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/create-wiki.html',
+        filename: 'create-wiki.html',
+        chunks: ['create-wiki']
+      })
   ],
   module: {
     rules: [
