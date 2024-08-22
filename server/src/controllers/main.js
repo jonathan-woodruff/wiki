@@ -21,3 +21,18 @@ exports.postWiki = async (req, res) => {
         });
     }
 };
+
+exports.getWiki = async (req, res) => {
+    try {
+        const wiki = await WikisModel.findOne({}).exec();
+        return res.status(200).json({
+            contentTime: wiki.contentTime,
+            contentBlocks: wiki.contentBlocks,
+            contentVersion: wiki.contentVersion
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};

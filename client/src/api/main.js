@@ -6,3 +6,7 @@ axios.defaults.withCredentials = true; //send the cookie back to the server with
 export async function onPostWiki(wikiContent) {
     return await axios.post(`${SERVER_URL}/main/postWiki`, wikiContent);
 };
+
+export async function getWikiContent() {
+    return await axios.get(`${SERVER_URL}/main/getWiki`);
+};
