@@ -10,9 +10,11 @@ app.use(cors({ origin: CLIENT_URL, credentials: true })); //credentials: true wi
 //https://stackoverflow.com/questions/21397809/create-a-trusted-self-signed-ssl-cert-for-localhost-for-use-with-express-node
 //import routes
 const authRoutes = require('./routes/auth');
+const mainRoutes = require('./routes/main');
 
 //initialize routes
 app.use('/auth', authRoutes);
+app.use('/main', mainRoutes);
 
 //app start
 const appStart = () => {
