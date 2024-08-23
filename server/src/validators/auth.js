@@ -20,15 +20,15 @@ const emailExists = check('email').custom(async (value) => {
 
 //login validation
 const loginFieldsCheck = check('email').custom(async (value, { req }) => {
-    const user = await UserModel.findOne({ email: value}).exec();
-    if (!user.length) {
+    const user = await UserModel.findOne({ email: value }).exec();
+    if (!user) {
         throw new Error('Email does not exist');
     }
     const validPassword = await compare(req.body.password, user.password);
     if (!validPassword) {
         throw new Error('Wrong password');
     }
-    req.user = user.rows[0];
+    req.user = user;
 });
 
 module.exports = {

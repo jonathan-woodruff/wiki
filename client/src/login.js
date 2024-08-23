@@ -4,19 +4,20 @@ import './scss/styles.scss';
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
-import { onRegister } from './api/auth';
+import { onLogin } from './api/auth';
 
 const form = document.getElementById('form');
 
 // Write your code here:
-const registerUser = async (event) => {
+const login = async (event) => {
   event.preventDefault();
   try {
     const credentials = {
         email: document.getElementById('email').value,
         password: document.getElementById('password').value
     };
-    await onRegister(credentials);
+    await onLogin(credentials);
+    localStorage.setItem('isAuth', 'true');
     window.location.href = './index.html';
   } catch(error) {
     const errorMessage = error.response.data.errors[0]; //error from axios
@@ -24,4 +25,4 @@ const registerUser = async (event) => {
   };
 };
 
-form.addEventListener('submit', registerUser);
+form.addEventListener('submit', login);

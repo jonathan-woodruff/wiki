@@ -4,6 +4,8 @@ import './scss/styles.scss';
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
+import './authenticate';
+
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -77,3 +79,4 @@ const submitContent = () => {
 }
 
 button.addEventListener('click', submitContent);
+

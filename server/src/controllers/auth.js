@@ -4,31 +4,13 @@ const { hash } = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 const { SECRET } = require('../constants/index');
 
-exports.addDumbUser = async (req, res) => {
-    try {
-        const newUser = new UserModel({
-            email: 'ADA.LOVELACE@GMAIL.COM'
-        });
-        console.log(newUser);
-        await newUser.save();
-        return res.status(201).json({
-            success: true,
-            message: 'dumb user added dawg'
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: error.message
-        });
-    }
-};
-
 exports.protected = (req, res) => {
     try {
         res.status(200).json({
-            info: 'protected info'
+            message: 'user is logged in'
         });
     } catch(error) {
-        console.log(error.message);
+        console.log(error.message); 
     }
 };
 
@@ -56,7 +38,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     const user = req.user;
     const payload = {
-        id: user.user_id,
+        id: user._id,
         email: user.email
     };
     try {

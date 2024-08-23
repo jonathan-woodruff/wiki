@@ -19,15 +19,11 @@ const opts = {
 };
 
 passport.use(
-    new Strategy(opts, async ({ _id }, done) => { //use the id from the token payload
+    new Strategy(opts, async ({ email }, done) => { //use the email from the token payload
         try {
-            const rows = await UserModel.findOne({ _id: _id}).exec();
-            if (!rows.length) {
+            const user = await UserModel.findOne({ email: email }).exec();
+            if (!user) {
                 throw new Error('401 not authorized');
-            }
-            const user = {
-                id: rows[0].user_id,
-                email: rows[0].email
             };
             return await done(null, user);
         } catch(error) {

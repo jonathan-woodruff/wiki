@@ -10,7 +10,8 @@ module.exports = {
     'home': './src/index.js',
     'create-wiki': './src/create-wiki.js',
     'view-wiki': './src/view-wiki.js',
-    'register': './src/register.js'
+    'register': './src/register.js',
+    'login': './src/login.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -41,6 +42,11 @@ module.exports = {
         template: './src/register.html',
         filename: 'register.html',
         chunks: ['register']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/login.html',
+        filename: 'login.html',
+        chunks: ['login']
       })
   ],
   module: {
