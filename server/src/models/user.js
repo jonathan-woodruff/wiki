@@ -7,16 +7,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    lowercase: true,
-    validate: (value) => {
-      return validator.isEmail(value);
-    }
+    lowercase: true
   },
   password: {
-    type: String,
-    validate: (value) => {
-      return validator.isLength(value, { min: 6, max: 15});
-    }
+    type: String
   },
   google_id: String
 }, { timestamps: true });

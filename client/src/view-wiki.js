@@ -23,26 +23,7 @@ const getData = async () => {
     }
 };
 
-const getData2 = () => {
-    return {
-        "time": 1724356313099,
-        "blocks": [
-            {
-                "data": {
-                    "text": "kjdofiadj"
-                },
-                "id": "WNc7",
-                "type": "paragraph"
-            }
-        ],
-        "version": "2.30.5"
-    }
-};
-
 const editor = new EditorJS({
-    /**
-     * Id of Element that should contain the Editor
-     */
     holder : 'editorjs',
 
     readOnly: true,

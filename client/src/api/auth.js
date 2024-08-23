@@ -5,4 +5,8 @@ axios.defaults.withCredentials = true; //send the cookie back to the server with
 
 export async function onAddDummy() {
     return await axios.post(`${SERVER_URL}/auth/addDummy`);
-}
+};
+
+export async function onRegister(credentials) {
+    return await axios.post(`${SERVER_URL}/auth/register`, credentials);
+};
