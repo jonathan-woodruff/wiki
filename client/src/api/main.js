@@ -10,3 +10,7 @@ export async function onPostWiki(wikiContent) {
 export async function getWikiContent() {
     return await axios.get(`${SERVER_URL}/main/getWiki`);
 };
+
+export async function getWikis() {
+    return await axios.get(`${SERVER_URL}/main/getWikis`);
+};

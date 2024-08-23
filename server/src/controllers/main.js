@@ -36,3 +36,16 @@ exports.getWiki = async (req, res) => {
         });
     }
 };
+
+exports.getWikis = async (req, res) => {
+    try {
+        const wikis = await WikisModel.find().exec();
+        return res.status(200).json({
+            wikis: wikis
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
