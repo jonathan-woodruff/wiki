@@ -7,9 +7,7 @@ const checkAuth = async () => {
             await checkProtected();
             localStorage.setItem('isAuth', 'true');
         } catch(error) {
-            localStorage.setItem('isAuth', 'false');
             window.location.href = './login.html';
-            await onLogout();
         }
     }
 };

@@ -25,9 +25,6 @@ const getData = async () => {
 
 const editor = new EditorJS({
     holder : 'editorjs',
-
     readOnly: true,
-
     data: await getData()
-    
   });

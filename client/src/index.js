@@ -37,24 +37,19 @@ const loadWikis = async () => {
   }
 };
 
-let wikis = [];
-wikis = await loadWikis();
+const allWikis = loadWikis();
 
 const searchWikis = async (event) => {
   event.preventDefault();
   const searchPattern = document.getElementById('search-engine').value;
-  if (wikis.length) {
+  allWikis
+  .then((wikis) => {
     const fuse = new Fuse(wikis, fuseOptions);
     console.log(fuse.search(searchPattern));
-  } else {
-    try {
-      const belatedWikis = await loadWikis();
-      const fuse = new Fuse(belatedWikis.data.wikis, fuseOptions);
-      console.log(fuse.search(searchPattern));
-    } catch(error) {
-      console.log(error);
-    }
-  }
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 };
 
 const button = document.getElementById('logout');
@@ -63,9 +58,9 @@ const form = document.getElementById('form');
 // Write your code here:
 const logout = async () => {
   try {
+    await onLogout();
     localStorage.setItem('isAuth', 'false');
     window.location.href = './login.html';
-    await onLogout();
   } catch(error) {
     const errorMessage = error.response.data.error; //error from axios
     console.log(errorMessage);
