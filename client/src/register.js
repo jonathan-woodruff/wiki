@@ -17,8 +17,8 @@ const registerUser = async (event) => {
   event.preventDefault();
   try {
     const credentials = {
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value
+        email: emailInput.value,
+        password: passwordInput.value
     };
     await onRegister(credentials);
     window.location.href = './index.html';
@@ -27,26 +27,21 @@ const registerUser = async (event) => {
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none')
     if (errorMessage === 'Email already exists' || errorMessage === 'Please enter a valid email address') {
-      document.getElementById('email').classList.add('border-danger');
+      emailInput.classList.add('border-danger');
     } else if (errorMessage === 'Password must be between 6 and 15 characters') {
-      document.getElementById('password').classList.add('border-danger');
+      passwordInput.classList.add('border-danger');
     };
   };
 };
 
-const clearEmailError = () => {
+const clearError = () => {
   emailInput.classList.remove('border-danger');
-  errorElement.classList.add('d-none');
-  errorElement.innerHTML = '';
-};
-
-const clearPasswordError = () => {
   passwordInput.classList.remove('border-danger');
   errorElement.classList.add('d-none');
   errorElement.innerHTML = '';
 };
 
 form.addEventListener('submit', registerUser);
-emailInput.addEventListener('input', clearEmailError);
-passwordInput.addEventListener('input', clearPasswordError);
+emailInput.addEventListener('input', clearError);
+passwordInput.addEventListener('input', clearError);
 loginLink.addEventListener('click', () => { window.location.href = './login.html' })
