@@ -11,7 +11,8 @@ module.exports = {
     'create-wiki': './src/create-wiki.js',
     'view-wiki': './src/view-wiki.js',
     'register': './src/register.js',
-    'login': './src/login.js'
+    'login': './src/login.js',
+    'profile': './src/profile.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -47,6 +48,11 @@ module.exports = {
         template: './src/login.html',
         filename: 'login.html',
         chunks: ['login']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/profile.html',
+        filename: 'profile.html',
+        chunks: ['profile']
       })
   ],
   module: {
@@ -78,6 +84,10 @@ module.exports = {
             loader: 'sass-loader'
           }
         ]
+      },
+      {
+        test: /\.(png|jpg|jpeg|svg)$/i,
+        type: 'asset/resource'
       }
     ]
   }

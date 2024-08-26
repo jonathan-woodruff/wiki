@@ -12,7 +12,6 @@ const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
 
-// Write your code here:
 const registerUser = async (event) => {
   event.preventDefault();
   try {
@@ -21,7 +20,7 @@ const registerUser = async (event) => {
         password: passwordInput.value
     };
     await onRegister(credentials);
-    window.location.href = './index.html';
+    window.location.href = './profile.html';
   } catch(error) {
     const errorMessage = error.response.data.errors[0].msg; //error from axios
     errorElement.innerHTML = errorMessage;

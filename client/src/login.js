@@ -12,7 +12,6 @@ const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
 
-// Write your code here:
 const login = async (event) => {
   event.preventDefault();
   try {

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>profile</title>
+  </head>
+  <body>
+    <div class="container py-4 px-3 mx-auto">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center mt-5 mb-3">Edit Profile</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <form id="form">
+            <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-3">
+              <label for="name">Your name</label>
+              <input type="text" class="form-control" id="name" aria-describedby="nameHelp">
+            </div>
+            <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-4">
+              <div class="rounded-circle mx-auto d-flex align-items-center position-relative border border-1 border-danger" style="width: 200px; height: 200px">
+                <img alt="Profile picture" id="pic-preview" class="img-fluid rounded-circle z-1 border border-1 border-dark">
+                <input type="file" class="form-control position-absolute opacity-0 overflow-hidden bottom-0 left-50 z-1" style="width: 0.1px; height: 0.1px" id="profile-picture" accept=".png,.jpg,.jpeg,.svg">
+                <label for="profile-picture" class="d-inline-block">Update profile picture</label>
+              </div>
+            </div>
+            <div class="d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+              <button id="save" class="btn btn-primary rounded">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
