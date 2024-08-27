@@ -10,6 +10,7 @@ import PeaceChicken from './images/peace_chicken.jpg';
 const pictureInput = document.getElementById('profile-picture');
 const picturePreview = document.getElementById('pic-preview');
 const uploadIcon = document.getElementById('upload-icon');
+const yearSelect = document.getElementById('year');
 
 picturePreview.src = PeaceChicken;
 uploadIcon.src = UploadIcon;
@@ -34,4 +35,16 @@ const showPreview = () => {
   reader.readAsDataURL(file);
 };
 
+const loadYears = () => {
+  let year = new Date().getFullYear();
+  while (year >= 1961) {
+    let nextOption = document.createElement('option');
+    nextOption.value = year;
+    nextOption.innerHTML = year;
+    yearSelect.appendChild(nextOption);
+    year--;
+  };
+};
+
 pictureInput.addEventListener('input', showPreview);
+loadYears();
