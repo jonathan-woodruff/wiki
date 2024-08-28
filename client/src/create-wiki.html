@@ -8,11 +8,48 @@
   </head>
   <body>
     <div class="container py-4 px-3 mx-auto">
-      <h1>Create a wiki</h1>
-      <button id="submit" class="btn btn-primary">Submit</button>
-      <a href="./index.html">go home</a>
-      <a href="./view-wiki.html">view wiki</a>
-      <div id="editorjs" class="border"></div>
+      <div class="row mb-3">
+        <div class="col">
+          <h1 class="text-center mt-5">Create Wiki</h1>
+        </div>
+      </div>
+      <form>
+        <div class="row mb-3 mx-auto">
+          <div class="col col-md-11 col-lg-10 col-xl-9 mx-auto">
+            <div class="row mb-3">
+              <div class="col col-12 col-md-6 mb-3">
+                <label for="country">Country</label>
+                <select id="country" class="form-select" aria-label="country for which you are writing this wiki">
+                  <option selected value="All">All</option>
+                </select>
+              </div>
+              <div class="col col-12 col-md-6 mb-3">
+                <label for="sector">Sector</label>
+                <select id="sector" class="form-select" aria-label="sector for which you are writing this wiki">
+                  <option selected value="All">All</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="form-group d-grid col">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" aria-describedby="titleHelp">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="editorJS">Content</label>
+                <div id="editorjs" class="border p-0" placeholder="Start writing..."></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mx-auto mb-2">
+          <div class="d-grid col-8 col-sm-6 col-md-4 col-lg-3 col-xl-2 mx-auto">
+            <button id="submit" class="btn btn-primary rounded">Submit</button>
+          </div>
+        </div>
+      </form>
     </div>
   </body>
 </html>

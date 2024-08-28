@@ -9,51 +9,45 @@
     <div class="container py-4 px-3 mx-auto">
       <div class="row">
         <div class="col">
-          <h1 class="text-center mt-5 mb-3">Edit Profile</h1>
+          <h1 class="text-center mt-5 mb-5">Edit Profile</h1>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <form id="form">
-            <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-3">
+            <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-5">
               <label for="name">Your name</label>
               <input type="text" class="form-control" id="name" aria-describedby="nameHelp">
             </div>
-            <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-3">
-              <div class="rounded-circle mx-auto d-flex align-items-center position-relative border border-1 border-dark mb-1" style="width: 200px; height: 200px">
+            <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-5">
+              <div class="rounded-circle mx-auto d-flex align-items-center position-relative mb-1" style="width: 200px; height: 200px">
                 <img alt="Profile picture" id="pic-preview" class="img-fluid rounded-circle z-2">
                 <input type="file" class="form-control position-absolute opacity-0 overflow-hidden bottom-0 left-50 z-1" style="width: 0.1px; height: 0.1px" id="profile-picture" accept=".png,.jpg,.jpeg,.svg">
               </div>
-              <div class="mx-auto p-1 bg-secondary text-white rounded" style="width: 200px">
+              <div class="mx-auto p-1 bg-secondary text-white text-center rounded">
                 <img id="upload-icon" class="p-1" alt="Upload icon" width="24" height="24">
-                <label for="profile-picture" class="text-center p-1">Update profile picture</label>
+                <label for="profile-picture" role="button" class="p-1">Update profile picture</label>
               </div>
             </div>
-            <div id="service-section" class="row mx-auto mb-3">
-              <div class="col col-12 col-sm-4 mx-auto">
-                <label for="country">Country</label>
-                <select class="form-select mb-3" id="country" aria-label="Country where you served">
-                  <!--options filled in using JavaScript-->
-                </select>
-              </div>
-              <div class="col col-12 col-sm-4 mx-auto">
-                <label for="sector">Sector</label>
-                <select class="form-select mb-3" id="sector" aria-label="Sector you served">
-                  <!--options filled in using JavaScript-->
-                </select>
-              </div>
-              <div class="col col-12 col-sm-4 mx-auto">
-                <label for="year">Year training started</label>
-                <select class="form-select mb-3" id="year" aria-label="Year you landed in-country">
-                  <!--options filled in using JavaScript-->
-                </select>
+            <div id="service-section" class="mx-auto">
+              <!--fields generated using JavaScript-->
+            </div>
+            <div class="row mx-auto mb-5">
+              <div class="mx-auto col-auto">
+                <button id="add-service" class="btn btn-secondary rounded"><img id="plus-icon" class="p-1" alt="plus icon" width="24" height="24">Add 1</button>
+                <button id="remove-service" class="btn btn-danger rounded"><img id="remove-icon" class="p-1" alt="remove icon" width="24" height="24">Remove 1</button>
               </div>
             </div>
-            <div class="d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-3">
-              <button id="add-service" class="btn btn-secondary rounded"><img id="plus-icon" class="p-1" alt="plus icon" width="24" height="24">Add Service</button>
+            <div class="row mx-auto mb-5">
+              <div class="form-group col col-md-10 col-lg-8 mx-auto">
+                <label for="description">Description</label>
+                <textarea id="description" class="form-control" placeholder="Describe yourself and your service..." style="height: 120px"></textarea>
+              </div>
             </div>
-            <div class="d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
-              <button id="save" class="btn btn-primary rounded">Save Profile</button>
+            <div class="row mx-auto mb-2">
+              <div class="d-grid col-8 col-sm-6 col-md-4 col-lg-3 col-xl-2 mx-auto">
+                <button id="save" class="btn btn-primary rounded">Save Profile</button>
+              </div>
             </div>
           </form>
         </div>

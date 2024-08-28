@@ -4,7 +4,7 @@ import './scss/styles.scss';
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
-import './authenticate';
+//import './authenticate';
 
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
@@ -58,7 +58,6 @@ const editor = new EditorJS({
 
 const button = document.getElementById('submit');
 
-// Write your code here:
 const submitContent = () => {
   alert('clicked submit button')
 
