@@ -1,4 +1,5 @@
 const WikisModel = require('../models/wikis');
+const UserModel = require('../models/user');
 
 exports.postWiki = async (req, res) => {
     const contentTime = req.body.time;
@@ -64,5 +65,22 @@ exports.getProfileData = (req, res) => {
         res.status(500).json({
             error: 'user is falsy'
         });
+    }
+};
+
+exports.updateProfile = async (req, res) => {
+    try {
+        console.log(req.body);
+        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        user.photo = req.body.photo;
+        user.services = req.body.services;
+        user.description = req.body.description;
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: 'updated profile'
+        });
+    } catch(error) {
+        console.log(error);
     }
 };
