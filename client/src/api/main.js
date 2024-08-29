@@ -14,3 +14,7 @@ export async function getWikiContent() {
 export async function getWikis() {
     return await axios.get(`${SERVER_URL}/main/getWikis`);
 };
+
+export async function getProfileData() {
+    return await axios.get(`${SERVER_URL}/main/getProfileData`);
+};

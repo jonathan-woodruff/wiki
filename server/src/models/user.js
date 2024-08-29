@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   photo: Buffer,
-  service: [serviceSchema],
+  services: [serviceSchema],
   description: String
 }, { timestamps: true });
 

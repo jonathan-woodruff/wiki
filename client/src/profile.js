@@ -1,10 +1,12 @@
-//import './authenticate'; //this line ensures the user is logged in
+import './authenticate'; //this line ensures the user is logged in
 
 // Import our custom CSS
 import './scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
+
+import { getProfileData } from './api/main';
 
 import UploadIcon from './images/upload.png';
 import PlusIcon from './images/plus.png';
@@ -121,7 +123,7 @@ const addYearField = (rowElement) => {
   rowElement.appendChild(yearDiv);
   const yearLabel = document.createElement('label');
   yearLabel.for = 'year';
-  yearLabel.innerHTML = 'Year training started';
+  yearLabel.innerHTML = 'Training start year';
   yearDiv.appendChild(yearLabel);
   const yearSelect = document.createElement('select');
   yearSelect.classList.add('form-select');
@@ -184,7 +186,35 @@ const removeService = (event) => {
   }
 };
 
+const loadPhoto = (photo) => {
+
+};
+
+const loadServices = (services) => {
+  if (!services.length) {
+    addServiceButton.click();
+  } else {
+
+  }
+};
+
+const loadDescription = (description) => {
+
+};
+
+const loadFields = async () => {
+  try {
+    const { data } = await getProfileData();
+    loadPhoto(data.photo);
+    loadServices(data.services);
+    loadDescription(data.description);
+  } catch(error) {
+    const errorMessage = error.response.data.errors[0].msg; //error from axios
+    console.log(errorMessage);
+  }
+};
+
 pictureInput.addEventListener('input', showPreview);
 addServiceButton.addEventListener('click', addService);
 removeServiceButton.addEventListener('click', removeService);
-addServiceButton.click();
+loadFields();

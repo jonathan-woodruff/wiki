@@ -22,6 +22,7 @@ exports.postWiki = async (req, res) => {
     }
 };
 
+/*
 exports.getWiki = async (req, res) => {
     try {
         const wiki = await WikisModel.findOne({}).exec();
@@ -36,6 +37,7 @@ exports.getWiki = async (req, res) => {
         });
     }
 };
+*/
 
 exports.getWikis = async (req, res) => {
     try {
@@ -46,6 +48,21 @@ exports.getWikis = async (req, res) => {
     } catch(error) {
         res.status(500).json({
             error: error.message
+        });
+    }
+};
+
+exports.getProfileData = (req, res) => {
+    const user = req.user;
+    if (user) {
+        return res.status(200).json({
+            photo: user.photo,
+            services: user.services,
+            description: user.description
+        });
+    } else {
+        res.status(500).json({
+            error: 'user is falsy'
         });
     }
 };
