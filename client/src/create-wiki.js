@@ -1,10 +1,10 @@
+import './authenticate'; //this line ensures the user is logged in
+
 // Import our custom CSS
 import './scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
-
-//import './authenticate';
 
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';

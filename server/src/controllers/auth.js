@@ -15,12 +15,13 @@ exports.protected = (req, res) => {
 };
 
 exports.register = async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     try {
         const hashedPassword = await hash(password, 10);
         const newUser = new UserModel({
+            name: name,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
         });
         await newUser.save();
         return res.status(201).json({

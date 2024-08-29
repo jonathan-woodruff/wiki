@@ -1,3 +1,5 @@
+//import './authenticate'; //this line ensures the user is logged in
+
 // Import our custom CSS
 import './scss/styles.scss';
 
