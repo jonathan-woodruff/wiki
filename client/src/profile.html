@@ -14,15 +14,15 @@
       </div>
       <div class="row">
         <div class="col">
-          <form id="form">
+          <form id="form" enctype="multipart/form-data">
             <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-5">
               <div class="rounded-circle mx-auto d-flex align-items-center position-relative mb-1" style="width: 200px; height: 200px">
                 <img alt="Profile picture" id="pic-preview" class="img-fluid rounded-circle z-2">
-                <input type="file" class="form-control position-absolute opacity-0 overflow-hidden bottom-0 left-50 z-1" style="width: 0.1px; height: 0.1px" id="profile-picture" accept=".png,.jpg,.jpeg,.svg">
+                <input type="file" name="profilePicture" class="form-control position-absolute opacity-0 overflow-hidden bottom-0 left-50 z-1" style="width: 0.1px; height: 0.1px" id="profile-picture" accept=".png,.jpg,.jpeg,.svg">
               </div>
-              <div class="mx-auto p-1 bg-secondary text-white text-center rounded">
+              <div class="mx-auto p-1 btn btn-secondary rounded">
                 <img id="upload-icon" class="p-1" alt="Upload icon" width="24" height="24">
-                <label for="profile-picture" role="button" class="p-1">Update profile picture</label>
+                <label for="profile-picture" role="button" class=" p-1">Update profile picture</label>
               </div>
             </div>
             <div class="row mx-auto">

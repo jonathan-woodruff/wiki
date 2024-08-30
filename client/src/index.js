@@ -59,7 +59,6 @@ const form = document.getElementById('form');
 const logout = async () => {
   try {
     await onLogout();
-    localStorage.setItem('isAuth', 'false');
     window.location.href = './login.html';
   } catch(error) {
     const errorMessage = error.response.data.error; //error from axios

@@ -25,6 +25,8 @@ const serviceSection = document.getElementById('service-section');
 const descriptionInput = document.getElementById('description');
 const saveButton = document.getElementById('save');
 
+let photoURL;
+
 picturePreview.src = PeaceChicken;
 uploadIcon.src = UploadIcon;
 plusIcon.src = PlusIcon;
@@ -40,10 +42,10 @@ const showPreview = () => {
   // Set up the reader's onload event handler
   reader.onload = (event) => {
     // Get the image data URL
-    const imageDataUrl = event.target.result;
+    photoURL = event.target.result;
 
     // Display the uploaded image
-    picturePreview.src = imageDataUrl;
+    picturePreview.src = photoURL;
   };
 
   // Read the selected file as Data URL
@@ -151,8 +153,7 @@ const loadYears = (yearSelectElement) => {
   };
 };
 
-const addService = (event) => {
-  event.preventDefault();
+const addServiceRow = () => {
   const row = document.createElement('div');
   row.classList.add('row');
   row.classList.add('mx-auto');
@@ -160,15 +161,28 @@ const addService = (event) => {
   row.classList.add('mb-2');
   row.classList.add('p-2');
   serviceSection.appendChild(row);
+  return row;
+};
+
+const addService = (countryValue='Select', sectorValue='Select', yearValue='Select') => {
+  const row = addServiceRow();
 
   const countrySelect = addCountryField(row);
   loadCountries(countrySelect);
+  countrySelect.value = countryValue;
 
   const sectorSelect = addSectorField(row);
   loadSectors(sectorSelect);
+  sectorSelect.value = sectorValue;
 
   const yearSelect = addYearField(row);
   loadYears(yearSelect);
+  yearSelect.value = yearValue;
+};
+
+const onAddService = (event) => {
+  event.preventDefault();
+  addService();
 };
 
 const getNumServices = (nodesList) => {
@@ -189,22 +203,21 @@ const removeService = (event) => {
 };
 
 const loadPhoto = (photo) => {
-
+  picturePreview.src = photo;
 };
 
 const loadServices = (storedServices) => {
   if (!storedServices.length) {
     addServiceButton.click();
-  } /*else {
-    services = storedServices;
-    services.forEach(service => {
+  } else {
+    storedServices.forEach(service => {
       addService(service.country, service.sector, service.year);
     })
-  }*/
+  };
 };
 
 const loadDescription = (description) => {
-
+  descriptionInput.innerHTML = description;
 };
 
 const loadFields = async () => {
@@ -221,20 +234,17 @@ const loadFields = async () => {
 
 const processServicesForBackend = () => {
   const services = [];
-  let index = -1;
+  let index = 0;
   serviceSection.childNodes.forEach(service => {
     if (service.nodeType === 1) { //the node is a real html element (which is a service)
       services.push({});
-      index++;
-      const countryLabel = service.children[0].children[0].innerHTML;
       const countryValue = service.children[0].children[1].value;
-      services[index][countryLabel] = countryValue;
-      const sectorLabel = service.children[1].children[0].innerHTML;
+      services[index]['country'] = countryValue;
       const sectorValue = service.children[1].children[1].value;
-      services[index][sectorLabel] = sectorValue;
-      const yearLabel = service.children[2].children[0].innerHTML;
+      services[index]['sector'] = sectorValue;
       const yearValue = service.children[2].children[1].value;
-      services[index][yearLabel] = yearValue;
+      services[index]['year'] = yearValue;
+      index++;
     }
   })
   return services;
@@ -244,7 +254,7 @@ const saveProfile = async (event) => {
   event.preventDefault();
   const services = processServicesForBackend();
   const dataToSave = {
-    photo: pictureInput.files[0],
+    photo: photoURL,
     services: services,
     description: descriptionInput.value
   };
@@ -258,7 +268,7 @@ const saveProfile = async (event) => {
 };
 
 pictureInput.addEventListener('input', showPreview);
-addServiceButton.addEventListener('click', addService);
+addServiceButton.addEventListener('click', onAddService);
 removeServiceButton.addEventListener('click', removeService);
 saveButton.addEventListener('click', saveProfile);
 loadFields();

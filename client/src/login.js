@@ -20,7 +20,6 @@ const login = async (event) => {
         password: passwordInput.value
     };
     await onLogin(credentials);
-    localStorage.setItem('isAuth', 'true');
     window.location.href = './index.html';
   } catch(error) {
     const errorMessage = 'Incorrect email or password';
