@@ -1,4 +1,4 @@
-import './authenticate'; //this line ensures the user is logged in
+//import './authenticate'; //this line ensures the user is logged in
 
 // Import our custom CSS
 import './scss/styles.scss';
@@ -24,6 +24,7 @@ const removeServiceButton = document.getElementById('remove-service');
 const serviceSection = document.getElementById('service-section');
 const descriptionInput = document.getElementById('description');
 const saveButton = document.getElementById('save');
+const serviceErrorMessage = document.getElementById('error-message');
 
 let photoURL;
 
@@ -56,7 +57,7 @@ const addCountryField = (rowElement) => {
   const countryDiv = document.createElement('div');
   countryDiv.classList.add('col');
   countryDiv.classList.add('col-12');
-  countryDiv.classList.add('col-sm-4');
+  countryDiv.classList.add('col-sm-3');
   countryDiv.classList.add('mx-auto');
   rowElement.appendChild(countryDiv);
   const countryLabel = document.createElement('label');
@@ -164,18 +165,28 @@ const addServiceRow = () => {
   return row;
 };
 
+const clearServiceError = (service) => {
+  service.classList.remove('border');
+  service.classList.remove('border-danger');
+  serviceErrorMessage.classList.add('d-none');
+  serviceErrorMessage.innerHTML = '';
+};
+
 const addService = (countryValue='Select', sectorValue='Select', yearValue='Select') => {
   const row = addServiceRow();
 
   const countrySelect = addCountryField(row);
+  countrySelect.addEventListener('input', () => clearServiceError(countrySelect.parentNode.parentNode));
   loadCountries(countrySelect);
   countrySelect.value = countryValue;
 
   const sectorSelect = addSectorField(row);
+  sectorSelect.addEventListener('input', () => clearServiceError(sectorSelect.parentNode.parentNode));
   loadSectors(sectorSelect);
   sectorSelect.value = sectorValue;
 
   const yearSelect = addYearField(row);
+  yearSelect.addEventListener('input', () => clearServiceError(yearSelect.parentNode.parentNode));
   loadYears(yearSelect);
   yearSelect.value = yearValue;
 };
@@ -234,36 +245,52 @@ const loadFields = async () => {
 
 const processServicesForBackend = () => {
   const services = [];
+  let errorService = null;
   let index = 0;
   serviceSection.childNodes.forEach(service => {
     if (service.nodeType === 1) { //the node is a real html element (which is a service)
-      services.push({});
       const countryValue = service.children[0].children[1].value;
-      services[index]['country'] = countryValue;
       const sectorValue = service.children[1].children[1].value;
-      services[index]['sector'] = sectorValue;
       const yearValue = service.children[2].children[1].value;
-      services[index]['year'] = yearValue;
-      index++;
+      const isAllSelect = (countryValue === 'Select' && sectorValue === 'Select' && yearValue === 'Select');
+      if (!isAllSelect) {
+        const isAnySelect = (countryValue === 'Select' || sectorValue === 'Select' || yearValue === 'Select');
+        if (!isAnySelect) {
+          services.push({});
+          services[index]['country'] = countryValue;
+          services[index]['sector'] = sectorValue;
+          services[index]['year'] = yearValue;
+          index++;
+        } else {
+          errorService = service;
+        }
+      }
     }
   })
-  return services;
+  return [services, errorService];
 };
 
 const saveProfile = async (event) => {
   event.preventDefault();
-  const services = processServicesForBackend();
-  const dataToSave = {
-    photo: photoURL,
-    services: services,
-    description: descriptionInput.value
-  };
-  try {
-    await putProfile(dataToSave);
-    console.log('booyah');
-  } catch(error) {
-    const errorMessage = error.response.data.errors[0].msg; //error from axios
-    console.log(errorMessage);
+  const [services, errorService] = processServicesForBackend();
+  if (errorService) {
+    errorService.classList.add('border');
+    errorService.classList.add('border-danger');
+    serviceErrorMessage.innerHTML = 'Please complete your services';
+    serviceErrorMessage.classList.remove('d-none');
+  } else {
+    const dataToSave = {
+      photo: photoURL,
+      services: services,
+      description: descriptionInput.value
+    };
+    try {
+      await putProfile(dataToSave);
+      console.log('booyah');
+    } catch(error) {
+      const errorMessage = error.response.data.errors[0].msg; //error from axios
+      console.log(errorMessage);
+    }
   }
 };
 
