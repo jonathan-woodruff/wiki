@@ -22,3 +22,7 @@ export async function getProfileData() {
 export async function putProfile(profileData) {
     return await axios.put(`${SERVER_URL}/main/updateProfile`, profileData);
 };
+
+export async function getCreateWikiData() {
+    return await axios.get(`${SERVER_URL}/main/getCreateWikiData`);
+};

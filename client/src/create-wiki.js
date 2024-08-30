@@ -14,12 +14,19 @@ import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
 
-import { onPostWiki } from './api/main';
+import { onPostWiki, getCreateWikiData } from './api/main';
+
+const countryInput = document.getElementById('country');
+const sectorInput = document.getElementById('sector');
+const titleInput = document.getElementById('title');
 
 const editor = new EditorJS({
   holder: 'editorjs',
   underline: Underline,
-  image: SimpleImage,
+  image: {
+    class: SimpleImage,
+    inlineToolbar: ['link'],
+  },
   tools: {
     list: {
       class: NestedList,
@@ -64,7 +71,13 @@ const submitContent = () => {
   editor.save()
   .then((outputData) => {
     console.log('Article data: ', outputData);
-    onPostWiki(outputData)
+    const postData = {
+      country: countryInput.value,
+      sector: sectorInput.value,
+      title: titleInput.value,
+      article: outputData
+    };
+    onPostWiki(postData)
     .then((response) => {
       console.log(response);
     })
@@ -75,7 +88,36 @@ const submitContent = () => {
   .catch((error) => {
     console.log('Saving failed: ', error);
   });
-}
+};
+
+const loadCountries = (countries) => {
+  countries.forEach(country => {
+    const option = document.createElement('option');
+    option.value = country;
+    option.innerHTML = country;
+    countryInput.appendChild(option);
+  });
+};
+
+const loadSectors = (sectors) => {
+  sectors.forEach(sector => {
+    const option = document.createElement('option');
+    option.value = sector;
+    option.innerHTML = sector;
+    sectorInput.appendChild(option);
+  });
+};
+
+const loadData = async () => {
+  try {
+    const { data } = await getCreateWikiData();
+    loadCountries(data.countries);
+    loadSectors(data.sectors);
+  } catch(error) {
+    const errorMessage = error.response.data.errors[0].msg; //error from axios
+    console.log(errorMessage);
+  }
+};
 
 button.addEventListener('click', submitContent);
-
+loadData();

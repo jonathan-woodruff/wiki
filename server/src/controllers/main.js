@@ -1,12 +1,19 @@
 const WikisModel = require('../models/wikis');
 const UserModel = require('../models/user');
+const { parseServices } = require('../utils/index');
 
 exports.postWiki = async (req, res) => {
-    const contentTime = req.body.time;
-    const contentBlocks = req.body.blocks;
-    const contentVersion = req.body.version;
+    const country = req.body.country;
+    const sector = req.body.sector;
+    const title = req.body.title;
+    const contentTime = req.body.article.time;
+    const contentBlocks = req.body.article.blocks;
+    const contentVersion = req.body.article.version;
     try {
         const newWiki = new WikisModel({
+            country: country,
+            sector: sector,
+            title: title,
             contentTime: contentTime,
             contentBlocks: contentBlocks,
             contentVersion: contentVersion
@@ -82,5 +89,20 @@ exports.updateProfile = async (req, res) => {
         });
     } catch(error) {
         console.log(error);
+    }
+};
+
+exports.getCreateWikiData = (req, res) => {
+    const user = req.user;
+    if (user) {
+        const [countries, sectors] = parseServices(user.services);
+        return res.status(200).json({
+            countries: countries,
+            sectors: sectors
+        });
+    } else {
+        res.status(500).json({
+            error: 'user is falsy'
+        });
     }
 };
