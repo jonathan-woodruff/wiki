@@ -1,4 +1,4 @@
-import './authenticate'; //this line ensures the user is logged in
+//import './authenticate'; //this line ensures the user is logged in
 
 // Import our custom CSS
 import './scss/styles.scss';
@@ -165,7 +165,9 @@ const addServiceRow = () => {
   return row;
 };
 
-const clearServiceError = (service) => {
+const clearServiceError = (event) => {
+  console.log(event.target);
+  const service = event.target.parentNode.parentNode;
   service.classList.remove('border');
   service.classList.remove('border-danger');
   serviceErrorMessage.classList.add('d-none');
@@ -176,17 +178,17 @@ const addService = (countryValue='Select', sectorValue='Select', yearValue='Sele
   const row = addServiceRow();
 
   const countrySelect = addCountryField(row);
-  countrySelect.addEventListener('input', () => clearServiceError(countrySelect.parentNode.parentNode));
+  countrySelect.addEventListener('input', clearServiceError);
   loadCountries(countrySelect);
   countrySelect.value = countryValue;
 
   const sectorSelect = addSectorField(row);
-  sectorSelect.addEventListener('input', () => clearServiceError(sectorSelect.parentNode.parentNode));
+  sectorSelect.addEventListener('input', clearServiceError);
   loadSectors(sectorSelect);
   sectorSelect.value = sectorValue;
 
   const yearSelect = addYearField(row);
-  yearSelect.addEventListener('input', () => clearServiceError(yearSelect.parentNode.parentNode));
+  yearSelect.addEventListener('input', clearServiceError);
   loadYears(yearSelect);
   yearSelect.value = yearValue;
 };
@@ -208,8 +210,14 @@ const removeService = (event) => {
   event.preventDefault();
   const numServices = getNumServices(serviceSection.childNodes);
   if (numServices >= 2) {
-    const lastChild = serviceSection.lastChild;
-    serviceSection.removeChild(lastChild);
+    const serviceToRemove = serviceSection.lastChild;
+    const countrySelect = serviceToRemove.children[0].children[1];
+    countrySelect.removeEventListener('input', clearServiceError);
+    const sectorSelect = serviceToRemove.children[1].children[1];
+    sectorSelect.removeEventListener('input', clearServiceError);
+    const yearSelect = serviceToRemove.children[2].children[1];
+    yearSelect.removeEventListener('input', clearServiceError);
+    serviceSection.removeChild(serviceToRemove);
   }
 };
 
