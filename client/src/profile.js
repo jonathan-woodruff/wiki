@@ -18,9 +18,7 @@ const pictureInput = document.getElementById('profile-picture');
 const picturePreview = document.getElementById('pic-preview');
 const uploadIcon = document.getElementById('upload-icon');
 const plusIcon = document.getElementById('plus-icon');
-const removeIcon = document.getElementById('remove-icon');
 const addServiceButton = document.getElementById('add-service');
-const removeServiceButton = document.getElementById('remove-service');
 const serviceSection = document.getElementById('service-section');
 const descriptionInput = document.getElementById('description');
 const saveButton = document.getElementById('save');
@@ -31,7 +29,6 @@ let photoURL;
 picturePreview.src = PeaceChicken;
 uploadIcon.src = UploadIcon;
 plusIcon.src = PlusIcon;
-removeIcon.src = RemoveIcon;
 
 const showPreview = () => {
   // Get the selected file
@@ -154,13 +151,35 @@ const loadYears = (yearSelectElement) => {
   };
 };
 
+const addTrashButton = (rowElement) => {
+  const buttonDiv = document.createElement('div');
+  buttonDiv.classList.add('col');
+  buttonDiv.classList.add('col-3');
+  buttonDiv.classList.add('col-sm-1');
+  buttonDiv.classList.add('mx-auto');
+  buttonDiv.classList.add('d-flex');
+  buttonDiv.classList.add('align-items-center');
+  rowElement.appendChild(buttonDiv);
+  const button = document.createElement('button');
+  button.classList.add('btn');
+  button.classList.add('btn-danger');
+  buttonDiv.appendChild(button);
+  const trashImg = document.createElement('img');
+  trashImg.src = RemoveIcon;
+  trashImg.alt = 'Delete service';
+  trashImg.style.width = '20px';
+  trashImg.style.height = '20px';
+  button.appendChild(trashImg);
+  return button;
+};
+
 const addServiceRow = () => {
   const row = document.createElement('div');
   row.classList.add('row');
   row.classList.add('mx-auto');
   row.classList.add('bg-light');
   row.classList.add('mb-2');
-  row.classList.add('p-2');
+  row.classList.add('p-3');
   serviceSection.appendChild(row);
   return row;
 };
@@ -191,6 +210,9 @@ const addService = (countryValue='Select', sectorValue='Select', yearValue='Sele
   yearSelect.addEventListener('input', clearServiceError);
   loadYears(yearSelect);
   yearSelect.value = yearValue;
+
+  const button = addTrashButton(row);
+  button.addEventListener('click', removeService);
 };
 
 const onAddService = (event) => {
@@ -208,17 +230,18 @@ const getNumServices = (nodesList) => {
 
 const removeService = (event) => {
   event.preventDefault();
-  const numServices = getNumServices(serviceSection.childNodes);
-  if (numServices >= 2) {
-    const serviceToRemove = serviceSection.lastChild;
-    const countrySelect = serviceToRemove.children[0].children[1];
-    countrySelect.removeEventListener('input', clearServiceError);
-    const sectorSelect = serviceToRemove.children[1].children[1];
-    sectorSelect.removeEventListener('input', clearServiceError);
-    const yearSelect = serviceToRemove.children[2].children[1];
-    yearSelect.removeEventListener('input', clearServiceError);
-    serviceSection.removeChild(serviceToRemove);
-  }
+
+  const button = event.currentTarget;
+  button.removeEventListener('click', removeService);
+  const serviceToRemove = button.parentNode.parentNode;
+  const countrySelect = serviceToRemove.children[0].children[1];
+  countrySelect.removeEventListener('input', clearServiceError);
+  const sectorSelect = serviceToRemove.children[1].children[1];
+  sectorSelect.removeEventListener('input', clearServiceError);
+  const yearSelect = serviceToRemove.children[2].children[1];
+  yearSelect.removeEventListener('input', clearServiceError);
+
+  serviceSection.removeChild(serviceToRemove)
 };
 
 const loadPhoto = (photo) => {
@@ -304,6 +327,5 @@ const saveProfile = async (event) => {
 
 pictureInput.addEventListener('input', showPreview);
 addServiceButton.addEventListener('click', onAddService);
-removeServiceButton.addEventListener('click', removeService);
 saveButton.addEventListener('click', saveProfile);
 loadFields();
