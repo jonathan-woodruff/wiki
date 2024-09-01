@@ -12,7 +12,8 @@ module.exports = {
     'view-wiki': './src/view-wiki.js',
     'register': './src/register.js',
     'login': './src/login.js',
-    'profile': './src/profile.js'
+    'edit-profile': './src/edit-profile.js',
+    'search-results': './src/search-results.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -50,9 +51,14 @@ module.exports = {
         chunks: ['login']
       }),
       new HtmlWebpackPlugin({
-        template: './src/profile.html',
-        filename: 'profile.html',
-        chunks: ['profile']
+        template: './src/edit-profile.html',
+        filename: 'edit-profile.html',
+        chunks: ['edit-profile']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/search-results.html',
+        filename: 'search-results.html',
+        chunks: ['search-results']
       })
   ],
   module: {

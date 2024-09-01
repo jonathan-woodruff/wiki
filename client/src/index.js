@@ -4,34 +4,9 @@ import './scss/styles.scss';
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
-import Fuse from 'fuse.js';
-
 import { onLogout } from './api/auth';
-import { getWikis } from './api/main';
 
 import SearchIcon from './images/search_icon.svg';
-
-const fuseOptions = {
-	// isCaseSensitive: false,
-	// includeScore: false,
-	// shouldSort: true,
-	// includeMatches: false,
-	// findAllMatches: false,
-	// minMatchCharLength: 1,
-	// location: 0,
-	// threshold: 0.6,
-	// distance: 100,
-	// useExtendedSearch: false,
-	// ignoreLocation: false,
-	// ignoreFieldNorm: false,
-	// fieldNormWeight: 1,
-	keys: [
-    "title",
-    "country",
-    "sector",
-		"contentBlocks.data.text"
-	]
-};
 
 const logoutButton = document.getElementById('logout');
 const form = document.getElementById('form');
@@ -42,29 +17,13 @@ const searchImg = document.getElementById('search-icon');
 
 searchImg.src = SearchIcon;
 
-const loadWikis = async () => {
-  try {
-    const wikis = await getWikis();
-    return wikis.data.wikis;
-  } catch(error) {
-    console.log(error);
-  }
-};
-
-const allWikis = loadWikis();
-
-const searchWikis = async (event) => {
-  event.preventDefault();
-  const searchPattern = document.getElementById('search-engine').value;
-  allWikis
-  .then((wikis) => {
-    console.log(wikis);
-    const fuse = new Fuse(wikis, fuseOptions);
-    console.log(fuse.search(searchPattern));
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+const submitSearch = () => {
+  const params = new URLSearchParams();
+  const searchPattern = searchEngine.value;
+  params.append('search', searchPattern);
+  const queryString = params.toString();
+  const url = `./search-results.html?${queryString}`;
+  window.location.href = url;
 };
 
 // Write your code here:
@@ -91,8 +50,8 @@ const showFocusOut = () => {
 };
 
 //logoutButton.addEventListener('click', logout);
-form.addEventListener('submit', searchWikis);
-submitButton.addEventListener('click', searchWikis);
+form.addEventListener('submit', submitSearch);
+submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
