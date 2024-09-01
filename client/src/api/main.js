@@ -7,9 +7,9 @@ export async function onPostWiki(wikiContent) {
     return await axios.post(`${SERVER_URL}/main/postWiki`, wikiContent);
 };
 
-export async function getWikiContent() {
+/*export async function getWikiContent() {
     return await axios.get(`${SERVER_URL}/main/getWiki`);
-};
+};*/
 
 export async function getWikis() {
     return await axios.get(`${SERVER_URL}/main/getWikis`);
@@ -25,4 +25,8 @@ export async function putProfile(profileData) {
 
 export async function getCreateWikiData() {
     return await axios.get(`${SERVER_URL}/main/getCreateWikiData`);
+};
+
+export async function onViewWiki(wikiID) {
+    return await axios.get(`${SERVER_URL}/main/getWikiByID?wiki=${wikiID}`);
 };

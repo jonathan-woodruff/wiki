@@ -6,25 +6,78 @@ import * as bootstrap from 'bootstrap';
 
 import EditorJS from '@editorjs/editorjs';
 
-import { getWikiContent } from './api/main';
+import { onViewWiki } from './api/main';
 
-const getData = async () => {
-    try {
-        const { data } = await getWikiContent();
-        const formattedData = {
-            time: data.contentTime,
-            blocks: data.contentBlocks,
-            version: data.contentVersion
-        };
-        return formattedData;
-    } catch(error) {
-        console.log(error);
-        return {};
-    }
+import Quote from '@editorjs/quote';
+import SimpleImage from '@editorjs/simple-image';
+import Header from '@editorjs/header';
+import Table from '@editorjs/table';
+import NestedList from '@editorjs/nested-list';
+import Underline from '@editorjs/underline';
+
+const title = document.getElementById('title');
+const countrySpan = document.getElementById('country');
+const sectorSpan = document.getElementById('sector');
+
+const getWiki = async () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const wikiID = urlParams.get('wiki');
+    const { data } = await onViewWiki(wikiID);
+    return data.wiki;
 };
 
+const displayWiki = (wiki) => {
+    title.innerHTML = wiki.title;
+    countrySpan.innerHTML = wiki.country;
+    sectorSpan.innerHTML = wiki.sector;
+};
+
+const wiki = await getWiki();
+displayWiki(wiki);
+
 const editor = new EditorJS({
-    holder : 'editorjs',
+    holder: 'editorjs',
     readOnly: true,
-    data: await getData()
+    data: {
+      time: wiki.contentTime,
+      blocks: wiki.contentBlocks,
+      version: wiki.contentVersion
+    },
+    tools: {
+        underline: Underline,
+        image: SimpleImage,
+        list: {
+          class: NestedList,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'ordered'
+          },
+        },
+        header: {
+          class: Header,
+          shortcut: 'CMD+SHIFT+H',
+          config: {
+            defaultLevel: 2,
+            levels: [2, 3, 4]
+          }
+        },
+        quote: {
+          class: Quote,
+          inlineToolbar: true,
+          shortcut: 'CMD+SHIFT+O',
+          config: {
+            quotePlaceholder: 'Enter a quote',
+            captionPlaceholder: 'Quote\'s author',
+          },
+        },
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 3,
+          },
+        },
+      }
   });

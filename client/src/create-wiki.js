@@ -1,4 +1,4 @@
-import './authenticate'; //this line ensures the user is logged in
+//import './authenticate'; //this line ensures the user is logged in
 
 // Import our custom CSS
 import './scss/styles.scss';
@@ -7,6 +7,9 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import EditorJS from '@editorjs/editorjs';
+
+import { onPostWiki, getCreateWikiData } from './api/main';
+
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
 import Header from '@editorjs/header';
@@ -14,20 +17,15 @@ import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
 
-import { onPostWiki, getCreateWikiData } from './api/main';
-
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
 const titleInput = document.getElementById('title');
 
 const editor = new EditorJS({
   holder: 'editorjs',
-  underline: Underline,
-  image: {
-    class: SimpleImage,
-    inlineToolbar: ['link'],
-  },
   tools: {
+    underline: Underline,
+    image: SimpleImage,
     list: {
       class: NestedList,
       inlineToolbar: true,

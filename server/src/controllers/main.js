@@ -107,3 +107,20 @@ exports.getCreateWikiData = (req, res) => {
         });
     }
 };
+
+exports.getWikiByID = async (req, res) => {
+    const wikiID = req.query.wiki;
+    try {
+        const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
+        console.log(wiki);
+        if (wiki) {
+            return res.status(200).json({
+                wiki: wiki
+            });
+        }
+    } catch(error) {
+        res.status(500).json({
+            error: 'did not find wiki'
+        })
+    }
+};
