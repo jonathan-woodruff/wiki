@@ -77,7 +77,6 @@ exports.getProfileData = (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        console.log(req.body);
         const user = await UserModel.findOne({ email: req.user.email }).exec();
         user.photo = req.body.photo;
         user.services = req.body.services;
@@ -88,7 +87,9 @@ exports.updateProfile = async (req, res) => {
             message: 'updated profile'
         });
     } catch(error) {
-        console.log(error);
+        res.status(500).json({
+            error: 'Did not update profile successfully'
+        });
     }
 };
 

@@ -185,7 +185,6 @@ const addServiceRow = () => {
 };
 
 const clearServiceError = (event) => {
-  console.log(event.target);
   const service = event.target.parentNode.parentNode;
   service.classList.remove('border');
   service.classList.remove('border-danger');
@@ -317,7 +316,6 @@ const saveProfile = async (event) => {
     };
     try {
       await putProfile(dataToSave);
-      console.log('booyah');
     } catch(error) {
       const errorMessage = error.response.data.errors[0].msg; //error from axios
       console.log(errorMessage);
