@@ -6,18 +6,57 @@
     <title>Bootstrap w/ Webpack</title>
   </head>
   <body>
-    <div class="container py-4 px-3 mx-auto">
-      <h1>Home</h1>
-      <button id="button" class="btn btn-primary">Primary button</button>
+    <!--
       <a href="./create-wiki.html">create wiki</a>
       <a href="./view-wiki.html">view wiki</a>
       <button type="button" id="logout" class="btn btn-link">Log Out</button>
-      <form id="form">
-        <div class="form-group">
-          <label for="search-engine">Search</label>
-          <input type="search" class="form-control" id="search-engine" placeholder="...Example: packing list">
+    -->
+    <div class="container py-4 px-3 mx-auto">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center mt-5 mb-5">Search Wikis</h1>
         </div>
-      </form>
+      </div>
+      <div class="row">
+        <div class="col col-11 col-sm-10 col-md-9 col-lg-8 col-xl-7 mx-auto mb-4">
+          <!--
+          <div class="input-group flex-nowrap rounded-pill p-2 border border-1 border-dark shadow-sm">
+            <span class="input-group-text" id="addon-wrapping"><img id="search-icon" alt="search icon" /></span>
+            <input id="search-engine" type="search" class="form-control border-0" placeholder="...Example: packing list" aria-label="search" autofocus>
+          </div>
+          -->
+          <form id="form">
+            <div id="search-div" class="row rounded-pill border border-2 border-dark p-2 shadow-sm">
+              <div class="col col-1 d-flex align-items-center">
+                <img id="search-icon" alt="search icon" />
+              </div>
+              <div class="col col-10 col-sm-11">
+                <input id="search-engine" type="search" class="form-control border-0 shadow-none" placeholder="...Example: packing list" autofocus />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+          <button type="submit" id="submit" class="btn btn-primary rounded">Search</button>
+        </div>
+      </div>
+      <!--
+      <div class="row">
+        <div class="col">
+          <form id="form">
+            <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-3 position-relative">
+              <input type="search" class="form-control rounded-pill p-2" id="search-engine" placeholder="...Example: packing list">
+              <img id="search-icon" alt="search icon" class="position-absolute left-5">
+            </div>
+            <div class="d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+              <button type="submit" id="submit" class="btn btn-primary rounded">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      -->
     </div>
   </body>
 </html>

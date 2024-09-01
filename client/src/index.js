@@ -9,6 +9,8 @@ import Fuse from 'fuse.js';
 import { onLogout } from './api/auth';
 import { getWikis } from './api/main';
 
+import SearchIcon from './images/search_icon.svg';
+
 const fuseOptions = {
 	// isCaseSensitive: false,
 	// includeScore: false,
@@ -24,9 +26,21 @@ const fuseOptions = {
 	// ignoreFieldNorm: false,
 	// fieldNormWeight: 1,
 	keys: [
+    "title",
+    "country",
+    "sector",
 		"contentBlocks.data.text"
 	]
 };
+
+const logoutButton = document.getElementById('logout');
+const form = document.getElementById('form');
+const submitButton = document.getElementById('submit');
+const searchEngine = document.getElementById('search-engine');
+const searchDiv = document.getElementById('search-div');
+const searchImg = document.getElementById('search-icon');
+
+searchImg.src = SearchIcon;
 
 const loadWikis = async () => {
   try {
@@ -44,6 +58,7 @@ const searchWikis = async (event) => {
   const searchPattern = document.getElementById('search-engine').value;
   allWikis
   .then((wikis) => {
+    console.log(wikis);
     const fuse = new Fuse(wikis, fuseOptions);
     console.log(fuse.search(searchPattern));
   })
@@ -51,9 +66,6 @@ const searchWikis = async (event) => {
     console.log(error);
   });
 };
-
-const button = document.getElementById('logout');
-const form = document.getElementById('form');
 
 // Write your code here:
 const logout = async () => {
@@ -66,5 +78,21 @@ const logout = async () => {
   };
 };
 
-button.addEventListener('click', logout);
+const focusOnInput = () => {
+  searchEngine.focus();
+};
+
+const showFocus = () => {
+  searchDiv.classList.replace('border-1', 'border-2');
+};
+
+const showFocusOut = () => {
+  searchDiv.classList.replace('border-2', 'border-1');
+};
+
+//logoutButton.addEventListener('click', logout);
 form.addEventListener('submit', searchWikis);
+submitButton.addEventListener('click', searchWikis);
+searchDiv.addEventListener('click', focusOnInput);
+searchEngine.addEventListener('focus', showFocus);
+searchEngine.addEventListener('focusout', showFocusOut);
