@@ -26,6 +26,10 @@ const submitSearch = () => {
   window.location.href = url;
 };
 
+const enterSubmit = (event) => {
+  if (event.key === 'Enter') submitSearch();
+};
+
 // Write your code here:
 const logout = async () => {
   try {
@@ -50,8 +54,8 @@ const showFocusOut = () => {
 };
 
 //logoutButton.addEventListener('click', logout);
-form.addEventListener('submit', submitSearch);
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
+searchEngine.addEventListener('keypress', enterSubmit);
