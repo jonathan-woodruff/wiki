@@ -49,7 +49,18 @@ exports.getWiki = async (req, res) => {
 
 exports.getWikis = async (req, res) => {
     try {
-        const wikis = await WikisModel.find().exec();
+        const country = req.query.country;
+        const sector = req.query.sector;
+        let wikis;
+        if (country === 'All' && sector === 'All') {
+            wikis = await WikisModel.find().exec();
+        } else if (country === 'All') {
+            wikis = await WikisModel.find({ sector: sector }).exec();
+        } else if (sector === 'All') {
+            wikis = await WikisModel.find({ country: country }).exec();
+        } else { //both country and sector are selected to be filtered
+            wikis = await WikisModel.find({ country: country, sector: sector }).exec();
+        }
         return res.status(200).json({
             wikis: wikis
         });
@@ -109,8 +120,8 @@ exports.getCreateWikiData = (req, res) => {
 };
 
 exports.getWikiByID = async (req, res) => {
-    const wikiID = req.query.wiki;
     try {
+        const wikiID = req.query.wiki;
         const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
         console.log(wiki);
         if (wiki) {

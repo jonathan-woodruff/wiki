@@ -11,8 +11,8 @@ export async function onPostWiki(wikiContent) {
     return await axios.get(`${SERVER_URL}/main/getWiki`);
 };*/
 
-export async function getWikis() {
-    return await axios.get(`${SERVER_URL}/main/getWikis`);
+export async function getWikis(selectedCountry, selectedSector) {
+    return await axios.get(`${SERVER_URL}/main/getWikis?country=${selectedCountry}&sector=${selectedSector}`);
 };
 
 export async function getProfileData() {

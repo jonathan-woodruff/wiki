@@ -7,6 +7,10 @@ import * as bootstrap from 'bootstrap';
 import Fuse from 'fuse.js';
 
 import { getWikis } from './api/main';
+import { countries, sectors } from './constants/profile';
+import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut } from './utils/search';
+
+import SearchIcon from './images/search_icon.svg';
 
 const fuseOptions = {
 	// isCaseSensitive: false,
@@ -30,9 +34,24 @@ const fuseOptions = {
 	]
 };
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const searchPattern = urlParams.get('search');
+const selectedCountry = urlParams.get('country');
+const selectedSector = urlParams.get('sector');
+
+const countryInput = document.getElementById('country');
+const sectorInput = document.getElementById('sector');
+const searchEngine = document.getElementById('search-engine');
+const submitButton = document.getElementById('submit');
+const searchDiv = document.getElementById('search-div');
+const searchImg = document.getElementById('search-icon');
+
+searchImg.src = SearchIcon;
+
 const loadWikis = async () => {
     try {
-      const wikis = await getWikis();
+      const wikis = await getWikis(selectedCountry, selectedSector);
       return wikis.data.wikis;
     } catch(error) {
       console.log(error);
@@ -42,9 +61,6 @@ const loadWikis = async () => {
 const allWikis = loadWikis();
   
 const searchWikis = async () => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const searchPattern = urlParams.get('search');
     allWikis
     .then((wikis) => {
       const fuse = new Fuse(wikis, fuseOptions);
@@ -55,4 +71,37 @@ const searchWikis = async () => {
     });
 };
 
-await searchWikis();
+const loadCountries = () => {
+  countries.forEach((country) => {
+    let option = document.createElement('option');
+    option.value = country;
+    option.innerHTML = country;
+    if (country === selectedCountry) option.selected = true;
+    countryInput.appendChild(option);
+  })
+};
+
+const loadSectors = () => {
+  sectors.forEach((sector) => {
+    let option = document.createElement('option');
+    option.value = sector;
+    option.innerHTML = sector;
+    if (sector === selectedSector) option.selected = true;
+    sectorInput.appendChild(option);
+  });
+};
+
+const populateSearchEngine = () => {
+  searchEngine.value = searchPattern;
+};
+
+submitButton.addEventListener('click', submitSearch);
+searchDiv.addEventListener('click', focusOnInput);
+searchEngine.addEventListener('focus', showFocus);
+searchEngine.addEventListener('focusout', showFocusOut);
+searchEngine.addEventListener('keypress', enterSubmit);
+
+searchWikis();
+loadCountries();
+loadSectors();
+populateSearchEngine();
