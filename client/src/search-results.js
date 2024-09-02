@@ -46,6 +46,7 @@ const searchEngine = document.getElementById('search-engine');
 const submitButton = document.getElementById('submit');
 const searchDiv = document.getElementById('search-div');
 const searchImg = document.getElementById('search-icon');
+const cardDiv = document.getElementById('card-div');
 
 searchImg.src = SearchIcon;
 
@@ -59,12 +60,17 @@ const loadWikis = async () => {
 };
   
 const allWikis = loadWikis();
+
+const showCards = (wikis) => {
+  console.log(wikis);
+  //for each wiki, make a card following the template in the html
+};
   
 const searchWikis = async () => {
     allWikis
     .then((wikis) => {
       const fuse = new Fuse(wikis, fuseOptions);
-      console.log(fuse.search(searchPattern));
+      showCards(fuse.search(searchPattern));
     })
     .catch((error) => {
       console.log(error);
