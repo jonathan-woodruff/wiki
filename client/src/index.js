@@ -6,7 +6,7 @@ import * as bootstrap from 'bootstrap';
 
 import { onLogout } from './api/auth';
 import { countries, sectors } from './constants/profile';
-import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut } from './utils/search';
+import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
 
 import SearchIcon from './images/search_icon.svg';
 
@@ -38,7 +38,6 @@ const loadSectors = () => {
   });
 };
 
-// Write your code here:
 const logout = async () => {
   try {
     await onLogout();
@@ -55,6 +54,7 @@ searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
+searchEngine.addEventListener('input', hideError);
 
 loadCountries();
 loadSectors();

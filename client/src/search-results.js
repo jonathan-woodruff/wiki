@@ -8,7 +8,7 @@ import Fuse from 'fuse.js';
 
 import { getWikis } from './api/main';
 import { countries, sectors } from './constants/profile';
-import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut } from './utils/search';
+import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
 
 import SearchIcon from './images/search_icon.svg';
 
@@ -63,7 +63,52 @@ const allWikis = loadWikis();
 
 const showCards = (wikis) => {
   console.log(wikis);
-  //for each wiki, make a card following the template in the html
+  if (wikis.length) {
+    wikis.forEach(wiki => {
+      const card = document.createElement('div');
+      card.id = wiki.item._id; //useful so when the user clicks the card, you can pass the id to the view-wiki page via urlParams query string
+      card.role = 'button';
+      card.classList.add('card');
+      card.classList.add('mb-3');
+      card.classList.add('shadow-sm');
+      card.addEventListener('mouseover', handleMouseover);
+      card.addEventListener('mouseout', handleMouseout);
+      card.addEventListener('click', handleClick);
+      cardDiv.appendChild(card);
+
+      const cardBody = document.createElement('div');
+      cardBody.classList.add('card-body');
+      card.appendChild(cardBody);
+
+      const h2 = document.createElement('h2');
+      h2.classList.add('card-title');
+      h2.classList.add('h4');
+      h2.innerHTML = wiki.item.title;
+      cardBody.appendChild(h2);
+
+      const p1 = document.createElement('p');
+      p1.classList.add('card-text');
+      p1.innerHTML = 'hi'; //todo: create function to use slice() and parse contentBlocks.text to pull up a preview of the content
+      cardBody.appendChild(p1);
+
+      const p2 = document.createElement('p2');
+      p2.style.fontSize = '0.9em';
+      p2.innerHTML = 'Country: ' + wiki.item.country + '\xa0\xa0\xa0\xa0' + 'Sector: ' + wiki.item.sector;
+      cardBody.appendChild(p2);
+    })
+  } else { //no wikis found based on the search
+    const p1 = document.createElement('p');
+    p1.classList.add('fs-6');
+    p1.classList.add('text-center');
+    p1.classList.add('mt-2');
+    p1.innerHTML = '-----------';
+    cardDiv.appendChild(p1);
+    const p2 = document.createElement('p');
+    p2.classList.add('fs-6');
+    p2.classList.add('text-center');
+    p2.innerHTML = 'No wikis found. Try a different search.';
+    cardDiv.appendChild(p2);
+  }
 };
   
 const searchWikis = async () => {
@@ -101,11 +146,28 @@ const populateSearchEngine = () => {
   searchEngine.value = searchPattern;
 };
 
+const handleMouseover = (event) => {
+  const card = event.currentTarget;
+  card.classList.add('bg-light');
+};
+
+const handleMouseout = (event) => {
+  const card = event.currentTarget;
+  card.classList.remove('bg-light');
+};
+
+const handleClick = (event) => {
+  const card = event.currentTarget;
+  const wikiID = card.id;
+  //navigate to view wiki page using url params
+};
+
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
+searchEngine.addEventListener('input', hideError);
 
 searchWikis();
 loadCountries();
