@@ -159,7 +159,11 @@ const handleMouseout = (event) => {
 const handleClick = (event) => {
   const card = event.currentTarget;
   const wikiID = card.id;
-  //navigate to view wiki page using url params
+  const params = new URLSearchParams();
+  params.append('wiki', wikiID);
+  const queryString = params.toString();
+  const url = `./view-wiki.html?${queryString}`;
+  window.location.href = url;
 };
 
 submitButton.addEventListener('click', submitSearch);
