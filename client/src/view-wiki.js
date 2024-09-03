@@ -16,8 +16,7 @@ import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
 
 const title = document.getElementById('title');
-const countrySpan = document.getElementById('country');
-const sectorSpan = document.getElementById('sector');
+const countryAndSector = document.getElementById('country-sector');
 
 const getWiki = async () => {
     const queryString = window.location.search;
@@ -29,8 +28,7 @@ const getWiki = async () => {
 
 const displayWiki = (wiki) => {
     title.innerHTML = wiki.title;
-    countrySpan.innerHTML = wiki.country;
-    sectorSpan.innerHTML = wiki.sector;
+    countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
 };
 
 const wiki = await getWiki();
