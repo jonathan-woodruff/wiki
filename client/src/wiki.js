@@ -8,9 +8,9 @@ import * as bootstrap from 'bootstrap';
 
 import EditorJS from '@editorjs/editorjs';
 
-import { onViewWiki } from './api/main';
+import { onViewWiki, onPutWiki } from './api/main';
 import EditIcon from './images/edit.png';
-import CancelIcon from './images/remove.png';
+import CancelIcon from './images/x.svg';
 
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -27,9 +27,14 @@ const title = document.getElementById('title');
 const countryAndSector = document.getElementById('country-sector');
 const editImg = document.getElementById('edit-icon');
 const editRow = document.getElementById('edit-row');
-const publishRow = document.getElementById('publish-row');
+const cancelPublish = document.getElementById('cancel-publish');
 const editButton = document.getElementById('edit-button');
 const cancelImg = document.getElementById('cancel-img');
+const cancelButton = document.getElementById('cancel');
+const publishButton = document.getElementById('publish');
+const descriptionRow = document.getElementById('description-row');
+const descriptionElement = document.getElementById('change-description');
+const missingErrorRow = element.getElementById('missing-error-row');
 
 editImg.src = EditIcon;
 cancelImg.src = CancelIcon;
@@ -106,8 +111,50 @@ const goEditMode = () => {
   } else {
     isEditing = true;
     editRow.classList.add('d-none');
-    publishRow.classList.remove('d-none');
+    descriptionRow.classList.remove('d-none');
+    cancelPublish.classList.remove('d-none');
   }
 };
 
+const refresh = () => {
+  window.location.reload();
+};
+
+const publishEdits = async () => {
+  const description = descriptionElement.value;
+  if (description) {
+    editor.save()
+    .then((outputData) => {
+      const putData = {
+        wikiId: wikiID,
+        changeDescription: description,
+        article: outputData
+      };
+      onPutWiki(putData)
+      .then((response) => {
+        refresh();
+      })
+      .catch((error => {
+        alert('Submit failed: ', error)
+      }))
+    })
+    .catch((error) => {
+      alert('Saving failed: ', error);
+    });
+  } else { //user didn't enter a description of changes made
+    missingErrorRow.classList.remove('d-none');
+    changeDescription.classList.add('border');
+    changeDescription.classList.add('border-danger');
+  }
+};
+
+const hideError = () => {
+  missingErrorRow.classList.add('d-none');
+  changeDescription.classList.remove('border');
+  changeDescription.classList.remove('border-danger');
+};
+
 editButton.addEventListener('click', goEditMode);
+cancelButton.addEventListener('click', refresh);
+publishButton.addEventListener('click', publishEdits);
+changeDescription.addEventListener('input', hideError);

@@ -66,11 +66,8 @@ const editor = new EditorJS({
 const button = document.getElementById('submit');
 
 const submitContent = () => {
-  alert('clicked submit button')
-
   editor.save()
   .then((outputData) => {
-    console.log('Article data: ', outputData);
     const postData = {
       country: countryInput.value,
       sector: sectorInput.value,

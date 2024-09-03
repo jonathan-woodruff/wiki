@@ -21,6 +21,7 @@
         <div class="col col-md-11 col-lg-10 col-xl-9 mx-auto">
           <div class="mx-auto col-auto">
             <button id="edit-button" class="btn btn-secondary rounded"><img id="edit-icon" class="p-1" alt="edit icon" width="24" height="24">Edit Wiki</button>
+            <button id="history" class="btn btn-link text-decoration-none">View History</button>
           </div>
           <span id="auth-error" class="text-danger mt-2 d-none">You must be signed in to edit the wiki</span>
         </div>
@@ -34,11 +35,20 @@
           </div>
         </div>
       </div>
-      <div id="publish-row" class="row mx-auto mb-2 d-none">
-        <div class="d-grid col-8 col-sm-6 col-md-4 col-lg-3 col-xl-2 mx-auto">
-          <button id="cancel" class="btn btn-outline-secondary"><img id="cancel-img" alt="cancel changes" />Cancel Changes</button>
-          <button id="publish" class="btn btn-primary rounded">Publish Changes</button>
+      <div id="description-row" class="row mb-3 mx-auto d-none">
+        <div class="col form-group d-grid col-md-11 col-lg-10 col-xl-9 mx-auto">
+          <label for="change-description" class="mb-1">Briefly describe your changes</label>
+          <input id="change-description" type="text" class="form-control" placeholder="Ex: Added a new section about chicken feathers">
         </div>
+      </div>
+      <div id="missing-error-row" class="row mb-3 d-none">
+        <div class="col">
+          <p id="missing-error" class="text-danger text-center">Please describe the changes you made</p>
+        </div>
+      </div>
+      <div id="cancel-publish" class="d-flex gap-2 justify-content-center mb-2 d-none">
+        <button id="cancel" class="btn btn-outline-secondary"><img id="cancel-img" alt="cancel changes" />Cancel Changes</button>
+        <button id="publish" class="btn btn-primary rounded">Publish Changes</button>
       </div>
     </div>
   </body>

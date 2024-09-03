@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
-const wikisSchema = new mongoose.Schema({
-  country: {
+const wikiHistorySchema = new mongoose.Schema({
+  wikiId: {
     type: String,
     required: true
   },
-  sector: {
+  authorUserId: {
     type: String,
     required: true
   },
-  title: {
+  changeDescription: {
     type: String,
     required: true
   },
@@ -25,6 +25,6 @@ const wikisSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Wikis', wikisSchema);
+module.exports = mongoose.model('WikiHistory', wikiHistorySchema);

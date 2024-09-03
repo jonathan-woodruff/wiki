@@ -1,5 +1,6 @@
 const WikisModel = require('../models/wikis');
 const UserModel = require('../models/user');
+const WikiHistoryModel = require('../models/wikiHistory');
 const { parseServices } = require('../utils/index');
 
 exports.postWiki = async (req, res) => {
@@ -132,5 +133,40 @@ exports.getWikiByID = async (req, res) => {
         res.status(500).json({
             error: 'did not find wiki'
         })
+    }
+};
+
+exports.publishWikiEdits = async (req, res) => {
+    const wikiId = req.body.wikiId;
+    const contentTime = req.body.article.time;
+    const contentBlocks = req.body.article.blocks;
+    const contentVersion = req.body.article.version;
+    const changeDescription = req.body.changeDescription;
+    try {
+        /* update the wiki in the wikis model */
+        const wiki = await WikisModel.findOne({ _id: wikiId }).exec();
+        wiki.contentTime = contentTime;
+        wiki.contentBlocks = contentBlocks;
+        wiki.contentVersion = contentVersion;
+        await wiki.save();
+        /* add the wiki version to the wiki history model */
+        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const newWikiEdit = new WikiHistoryModel({
+            wikiId: wikiId,
+            authorUserId: user._id,
+            changeDescription: changeDescription,
+            contentTime: contentTime,
+            contentBlocks: contentBlocks,
+            contentVersion: contentVersion
+        });
+        await newWikiEdit.save();
+        return res.status(200).json({
+            success: true,
+            message: 'updated wiki'
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: 'Did not update wiki successfully'
+        });
     }
 };
