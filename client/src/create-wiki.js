@@ -1,4 +1,6 @@
-//import './authenticate'; //this line ensures the user is logged in
+import { isAuth } from './authenticate';
+
+if (!isAuth) window.location.href = './login.html';
 
 // Import our custom CSS
 import './scss/styles.scss';

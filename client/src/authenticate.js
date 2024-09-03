@@ -3,9 +3,10 @@ import { checkProtected } from './api/auth';
 const checkAuth = async () => {
     try {
         await checkProtected();
+        return true;
     } catch(error) {
-        window.location.href = './login.html';
+        return false;
     }
 };
 
-checkAuth();
+export const isAuth = await checkAuth();

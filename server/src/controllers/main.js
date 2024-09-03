@@ -123,7 +123,6 @@ exports.getWikiByID = async (req, res) => {
     try {
         const wikiID = req.query.wiki;
         const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
-        console.log(wiki);
         if (wiki) {
             return res.status(200).json({
                 wiki: wiki

@@ -9,7 +9,7 @@ module.exports = {
   entry: {
     'home': './src/index.js',
     'create-wiki': './src/create-wiki.js',
-    'view-wiki': './src/view-wiki.js',
+    'wiki': './src/wiki.js',
     'register': './src/register.js',
     'login': './src/login.js',
     'edit-profile': './src/edit-profile.js',
@@ -36,9 +36,9 @@ module.exports = {
         chunks: ['create-wiki']
       }),
       new HtmlWebpackPlugin({
-        template: './src/view-wiki.html',
-        filename: 'view-wiki.html',
-        chunks: ['view-wiki']
+        template: './src/wiki.html',
+        filename: 'wiki.html',
+        chunks: ['wiki']
       }),
       new HtmlWebpackPlugin({
         template: './src/register.html',

@@ -66,7 +66,7 @@ const showCards = (wikis) => {
   if (wikis.length) {
     wikis.forEach(wiki => {
       const card = document.createElement('div');
-      card.id = wiki.item._id; //useful so when the user clicks the card, you can pass the id to the view-wiki page via urlParams query string
+      card.id = wiki.item._id; //useful so when the user clicks the card, you can pass the id to the wiki page via urlParams query string
       card.role = 'button';
       card.classList.add('card');
       card.classList.add('mb-3');
@@ -162,7 +162,7 @@ const handleClick = (event) => {
   const params = new URLSearchParams();
   params.append('wiki', wikiID);
   const queryString = params.toString();
-  const url = `./view-wiki.html?${queryString}`;
+  const url = `./wiki.html?${queryString}`;
   window.location.href = url;
 };
 
