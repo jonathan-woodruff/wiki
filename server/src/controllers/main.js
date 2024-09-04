@@ -156,6 +156,7 @@ exports.publishWikiEdits = async (req, res) => {
             contentVersion: contentVersion
         });
         await newWikiEdit.save();
+        console.log('sup');
         return res.status(200).json({
             success: true,
             message: 'updated wiki'

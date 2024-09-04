@@ -41,7 +41,6 @@ const charactersRemaining = document.getElementById('characters-remaining');
 editImg.src = EditIcon;
 cancelImg.src = CancelIconGrey;
 
-let isEditing = false;
 const maxLengthStr = changeDescription.getAttribute('maxlength');
 charactersRemaining.innerHTML = maxLengthStr;
 const maxDescriptionLength = parseInt(maxLengthStr);
@@ -61,7 +60,7 @@ displayWiki(wiki);
 
 const editor = new EditorJS({
   holder: 'editorjs',
-  readOnly: !isEditing,
+  readOnly: true,
   data: {
     time: wiki.contentTime,
     blocks: wiki.contentBlocks,
@@ -114,7 +113,7 @@ const goEditMode = () => {
   if (!isAuth) {
     showAuthError();
   } else {
-    isEditing = true;
+    editor.readOnly.toggle();
     editRow.classList.add('d-none');
     descriptionRow.classList.remove('d-none');
     cancelPublish.classList.remove('d-none');
