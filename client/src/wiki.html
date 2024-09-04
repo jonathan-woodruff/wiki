@@ -43,8 +43,46 @@
         </div>
       </div>
       <div id="cancel-publish" class="d-flex gap-2 justify-content-center mb-2 d-none">
-        <button id="cancel" class="btn btn-outline-secondary"><img id="cancel-img" alt="cancel changes" class="p-1" />Cancel Changes</button>
+        <button id="cancel" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#cancel-modal"><img id="cancel-img" alt="cancel changes" class="p-1" />Cancel Changes</button>
         <button id="publish" class="btn btn-primary rounded">Publish Changes</button>
+      </div>
+    </div>
+
+    <!-- Cancel modal -->
+    <div class="modal fade" id="cancel-modal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Cancel changes?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Canceling will remove your changes and refresh the page.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="confirm-cancel" type="button" class="btn btn-primary">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publish modal -->
+    <div class="modal fade" id="publish-modal" tabindex="-1" aria-labelledby="publishModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Publish your changes?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Publishing will save your changes for all to see.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="confirm-publish" type="button" class="btn btn-primary">Publish</button>
+          </div>
+        </div>
       </div>
     </div>
   </body>

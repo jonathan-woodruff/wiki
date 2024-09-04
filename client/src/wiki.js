@@ -32,7 +32,9 @@ const cancelPublish = document.getElementById('cancel-publish');
 const editButton = document.getElementById('edit-button');
 const cancelImg = document.getElementById('cancel-img');
 const cancelButton = document.getElementById('cancel');
+const confirmCancelButton = document.getElementById('confirm-cancel');
 const publishButton = document.getElementById('publish');
+const confirmPublishButton = document.getElementById('confirm-publish');
 const descriptionRow = document.getElementById('description-row');
 const changeDescription = document.getElementById('change-description');
 const missingErrorRow = document.getElementById('missing-error-row');
@@ -44,6 +46,8 @@ cancelImg.src = CancelIconGrey;
 const maxLengthStr = changeDescription.getAttribute('maxlength');
 charactersRemaining.innerHTML = maxLengthStr;
 const maxDescriptionLength = parseInt(maxLengthStr);
+
+const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
 
 const getWiki = async () => {
   const { data } = await onViewWiki(wikiID);
@@ -125,31 +129,24 @@ const refresh = () => {
 };
 
 const publishEdits = async () => {
-  const description = changeDescription.value;
-  if (description) {
-    editor.save()
-    .then((outputData) => {
-      const putData = {
-        wikiId: wikiID,
-        changeDescription: description,
-        article: outputData
-      };
-      onPutWiki(putData)
-      .then((response) => {
-        refresh();
-      })
-      .catch((error => {
-        alert('Submit failed: ', error)
-      }))
+  editor.save()
+  .then((outputData) => {
+    const putData = {
+      wikiId: wikiID,
+      changeDescription: changeDescription.value,
+      article: outputData
+    };
+    onPutWiki(putData)
+    .then((response) => {
+      refresh();
     })
-    .catch((error) => {
-      alert('Saving failed: ', error);
-    });
-  } else { //user didn't enter a description of changes made
-    missingErrorRow.classList.remove('d-none');
-    changeDescription.classList.add('border');
-    changeDescription.classList.add('border-danger');
-  }
+    .catch((error => {
+      alert('Submit failed: ', error)
+    }))
+  })
+  .catch((error) => {
+    alert('Saving failed: ', error);
+  });
 };
 
 const hideError = () => {
@@ -177,9 +174,20 @@ const handleDescriptionInput = () => {
   showCharactersRemaining();
 };
 
+const checkDescription = () => {
+  if (!changeDescription.value) {
+    missingErrorRow.classList.remove('d-none');
+    changeDescription.classList.add('border');
+    changeDescription.classList.add('border-danger');
+  } else {
+    publishModal.show();
+  }
+};
+
 editButton.addEventListener('click', goEditMode);
-cancelButton.addEventListener('click', refresh);
+confirmCancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
 cancelButton.addEventListener('mouseout', useGreyIcon);
-publishButton.addEventListener('click', publishEdits);
+publishButton.addEventListener('click', checkDescription);
+confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
