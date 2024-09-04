@@ -156,7 +156,6 @@ exports.publishWikiEdits = async (req, res) => {
             contentVersion: contentVersion
         });
         await newWikiEdit.save();
-        console.log('sup');
         return res.status(200).json({
             success: true,
             message: 'updated wiki'
@@ -165,5 +164,23 @@ exports.publishWikiEdits = async (req, res) => {
         res.status(500).json({
             error: 'Did not update wiki successfully'
         });
+    }
+};
+
+exports.getHistory = async (req, res) => {
+    try {
+        const wikiID = req.query.wiki;
+        const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
+        const wikiHistory = await WikiHistoryModel.find({ wikiId: wikiID }).exec();
+        if (wiki && wikiHistory) {
+            return res.status(200).json({
+                wiki: wiki,
+                wikiHistory: wikiHistory
+            });
+        }
+    } catch(error) {
+        res.status(500).json({
+            error: 'did not find wiki or wiki history'
+        })
     }
 };

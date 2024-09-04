@@ -62,7 +62,6 @@ const loadWikis = async () => {
 const allWikis = loadWikis();
 
 const showCards = (wikis) => {
-  console.log(wikis);
   if (wikis.length) {
     wikis.forEach(wiki => {
       const card = document.createElement('div');

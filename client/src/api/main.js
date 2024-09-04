@@ -30,3 +30,7 @@ export async function onViewWiki(wikiID) {
 export async function onPutWiki(payload) {
     return await axios.put(`${SERVER_URL}/main/putWiki`, payload);
 };
+
+export async function onViewHistory(wikiID) {
+    return await axios.get(`${SERVER_URL}/main/viewHistory?wiki=${wikiID}`);
+};

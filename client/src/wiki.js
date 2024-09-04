@@ -39,6 +39,7 @@ const descriptionRow = document.getElementById('description-row');
 const changeDescription = document.getElementById('change-description');
 const missingErrorRow = document.getElementById('missing-error-row');
 const charactersRemaining = document.getElementById('characters-remaining');
+const historyButton = document.getElementById('history');
 
 editImg.src = EditIcon;
 cancelImg.src = CancelIconGrey;
@@ -184,6 +185,12 @@ const checkDescription = () => {
   }
 };
 
+const handleHistoryClick = () => {
+  const queryString = urlParams.toString();
+  const url = `./history.html?${queryString}`;
+  window.location.href = url;
+};
+
 editButton.addEventListener('click', goEditMode);
 confirmCancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
@@ -191,3 +198,4 @@ cancelButton.addEventListener('mouseout', useGreyIcon);
 publishButton.addEventListener('click', checkDescription);
 confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
+historyButton.addEventListener('click', handleHistoryClick);

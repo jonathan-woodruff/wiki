@@ -13,7 +13,8 @@ module.exports = {
     'register': './src/register.js',
     'login': './src/login.js',
     'edit-profile': './src/edit-profile.js',
-    'search-results': './src/search-results.js'
+    'search-results': './src/search-results.js',
+    'history': './src/history.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -59,6 +60,11 @@ module.exports = {
         template: './src/search-results.html',
         filename: 'search-results.html',
         chunks: ['search-results']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/history.html',
+        filename: 'history.html',
+        chunks: ['history']
       })
   ],
   module: {

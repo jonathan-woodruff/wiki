@@ -7,7 +7,8 @@ const {
     updateProfile, 
     getCreateWikiData, 
     getWikiByID,
-    publishWikiEdits
+    publishWikiEdits,
+    getHistory
 } = require('../controllers/main');
 const { userAuth } = require('../middlewares/auth-middleware');
 
@@ -18,5 +19,6 @@ router.put('/updateProfile', userAuth, updateProfile);
 router.get('/getCreateWikiData', userAuth, getCreateWikiData);
 router.get('/getWikiByID', getWikiByID);
 router.put('/putWiki', userAuth, publishWikiEdits);
+router.get('/viewHistory', getHistory);
 
 module.exports = router;
