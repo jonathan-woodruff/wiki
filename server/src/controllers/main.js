@@ -11,6 +11,7 @@ exports.postWiki = async (req, res) => {
     const contentBlocks = req.body.article.blocks;
     const contentVersion = req.body.article.version;
     try {
+        /* post to the wiki model */
         const newWiki = new WikisModel({
             country: country,
             sector: sector,
@@ -19,7 +20,19 @@ exports.postWiki = async (req, res) => {
             contentBlocks: contentBlocks,
             contentVersion: contentVersion
         });
-        await newWiki.save();
+        const savedWiki = await newWiki.save();
+
+        /* post to the wiki history model */
+        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const newWikiHistory = new WikiHistoryModel({
+            wikiId: savedWiki._id,
+            authorUserId: user._id,
+            changeDescription: 'created wiki',
+            contentTime: contentTime,
+            contentBlocks: contentBlocks,
+            contentVersion: contentVersion
+        });
+        await newWikiHistory.save();
         return res.status(201).json({
             success: true,
             message: 'new wiki created'
@@ -30,23 +43,6 @@ exports.postWiki = async (req, res) => {
         });
     }
 };
-
-/*
-exports.getWiki = async (req, res) => {
-    try {
-        const wiki = await WikisModel.findOne({}).exec();
-        return res.status(200).json({
-            contentTime: wiki.contentTime,
-            contentBlocks: wiki.contentBlocks,
-            contentVersion: wiki.contentVersion
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: error.message
-        });
-    }
-};
-*/
 
 exports.getWikis = async (req, res) => {
     try {

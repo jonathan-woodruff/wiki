@@ -10,7 +10,8 @@ import EditorJS from '@editorjs/editorjs';
 
 import { onViewWiki, onPutWiki } from './api/main';
 import EditIcon from './images/edit.png';
-import CancelIcon from './images/x.svg';
+import CancelIconWhite from './images/cancel_white.png';
+import CancelIconGrey from './images/cancel_grey.png';
 
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -34,10 +35,10 @@ const cancelButton = document.getElementById('cancel');
 const publishButton = document.getElementById('publish');
 const descriptionRow = document.getElementById('description-row');
 const descriptionElement = document.getElementById('change-description');
-const missingErrorRow = element.getElementById('missing-error-row');
+const missingErrorRow = document.getElementById('missing-error-row');
 
 editImg.src = EditIcon;
-cancelImg.src = CancelIcon;
+cancelImg.src = CancelIconGrey;
 
 let isEditing = false;
 
@@ -154,7 +155,17 @@ const hideError = () => {
   changeDescription.classList.remove('border-danger');
 };
 
+const useWhiteIcon = () => {
+  cancelImg.src = CancelIconWhite;
+};
+
+const useGreyIcon = () => {
+  cancelImg.src = CancelIconGrey;
+};
+
 editButton.addEventListener('click', goEditMode);
 cancelButton.addEventListener('click', refresh);
+cancelButton.addEventListener('mouseover', useWhiteIcon);
+cancelButton.addEventListener('mouseout', useGreyIcon);
 publishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', hideError);
