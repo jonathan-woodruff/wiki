@@ -34,13 +34,17 @@ const cancelImg = document.getElementById('cancel-img');
 const cancelButton = document.getElementById('cancel');
 const publishButton = document.getElementById('publish');
 const descriptionRow = document.getElementById('description-row');
-const descriptionElement = document.getElementById('change-description');
+const changeDescription = document.getElementById('change-description');
 const missingErrorRow = document.getElementById('missing-error-row');
+const charactersRemaining = document.getElementById('characters-remaining');
 
 editImg.src = EditIcon;
 cancelImg.src = CancelIconGrey;
 
 let isEditing = false;
+const maxLengthStr = changeDescription.getAttribute('maxlength');
+charactersRemaining.innerHTML = maxLengthStr;
+const maxDescriptionLength = parseInt(maxLengthStr);
 
 const getWiki = async () => {
   const { data } = await onViewWiki(wikiID);
@@ -122,7 +126,7 @@ const refresh = () => {
 };
 
 const publishEdits = async () => {
-  const description = descriptionElement.value;
+  const description = changeDescription.value;
   if (description) {
     editor.save()
     .then((outputData) => {
@@ -155,6 +159,12 @@ const hideError = () => {
   changeDescription.classList.remove('border-danger');
 };
 
+const showCharactersRemaining = () => {
+  const numCharacters = changeDescription.value.length;
+  const remaining = maxDescriptionLength - numCharacters;
+  charactersRemaining.innerHTML = remaining.toString();
+};
+
 const useWhiteIcon = () => {
   cancelImg.src = CancelIconWhite;
 };
@@ -163,9 +173,14 @@ const useGreyIcon = () => {
   cancelImg.src = CancelIconGrey;
 };
 
+const handleDescriptionInput = () => {
+  hideError();
+  showCharactersRemaining();
+};
+
 editButton.addEventListener('click', goEditMode);
 cancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
 cancelButton.addEventListener('mouseout', useGreyIcon);
 publishButton.addEventListener('click', publishEdits);
-changeDescription.addEventListener('input', hideError);
+changeDescription.addEventListener('input', handleDescriptionInput);
