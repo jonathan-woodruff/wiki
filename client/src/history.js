@@ -12,16 +12,74 @@ const wikiID = urlParams.get('wiki');
 
 const title = document.getElementById('title');
 const countryAndSector = document.getElementById('country-sector');
+const cardDiv = document.getElementById('card-div');
 
 const displayWikiHeader = (wiki) => {
     title.innerHTML = wiki.title;
     countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
 };
 
+const showCards = (wikiHistory) => {
+    let editionNum = 0
+    wikiHistory.forEach(edition => {
+        editionNum++;
+        const card = document.createElement('div');
+        card.id = edition._id;
+        card.role = 'button';
+        card.classList.add('card');
+        card.classList.add('mb-3');
+        card.classList.add('shadow-sm');
+        card.addEventListener('mouseover', handleMouseover);
+        card.addEventListener('mouseout', handleMouseout);
+        card.addEventListener('click', handleClick);
+        cardDiv.appendChild(card);
+
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+        card.appendChild(cardBody);
+
+        const h2 = document.createElement('h2');
+        h2.classList.add('card-title');
+        h2.classList.add('h4');
+        h2.innerHTML = 'Edition ' + editionNum;
+        cardBody.appendChild(h2);
+
+        const cardText = document.createElement('p');
+        cardText.classList.add('card-text');
+        cardText.innerHTML = edition.changeDescription;
+        cardBody.appendChild(cardText);
+        const dateAndAuthor = document.createElement('p');
+        dateAndAuthor.style.fontSize = '0.9em';
+        dateAndAuthor.innerHTML = 'Date: ' + 'dateSpan' + '\xa0\xa0\xa0\xa0\xa0' + 'Author: ' + edition.user[0].name;
+        cardBody.appendChild(dateAndAuthor);
+    });
+};
+
+const handleMouseover = (event) => {
+    const card = event.currentTarget;
+    card.classList.add('bg-light');
+  };
+  
+  const handleMouseout = (event) => {
+    const card = event.currentTarget;
+    card.classList.remove('bg-light');
+  };
+  
+  const handleClick = (event) => {
+    const card = event.currentTarget;
+    const wikiHistoryID = card.id;
+    const params = new URLSearchParams();
+    params.append('edition', wikiHistoryID);
+    const queryString = params.toString();
+    //const url = `./wiki.html?${queryString}`;
+    //window.location.href = url;
+  };
+
 const loadPage = async () => {
     try {
         const { data } = await onViewHistory(wikiID);
         displayWikiHeader(data.wiki);
+        showCards(data.wikiHistory);
     } catch(error) {
         const errorMessage = error.response.data.error; //error from axios
         console.log(errorMessage);

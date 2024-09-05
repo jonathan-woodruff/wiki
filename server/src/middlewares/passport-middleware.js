@@ -2,7 +2,7 @@ const passport = require('passport');
 const { Strategy } = require('passport-jwt');
 const { SECRET } = require('../constants/index');
 const db = require('../db/index');
-const UserModel = require('../models/user');
+const { UserModel } = require('../models/index');
 
 //check if the user sends a cookie called token. If so, return the token
 const cookieExtractor = function(req) {

@@ -1,6 +1,7 @@
-const WikisModel = require('../models/wikis');
+/*const WikisModel = require('../models/wikis');
 const UserModel = require('../models/user');
-const WikiHistoryModel = require('../models/wikiHistory');
+const WikiHistoryModel = require('../models/wikiHistory');*/
+const { UserModel, WikisModel, WikiHistoryModel } = require('../models/index');
 const { parseServices } = require('../utils/index');
 
 exports.postWiki = async (req, res) => {
@@ -27,6 +28,8 @@ exports.postWiki = async (req, res) => {
         const newWikiHistory = new WikiHistoryModel({
             wikiId: savedWiki._id,
             authorUserId: user._id,
+            wikiObjectId: savedWiki._id,
+            authorUserObjectId: user._id,
             changeDescription: 'created wiki',
             contentTime: contentTime,
             contentBlocks: contentBlocks,
@@ -150,6 +153,8 @@ exports.publishWikiEdits = async (req, res) => {
         const newWikiEdit = new WikiHistoryModel({
             wikiId: wikiId,
             authorUserId: user._id,
+            wikiObjectId: wikiId,
+            authorUserObjectId: user._id,
             changeDescription: changeDescription,
             contentTime: contentTime,
             contentBlocks: contentBlocks,
@@ -171,8 +176,22 @@ exports.getHistory = async (req, res) => {
     try {
         const wikiID = req.query.wiki;
         const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
-        const wikiHistory = await WikiHistoryModel.find({ wikiId: wikiID }).exec();
-        if (wiki && wikiHistory) {
+        const wikiHistory = await WikiHistoryModel
+        .aggregate([
+            {
+                $match: { wikiId: wikiID }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'authorUserObjectId',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            }
+        ])
+        .exec();
+        if (wiki && wikiHistory.length) {
             return res.status(200).json({
                 wiki: wiki,
                 wikiHistory: wikiHistory

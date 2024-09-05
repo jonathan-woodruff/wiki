@@ -1,7 +1,7 @@
 const { check } = require('express-validator');
 const { compare } = require('bcrypt');
 const db = require('../db');
-const UserModel = require('../models/user');
+const { UserModel } = require('../models/index');
 
 //password
 const password = check('password').isLength({ min: 6, max: 15 }).withMessage('Password must be between 6 and 15 characters');
