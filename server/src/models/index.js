@@ -22,7 +22,15 @@ const userSchema = new Schema({
   },
   photo: String,
   services: [serviceSchema],
-  description: String
+  description: String,
+  wikisCreated: {
+    type: Number,
+    default: 0
+  },
+  wikiEdits: {
+    type: Number,
+    default: 0
+  }
 }, { timestamps: true });
 
 const wikisSchema = new Schema({

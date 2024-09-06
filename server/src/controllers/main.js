@@ -36,6 +36,10 @@ exports.postWiki = async (req, res) => {
             contentVersion: contentVersion
         });
         await newWikiHistory.save();
+
+        /* update the user model */
+        user.wikisCreated++;
+        await user.save();
         return res.status(201).json({
             success: true,
             message: 'new wiki created'
@@ -161,6 +165,9 @@ exports.publishWikiEdits = async (req, res) => {
             contentVersion: contentVersion
         });
         await newWikiEdit.save();
+        /* update the user model */
+        user.wikiEdits++;
+        user.save();
         return res.status(200).json({
             success: true,
             message: 'updated wiki'
@@ -215,7 +222,9 @@ exports.getViewProfileData = async (req, res) => {
             name: user.name,
             photo: user.photo,
             services: user.services,
-            description: user.description
+            description: user.description,
+            wikisCreated: user.wikisCreated,
+            wikiEdits: user.wikiEdits
         });
     } else {
         res.status(500).json({
