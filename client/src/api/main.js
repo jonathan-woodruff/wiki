@@ -34,3 +34,7 @@ export async function onPutWiki(payload) {
 export async function onViewHistory(wikiID) {
     return await axios.get(`${SERVER_URL}/main/viewHistory?wiki=${wikiID}`);
 };
+
+export async function onViewProfile(userID) {
+    return await axios.get(`${SERVER_URL}/main/viewProfile?user=${userID}`);
+};

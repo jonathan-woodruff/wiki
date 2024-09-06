@@ -48,10 +48,21 @@ const showCards = (wikiHistory) => {
         cardText.classList.add('card-text');
         cardText.innerHTML = edition.changeDescription;
         cardBody.appendChild(cardText);
+
         const dateAndAuthor = document.createElement('p');
         dateAndAuthor.style.fontSize = '0.9em';
-        dateAndAuthor.innerHTML = 'Edited ' + convertTimestamp(edition.contentTime) + ' by ' + edition.user[0].name;
+        dateAndAuthor.innerHTML = 'Edited ' + convertTimestamp(edition.contentTime) + ' by ';// + edition.user[0].name;
         cardBody.appendChild(dateAndAuthor);
+
+        const authorLink = document.createElement('a');
+        const params = new URLSearchParams();
+        const userID = edition.authorUserId;
+        params.append('user', userID);
+        const queryString = params.toString();
+        authorLink.href = `./view-profile.html?${queryString}`;
+        authorLink.alt = 'Link to user profile';
+        authorLink.innerHTML = edition.user[0].name;
+        dateAndAuthor.appendChild(authorLink);
 
         editionNum--;
     });

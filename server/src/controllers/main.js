@@ -206,3 +206,20 @@ exports.getHistory = async (req, res) => {
         })
     }
 };
+
+exports.getViewProfileData = async (req, res) => {
+    const userID = req.query.user;
+    const user = await UserModel.findOne({ _id: userID }).exec();
+    if (user) {
+        return res.status(200).json({
+            name: user.name,
+            photo: user.photo,
+            services: user.services,
+            description: user.description
+        });
+    } else {
+        res.status(500).json({
+            error: 'user is falsy'
+        });
+    }
+};

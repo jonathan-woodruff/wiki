@@ -260,7 +260,11 @@ const loadServices = (storedServices) => {
 };
 
 const loadDescription = (description) => {
-  descriptionInput.innerHTML = description;
+  if (description) {
+    descriptionInput.innerHTML = description;
+  } else {
+    descriptionInput.innerHTML = '';
+  }
 };
 
 const loadFields = async () => {
