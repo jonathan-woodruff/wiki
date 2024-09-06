@@ -5,6 +5,7 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { onViewHistory } from './api/main';
+import { convertTimestamp } from './utils/time';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -20,9 +21,8 @@ const displayWikiHeader = (wiki) => {
 };
 
 const showCards = (wikiHistory) => {
-    let editionNum = 0
+    let editionNum = wikiHistory.length;
     wikiHistory.forEach(edition => {
-        editionNum++;
         const card = document.createElement('div');
         card.id = edition._id;
         card.role = 'button';
@@ -50,8 +50,10 @@ const showCards = (wikiHistory) => {
         cardBody.appendChild(cardText);
         const dateAndAuthor = document.createElement('p');
         dateAndAuthor.style.fontSize = '0.9em';
-        dateAndAuthor.innerHTML = 'Date: ' + 'dateSpan' + '\xa0\xa0\xa0\xa0\xa0' + 'Author: ' + edition.user[0].name;
+        dateAndAuthor.innerHTML = 'Edited ' + convertTimestamp(edition.contentTime) + ' by ' + edition.user[0].name;
         cardBody.appendChild(dateAndAuthor);
+
+        editionNum--;
     });
 };
 

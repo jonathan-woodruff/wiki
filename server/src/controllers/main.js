@@ -182,6 +182,9 @@ exports.getHistory = async (req, res) => {
                 $match: { wikiId: wikiID }
             },
             {
+                $sort: { contentTime: -1 }
+            },
+            {
                 $lookup: {
                     from: 'users',
                     localField: 'authorUserObjectId',
