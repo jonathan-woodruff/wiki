@@ -83,10 +83,22 @@ const editor = new EditorJS({
 const h1 = document.getElementById('h1');
 const viewCurrentButton = document.getElementById('current');
 const countryAndSector = document.getElementById('country-sector');
+const authorLink = document.getElementById('author-link');
+const descriptionSpan = document.getElementById('change-description');
 
 const loadHeader = () => {
+    //h1
     h1.innerHTML = data.title + ' (' + editionHeader + ')';
+    //country and sector
     countryAndSector.innerHTML = 'Country: ' + data.country + '\xa0\xa0\xa0' + 'Sector: ' + data.sector;
+    //link to author profile
+    const params = new URLSearchParams();
+    params.append('user', data.userID);
+    const queryString = params.toString();
+    authorLink.href = `./view-profile.html?${queryString}`;
+    authorLink.innerHTML = data.authorName;
+    //change description
+    descriptionSpan.innerHTML = data.changeDescription;
 };
 
 const goCurrent = () => {

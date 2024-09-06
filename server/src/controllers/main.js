@@ -228,12 +228,16 @@ exports.getHistoricalWikiData = async (req, res) => {
     const wikiHistoryID = req.query.wikiHistoryID;
     const wikiHistory = await WikiHistoryModel.findOne({ _id: wikiHistoryID }).exec();
     const wiki = await WikisModel.findOne({ _id: wikiHistory.wikiId }).exec();
+    const user = await UserModel.findOne({ _id: wikiHistory.authorUserId });
     if (wikiHistory) {
         return res.status(200).json({
             wikiID: wikiHistory.wikiId,
             country: wiki.country,
             sector: wiki.sector,
             title: wiki.title,
+            changeDescription: wikiHistory.changeDescription,
+            userID: wikiHistory.authorUserId,
+            authorName: user.name,
             contentTime: wikiHistory.contentTime,
             contentBlocks: wikiHistory.contentBlocks,
             contentVersion: wikiHistory.contentVersion
