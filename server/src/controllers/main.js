@@ -223,3 +223,24 @@ exports.getViewProfileData = async (req, res) => {
         });
     }
 };
+
+exports.getHistoricalWikiData = async (req, res) => {
+    const wikiHistoryID = req.query.wikiHistoryID;
+    const wikiHistory = await WikiHistoryModel.findOne({ _id: wikiHistoryID }).exec();
+    const wiki = await WikisModel.findOne({ _id: wikiHistory.wikiId }).exec();
+    if (wikiHistory) {
+        return res.status(200).json({
+            wikiID: wikiHistory.wikiId,
+            country: wiki.country,
+            sector: wiki.sector,
+            title: wiki.title,
+            contentTime: wikiHistory.contentTime,
+            contentBlocks: wikiHistory.contentBlocks,
+            contentVersion: wikiHistory.contentVersion
+        });
+    } else {
+        res.status(500).json({
+            error: 'wiki history is falsy'
+        });
+    }
+};

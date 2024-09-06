@@ -9,6 +9,7 @@ import Fuse from 'fuse.js';
 import { getWikis } from './api/main';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
+import { goToWiki } from './utils/wiki';
 
 import SearchIcon from './images/search_icon.svg';
 
@@ -158,11 +159,7 @@ const handleMouseout = (event) => {
 const handleClick = (event) => {
   const card = event.currentTarget;
   const wikiID = card.id;
-  const params = new URLSearchParams();
-  params.append('wiki', wikiID);
-  const queryString = params.toString();
-  const url = `./wiki.html?${queryString}`;
-  window.location.href = url;
+  goToWiki(wikiID);
 };
 
 submitButton.addEventListener('click', submitSearch);

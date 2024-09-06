@@ -51,7 +51,7 @@ const showCards = (wikiHistory) => {
 
         const dateAndAuthor = document.createElement('p');
         dateAndAuthor.style.fontSize = '0.9em';
-        dateAndAuthor.innerHTML = 'Edited ' + convertTimestamp(edition.contentTime) + ' by ';// + edition.user[0].name;
+        dateAndAuthor.innerHTML = 'Edited ' + convertTimestamp(edition.contentTime) + ' by ';
         cardBody.appendChild(dateAndAuthor);
 
         const authorLink = document.createElement('a');
@@ -83,9 +83,10 @@ const handleMouseover = (event) => {
     const wikiHistoryID = card.id;
     const params = new URLSearchParams();
     params.append('edition', wikiHistoryID);
+    params.append('editionHeader', event.currentTarget.children[0].children[0].innerHTML);
     const queryString = params.toString();
-    //const url = `./wiki.html?${queryString}`;
-    //window.location.href = url;
+    const url = `./view-historical-wiki.html?${queryString}`;
+    window.location.href = url;
   };
 
 const loadPage = async () => {

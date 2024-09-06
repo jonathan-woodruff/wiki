@@ -38,3 +38,7 @@ export async function onViewHistory(wikiID) {
 export async function onViewProfile(userID) {
     return await axios.get(`${SERVER_URL}/main/viewProfile?user=${userID}`);
 };
+
+export async function onViewHistoricalWiki(wikiHistoryID) {
+    return await axios.get(`${SERVER_URL}/main/viewHistoricalWiki?wikiHistoryID=${wikiHistoryID}`);
+};

@@ -5,7 +5,6 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { onViewProfile } from './api/main';
-import { left } from '@popperjs/core';
 
 const descriptionParagraph = document.getElementById('description');
 const h1 = document.getElementById('h1');
