@@ -88,7 +88,7 @@ const showCards = (wikis) => {
 
       const p1 = document.createElement('p');
       p1.classList.add('card-text');
-      p1.innerHTML = 'hi'; //todo: create function to use slice() and parse contentBlocks.text to pull up a preview of the content
+      p1.innerHTML = showPreview(wiki.item.contentBlocks); 
       cardBody.appendChild(p1);
 
       const p2 = document.createElement('p2');
@@ -109,6 +109,26 @@ const showCards = (wikis) => {
     p2.innerHTML = 'No wikis found. Try a different search.';
     cardDiv.appendChild(p2);
   }
+};
+
+const showPreview = (contentBlocks) => {
+  const previewLimit = 80;
+  let preview = '';
+  let reachedPreviewLimit = false;
+  let blockIndex = 0;
+  while (!reachedPreviewLimit && blockIndex < contentBlocks.length) {
+    let block = contentBlocks[blockIndex];
+    if (block.type === 'paragraph') {
+      preview += block.data.text + ' ';
+      if (preview.length > previewLimit) {
+        preview = preview.slice(0, previewLimit);
+        reachedPreviewLimit = true;
+      }
+    }
+    blockIndex++;
+  }
+  preview = preview.trimEnd();
+  return preview + '...';
 };
   
 const searchWikis = async () => {

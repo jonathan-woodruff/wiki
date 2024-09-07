@@ -1,3 +1,7 @@
+import { isAuth } from './authenticate';
+
+if (isAuth) window.location.href = './index.html';
+
 // Import our custom CSS
 import './scss/styles.scss';
 

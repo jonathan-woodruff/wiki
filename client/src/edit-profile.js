@@ -25,6 +25,7 @@ const serviceSection = document.getElementById('service-section');
 const descriptionInput = document.getElementById('description');
 const saveButton = document.getElementById('save');
 const serviceErrorMessage = document.getElementById('error-message');
+const userName = document.getElementById('name');
 
 let photoURL;
 
@@ -259,17 +260,14 @@ const loadServices = (storedServices) => {
   };
 };
 
-const loadDescription = (description) => {
-  if (description) {
-    descriptionInput.innerHTML = description;
-  } else {
-    descriptionInput.innerHTML = '';
-  }
-};
+const loadDescription = (description) => descriptionInput.innerHTML || '';
+
+const loadName = (nameOfUser) => userName.value = nameOfUser || '';
 
 const loadFields = async () => {
   try {
     const { data } = await getProfileData();
+    loadName(data.name);
     loadPhoto(data.photo);
     loadServices(data.services);
     loadDescription(data.description);
@@ -316,6 +314,7 @@ const saveProfile = async (event) => {
     serviceErrorMessage.classList.remove('d-none');
   } else {
     const dataToSave = {
+      name: userName.value,
       photo: photoURL,
       services: services,
       description: descriptionInput.value

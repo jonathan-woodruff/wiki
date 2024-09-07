@@ -79,6 +79,7 @@ exports.getProfileData = (req, res) => {
     const user = req.user;
     if (user) {
         return res.status(200).json({
+            name: user.name,
             photo: user.photo,
             services: user.services,
             description: user.description
@@ -93,6 +94,7 @@ exports.getProfileData = (req, res) => {
 exports.updateProfile = async (req, res) => {
     try {
         const user = await UserModel.findOne({ email: req.user.email }).exec();
+        user.name = req.body.name;
         user.photo = req.body.photo;
         user.services = req.body.services;
         user.description = req.body.description;
