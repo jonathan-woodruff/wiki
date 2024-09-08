@@ -42,6 +42,8 @@ const changeDescription = document.getElementById('change-description');
 const missingErrorRow = document.getElementById('missing-error-row');
 const charactersRemaining = document.getElementById('characters-remaining');
 const historyButton = document.getElementById('history');
+const xButton = document.getElementById('x-button');
+const closeButton = document.getElementById('close-button');
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 
@@ -116,6 +118,7 @@ const editor = new EditorJS({
 const showAuthError = () => {
   const errorElement = document.getElementById('auth-error');
   errorElement.classList.remove('d-none');
+  
 };
 
 const goEditMode = () => {
@@ -133,8 +136,23 @@ const refresh = () => {
   window.location.reload();
 };
 
+const showLoadingButton = () => {
+  xButton.setAttribute('disabled', true);
+  closeButton.setAttribute('disabled', true);
+  confirmPublishButton.setAttribute('disabled', true);
+  const loadingSpan = document.createElement('span');
+  loadingSpan.classList.add('spinner-border');
+  loadingSpan.classList.add('spinner-border-sm');
+  loadingSpan.classList.add('me-1');
+  loadingSpan.role = 'status';
+  loadingSpan.ariaHidden = 'true';
+  confirmPublishButton.innerHTML = '';
+  confirmPublishButton.appendChild(loadingSpan);
+  confirmPublishButton.innerHTML += 'Loading...';
+};
+
 const publishEdits = async () => {
-  setLoading(spinnerDiv, mainContainer);
+  showLoadingButton();
   editor.save()
   .then((outputData) => {
     const putData = {
@@ -147,13 +165,14 @@ const publishEdits = async () => {
       refresh();
     })
     .catch((error => {
+      publishModal.hide();
       alert('Submit failed: ', error)
     }))
   })
   .catch((error) => {
+    publishModal.hide();
     alert('Saving failed: ', error);
   });
-  setNotLoading(spinnerDiv, mainContainer);
 };
 
 const hideError = () => {
