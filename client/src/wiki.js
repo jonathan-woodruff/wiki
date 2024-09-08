@@ -39,11 +39,13 @@ const publishButton = document.getElementById('publish');
 const confirmPublishButton = document.getElementById('confirm-publish');
 const descriptionRow = document.getElementById('description-row');
 const changeDescription = document.getElementById('change-description');
-const missingErrorRow = document.getElementById('missing-error-row');
+const errorRow = document.getElementById('error-row');
+const errorParagraph = document.getElementById('error-paragraph');
 const charactersRemaining = document.getElementById('characters-remaining');
 const historyButton = document.getElementById('history');
 const xButton = document.getElementById('x-button');
 const closeButton = document.getElementById('close-button');
+const editorDiv = document.getElementById('editorjs');
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 
@@ -76,6 +78,9 @@ const editor = new EditorJS({
     time: wiki.contentTime,
     blocks: wiki.contentBlocks,
     version: wiki.contentVersion
+  },
+  onChange: (api, event) => {
+    hideNoEditsError();
   },
   tools: {
       underline: Underline,
@@ -151,6 +156,19 @@ const showLoadingButton = () => {
   confirmPublishButton.innerHTML += 'Loading...';
 };
 
+const showNoEditsError = () => {
+  errorParagraph.innerHTML = 'You did not make any edits. Please make edits before publishing.';
+  errorRow.classList.remove('d-none');
+  editorDiv.classList.add('border');
+  editorDiv.classList.add('border-danger');
+};
+
+const hideNoEditsError = () => {
+  errorRow.classList.add('d-none');
+  editorDiv.classList.remove('border');
+  editorDiv.classList.remove('border-danger');
+};
+
 const publishEdits = async () => {
   showLoadingButton();
   editor.save()
@@ -160,14 +178,19 @@ const publishEdits = async () => {
       changeDescription: changeDescription.value,
       article: outputData
     };
-    onPutWiki(putData)
-    .then((response) => {
-      refresh();
-    })
-    .catch((error => {
-      publishModal.hide();
-      alert('Submit failed: ', error)
-    }))
+    const wikiChanged = outputData.blocks === wiki.contentBlocks;
+    if (wikiChanged) {
+      onPutWiki(putData)
+      .then((response) => {
+        refresh();
+      })
+      .catch((error => {
+        publishModal.hide();
+        alert('Submit failed: ', error)
+      }))
+    } else { //no edits were made to the wiki, so there is nothing to save
+      showNoEditsError();
+    }
   })
   .catch((error) => {
     publishModal.hide();
@@ -176,7 +199,7 @@ const publishEdits = async () => {
 };
 
 const hideError = () => {
-  missingErrorRow.classList.add('d-none');
+  errorRow.classList.add('d-none');
   changeDescription.classList.remove('border');
   changeDescription.classList.remove('border-danger');
 };
@@ -202,7 +225,8 @@ const handleDescriptionInput = () => {
 
 const checkDescription = () => {
   if (!changeDescription.value) {
-    missingErrorRow.classList.remove('d-none');
+    errorParagraph.innerHTML = 'Please describe the changes you made';
+    errorRow.classList.remove('d-none');
     changeDescription.classList.add('border');
     changeDescription.classList.add('border-danger');
   } else {
