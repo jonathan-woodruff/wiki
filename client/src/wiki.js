@@ -9,6 +9,8 @@ import * as bootstrap from 'bootstrap';
 import EditorJS from '@editorjs/editorjs';
 
 import { onViewWiki, onPutWiki } from './api/main';
+import { setNotLoading, setLoading } from './utils/spinner';
+
 import EditIcon from './images/edit.png';
 import CancelIconWhite from './images/cancel_white.png';
 import CancelIconGrey from './images/cancel_grey.png';
@@ -40,6 +42,8 @@ const changeDescription = document.getElementById('change-description');
 const missingErrorRow = document.getElementById('missing-error-row');
 const charactersRemaining = document.getElementById('characters-remaining');
 const historyButton = document.getElementById('history');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 editImg.src = EditIcon;
 cancelImg.src = CancelIconGrey;
@@ -56,8 +60,8 @@ const getWiki = async () => {
 };
 
 const displayWiki = (wiki) => {
-    title.innerHTML = wiki.title;
-    countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
+  title.innerHTML = wiki.title;
+  countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
 };
 
 const wiki = await getWiki();
@@ -130,6 +134,7 @@ const refresh = () => {
 };
 
 const publishEdits = async () => {
+  setLoading(spinnerDiv, mainContainer);
   editor.save()
   .then((outputData) => {
     const putData = {
@@ -148,6 +153,7 @@ const publishEdits = async () => {
   .catch((error) => {
     alert('Saving failed: ', error);
   });
+  setNotLoading(spinnerDiv, mainContainer);
 };
 
 const hideError = () => {
@@ -199,3 +205,6 @@ publishButton.addEventListener('click', checkDescription);
 confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);

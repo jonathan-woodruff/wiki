@@ -9,6 +9,7 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { getProfileData, putProfile } from './api/main';
+import { setNotLoading, setLoading } from './utils/spinner';
 
 import UploadIcon from './images/upload.png';
 import PlusIcon from './images/plus.png';
@@ -26,6 +27,8 @@ const descriptionInput = document.getElementById('description');
 const saveButton = document.getElementById('save');
 const serviceErrorMessage = document.getElementById('error-message');
 const userName = document.getElementById('name');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 let photoURL;
 
@@ -313,6 +316,7 @@ const saveProfile = async (event) => {
     serviceErrorMessage.innerHTML = 'Please complete your services';
     serviceErrorMessage.classList.remove('d-none');
   } else {
+    setLoading(spinnerDiv, mainContainer);
     const dataToSave = {
       name: userName.value,
       photo: photoURL,
@@ -325,6 +329,7 @@ const saveProfile = async (event) => {
       const errorMessage = error.response.data.errors[0].msg; //error from axios
       console.log(errorMessage);
     }
+    setNotLoading(spinnerDiv, mainContainer);
   }
 };
 
@@ -332,3 +337,6 @@ pictureInput.addEventListener('input', showPreview);
 addServiceButton.addEventListener('click', onAddService);
 saveButton.addEventListener('click', saveProfile);
 loadFields();
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);

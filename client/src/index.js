@@ -5,6 +5,7 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { onLogout } from './api/auth';
+import { setNotLoading, setLoading } from './utils/spinner';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
 
@@ -17,6 +18,8 @@ const searchDiv = document.getElementById('search-div');
 const searchImg = document.getElementById('search-icon');
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 searchImg.src = SearchIcon;
 
@@ -58,3 +61,6 @@ searchEngine.addEventListener('input', hideError);
 
 loadCountries();
 loadSectors();
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);

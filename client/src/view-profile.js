@@ -5,6 +5,7 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { onViewProfile } from './api/main';
+import { setNotLoading, setLoading } from './utils/spinner';
 
 const descriptionParagraph = document.getElementById('description');
 const h1 = document.getElementById('h1');
@@ -13,6 +14,8 @@ const wikisCreatedLI = document.getElementById('wikis-created');
 const wikiEditsLI = document.getElementById('wiki-edits');
 const serviceSection = document.getElementById('service-section');
 const descriptionSection = document.getElementById('description-section');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 const showHeader = (name) => h1.innerHTML = name;
 
@@ -64,3 +67,6 @@ const getData = async () => {
 };
 
 getData();
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);

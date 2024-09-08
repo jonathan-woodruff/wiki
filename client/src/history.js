@@ -5,6 +5,7 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { onViewHistory } from './api/main';
+import { setNotLoading, setLoading } from './utils/spinner';
 import { convertTimestamp } from './utils/time';
 
 const queryString = window.location.search;
@@ -14,6 +15,8 @@ const wikiID = urlParams.get('wiki');
 const title = document.getElementById('title');
 const countryAndSector = document.getElementById('country-sector');
 const cardDiv = document.getElementById('card-div');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 const displayWikiHeader = (wiki) => {
     title.innerHTML = wiki.title;
@@ -101,3 +104,6 @@ const loadPage = async () => {
 };
 
 loadPage();
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);

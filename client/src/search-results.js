@@ -7,6 +7,7 @@ import * as bootstrap from 'bootstrap';
 import Fuse from 'fuse.js';
 
 import { getWikis } from './api/main';
+import { setNotLoading, setLoading } from './utils/spinner';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
 import { goToWiki } from './utils/wiki';
@@ -48,6 +49,8 @@ const submitButton = document.getElementById('submit');
 const searchDiv = document.getElementById('search-div');
 const searchImg = document.getElementById('search-icon');
 const cardDiv = document.getElementById('card-div');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 searchImg.src = SearchIcon;
 
@@ -193,3 +196,6 @@ searchWikis();
 loadCountries();
 loadSectors();
 populateSearchEngine();
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);

@@ -11,6 +11,7 @@ import * as bootstrap from 'bootstrap';
 import EditorJS from '@editorjs/editorjs';
 
 import { onPostWiki, getCreateWikiData } from './api/main';
+import { setNotLoading, setLoading } from './utils/spinner';
 
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -22,6 +23,8 @@ import Underline from '@editorjs/underline';
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
 const titleInput = document.getElementById('title');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 const editor = new EditorJS({
   holder: 'editorjs',
@@ -66,6 +69,7 @@ const editor = new EditorJS({
 const button = document.getElementById('submit');
 
 const submitContent = () => {
+  setLoading(spinnerDiv, mainContainer);
   editor.save()
   .then((outputData) => {
     const postData = {
@@ -85,6 +89,7 @@ const submitContent = () => {
   .catch((error) => {
     console.log('Saving failed: ', error);
   });
+  setNotLoading(spinnerDiv, mainContainer);
 };
 
 const loadCountries = (countries) => {
@@ -118,3 +123,6 @@ const loadData = async () => {
 
 button.addEventListener('click', submitContent);
 loadData();
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);

@@ -14,6 +14,7 @@ import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
 
 import { onViewHistoricalWiki } from './api/main';
+import { setNotLoading, setLoading } from './utils/spinner';
 import { goToWiki } from './utils/wiki';
 
 const queryString = window.location.search;
@@ -85,6 +86,8 @@ const viewCurrentButton = document.getElementById('current');
 const countryAndSector = document.getElementById('country-sector');
 const authorLink = document.getElementById('author-link');
 const descriptionSpan = document.getElementById('change-description');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 const loadHeader = () => {
     //h1
@@ -110,3 +113,6 @@ const goCurrent = () => {
 viewCurrentButton.addEventListener('click', goCurrent);
 
 loadHeader();
+
+/* Make sure this is the last line of code */
+setNotLoading(spinnerDiv, mainContainer);
