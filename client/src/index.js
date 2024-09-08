@@ -1,27 +1,39 @@
+import { isAuth } from './authenticate';
+
 // Import our custom CSS
 import './scss/styles.scss';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
-import { onLogout } from './api/auth';
 import { setNotLoading, setLoading } from './utils/spinner';
+import { configureNav, logout } from './utils/navbar';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
 
 import SearchIcon from './images/search_icon.svg';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 
-const logoutButton = document.getElementById('logout');
+const logoutLink = document.getElementById('logout-link');
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
 const submitButton = document.getElementById('submit');
 const searchEngine = document.getElementById('search-engine');
 const searchDiv = document.getElementById('search-div');
 const searchImg = document.getElementById('search-icon');
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 
 searchImg.src = SearchIcon;
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 const loadCountries = () => {
   countries.forEach((country) => {
@@ -41,24 +53,16 @@ const loadSectors = () => {
   });
 };
 
-const logout = async () => {
-  try {
-    await onLogout();
-    window.location.href = './login.html';
-  } catch(error) {
-    const errorMessage = error.response.data.error; //error from axios
-    console.log(errorMessage);
-  };
-};
-
-//logoutButton.addEventListener('click', logout);
+logoutLink.addEventListener('click', logout);
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
 
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadCountries();
 loadSectors();
 

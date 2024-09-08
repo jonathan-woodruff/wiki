@@ -1,0 +1,29 @@
+import { onLogout } from '../api/auth';
+
+export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, createWikiAnchor) => {
+    if (isAuth) {
+        registerButton.classList.add('d-none');
+        dropdown.classList.remove('d-none');
+        createWikiLI.setAttribute('title', '');
+        createWikiAnchor.classList.remove('disabled');
+        createWikiAnchor.setAttribute('tabindex', '1');
+        createWikiAnchor.setAttribute('aria-disabled', 'false');
+    } else {
+        registerButton.classList.remove('d-none');
+        dropdown.classList.add('d-none');
+        createWikiLI.setAttribute('title', 'Log in to create a wiki');
+        createWikiAnchor.classList.add('disabled');
+        createWikiAnchor.setAttribute('tabindex', '-1');
+        createWikiAnchor.setAttribute('aria-disabled', 'true');
+    }
+};
+
+export const logout = async () => {
+    try {
+      await onLogout();
+      window.location.href = '../index.html';
+    } catch(error) {
+      const errorMessage = error.response.data.error; //error from axios
+      console.log(errorMessage);
+    };
+};

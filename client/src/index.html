@@ -6,9 +6,47 @@
     <title>Peace Chickens - Search Wikis</title>
   </head>
   <body>
+    <!-- Spinner -->
     <div id="spinner" class="spinner-border position-fixed top-50 start-50" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">
+          <img id="logo-img" alt="Peace Chickens logo" width="40" height="40" class="d-inline-block align-text-center">
+          Peace Chickens
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+            </li>
+            <li id="nav-create-li" class="nav-item" data-bs-toggle="tooltip" title="Log in to create a wiki">
+              <a id="nav-create-a" class="nav-link disabled" href="./create-wiki.html" tabindex="-1" aria-disabled="true">Create a Wiki</a>
+            </li>
+            <li id="nav-dropdown" class="dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img alt="Profile picture" id="pic-preview" class="img-fluid rounded-circle d-inline-block align-text-center" width="40" height="40">
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="./edit-profile.html">Edit Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a id="logout-link" href="#" class="dropdown-item">Log Out</a></li>
+              </ul>
+            </li>
+          </ul>
+          <button class="btn btn-outline-success">Buy Me a Beer</button>
+          <button id="nav-register-button" class="btn btn-outline-primary ms-3">Log In/Sign Up</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
     <div id="main-container" class="container py-4 px-3 mx-auto d-none">
       <div class="row">
         <div class="col">
