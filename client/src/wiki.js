@@ -10,6 +10,7 @@ import EditorJS from '@editorjs/editorjs';
 
 import { onViewWiki, onPutWiki } from './api/main';
 import { setNotLoading, setLoading } from './utils/spinner';
+import { arraysAreEqual } from './utils/index';
 
 import EditIcon from './images/edit.png';
 import CancelIconWhite from './images/cancel_white.png';
@@ -145,15 +146,22 @@ const showLoadingButton = () => {
   xButton.setAttribute('disabled', true);
   closeButton.setAttribute('disabled', true);
   confirmPublishButton.setAttribute('disabled', true);
-  const loadingSpan = document.createElement('span');
-  loadingSpan.classList.add('spinner-border');
-  loadingSpan.classList.add('spinner-border-sm');
-  loadingSpan.classList.add('me-1');
-  loadingSpan.role = 'status';
-  loadingSpan.ariaHidden = 'true';
+  const spinnerSpan = document.createElement('span');
+  spinnerSpan.classList.add('spinner-border');
+  spinnerSpan.classList.add('spinner-border-sm');
+  spinnerSpan.classList.add('me-1');
+  spinnerSpan.role = 'status';
+  spinnerSpan.ariaHidden = 'true';
   confirmPublishButton.innerHTML = '';
-  confirmPublishButton.appendChild(loadingSpan);
-  confirmPublishButton.innerHTML += 'Loading...';
+  confirmPublishButton.appendChild(spinnerSpan);
+  confirmPublishButton.innerHTML += 'Publishing...';
+};
+
+const dontShowLoadingButton = () => {
+  xButton.disabled = false;
+  closeButton.disabled = false;
+  confirmPublishButton.disabled = false;
+  confirmPublishButton.innerHTML = 'Publish';
 };
 
 const showNoEditsError = () => {
@@ -178,22 +186,28 @@ const publishEdits = async () => {
       changeDescription: changeDescription.value,
       article: outputData
     };
-    const wikiChanged = outputData.blocks === wiki.contentBlocks;
+    console.log(outputData.blocks);
+    console.log(wiki.contentBlocks);
+    const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
     if (wikiChanged) {
       onPutWiki(putData)
       .then((response) => {
         refresh();
       })
-      .catch((error => {
+      .catch((error) => {
         publishModal.hide();
+        dontShowLoadingButton();
         alert('Submit failed: ', error)
-      }))
+      })
     } else { //no edits were made to the wiki, so there is nothing to save
+      publishModal.hide();
+      dontShowLoadingButton();
       showNoEditsError();
     }
   })
   .catch((error) => {
     publishModal.hide();
+    dontShowLoadingButton();
     alert('Saving failed: ', error);
   });
 };
