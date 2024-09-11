@@ -20,7 +20,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  photo: String,
+  photo: {
+    data: Buffer,
+    contentType: String
+  },
   services: [serviceSchema],
   description: String,
   wikisCreated: {

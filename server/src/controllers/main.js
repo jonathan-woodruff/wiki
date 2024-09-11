@@ -1,8 +1,6 @@
-/*const WikisModel = require('../models/wikis');
-const UserModel = require('../models/user');
-const WikiHistoryModel = require('../models/wikiHistory');*/
 const { UserModel, WikisModel, WikiHistoryModel } = require('../models/index');
 const { parseServices } = require('../utils/index');
+const multer = require('multer');
 
 exports.postWiki = async (req, res) => {
     const country = req.body.country;
@@ -91,13 +89,29 @@ exports.getProfileData = (req, res) => {
     }
 };
 
+exports.postAvatar = async (req, res) => {
+    console.log('sup backend');
+    console.log(req.file);
+    console.log(req.body);
+    return res.status(200).json({
+        message: 'yay'
+    });
+};
+
 exports.updateProfile = async (req, res) => {
     try {
         const user = await UserModel.findOne({ email: req.user.email }).exec();
         user.name = req.body.name;
-        user.photo = req.body.photo;
         user.services = req.body.services;
         user.description = req.body.description;
+        /*upload(req, res, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                user.photo.data = req.file.filename;
+                user.photo.contentType = 'image/png';
+            }
+        })*/
         await user.save();
         return res.status(200).json({
             success: true,

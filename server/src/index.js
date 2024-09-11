@@ -14,7 +14,7 @@ app.use(express.json()); //parses incoming requests with JSON payloads and enabl
 app.use(cookieParser()); //gives you access to req.cookies or req.signedCookies
 app.use(cors({ origin: CLIENT_URL, credentials: true })); //credentials: true will allow the client to send the cookie containing user credentials
 app.use(passport.initialize());
-//https://stackoverflow.com/questions/21397809/create-a-trusted-self-signed-ssl-cert-for-localhost-for-use-with-express-node
+
 //import routes
 const authRoutes = require('./routes/auth');
 const mainRoutes = require('./routes/main');

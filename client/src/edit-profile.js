@@ -8,7 +8,7 @@ import './scss/styles.scss';
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
-import { getProfileData, putProfile } from './api/main';
+import { getProfileData, putProfile, postAvatar } from './api/main';
 import { setNotLoading, setLoading } from './utils/spinner';
 
 import UploadIcon from './images/upload.png';
@@ -250,7 +250,8 @@ const removeService = (event) => {
 };
 
 const loadPhoto = (photo) => {
-  picturePreview.src = photo;
+  //picturePreview.src = photo;
+  console.log(photo);
 };
 
 const loadServices = (storedServices) => {
@@ -307,6 +308,22 @@ const processServicesForBackend = () => {
   return [services, errorService];
 };
 
+/* Reusable function for saving files to the backend
+const putPhoto = (event) => {
+  const url = new URL(form.action);
+  const formData = new FormData(form);
+
+  const fetchOptions = {
+    method: form.method,
+    body: formData
+  };
+
+  fetch(url, fetchOptions);
+
+  event.preventDefault();
+};
+*/
+
 const saveProfile = async (event) => {
   event.preventDefault();
   const [services, errorService] = processServicesForBackend();
@@ -319,12 +336,15 @@ const saveProfile = async (event) => {
     setLoading(spinnerDiv, mainContainer);
     const dataToSave = {
       name: userName.value,
-      photo: photoURL,
+      file: pictureInput.files[0],
       services: services,
       description: descriptionInput.value
     };
     try {
       await putProfile(dataToSave);
+      const formData = new FormData();
+      formData.append('avatar', pictureInput.files[0], 'avatar')
+      await postAvatar(formData);
     } catch(error) {
       const errorMessage = error.response.data.errors[0].msg; //error from axios
       console.log(errorMessage);
