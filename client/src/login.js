@@ -9,15 +9,19 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { onLogin } from './api/auth';
+import { setNotLoading, setLoading } from './utils/spinner';
 
 const form = document.getElementById('form');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 const login = async (event) => {
   event.preventDefault();
+  setLoading(spinnerDiv, mainContainer);
   try {
     const credentials = {
         email: emailInput.value,
@@ -29,6 +33,7 @@ const login = async (event) => {
     const errorMessage = 'Incorrect email or password';
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none');
+    setNotLoading(spinnerDiv, mainContainer);
   };
 };
 

@@ -6,7 +6,7 @@ import './scss/styles.scss';
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 
-import { setNotLoading, setLoading } from './utils/spinner';
+import { setNotLoading } from './utils/spinner';
 import { configureNav, logout } from './utils/navbar';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';

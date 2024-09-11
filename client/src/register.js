@@ -5,6 +5,7 @@ import './scss/styles.scss';
 import * as bootstrap from 'bootstrap';
 
 import { onRegister } from './api/auth';
+import { setNotLoading, setLoading } from './utils/spinner';
 
 const form = document.getElementById('form');
 const nameInput = document.getElementById('name');
@@ -13,6 +14,8 @@ const passwordInput = document.getElementById('password');
 const checkboxInput = document.getElementById('checkbox');
 const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
 
 let isNameError = false;
 let isEmailError = false;
@@ -22,6 +25,7 @@ let isCheckboxError = false;
 const registerUser = async (event) => {
   event.preventDefault();
   if (nameInput.value && checkboxInput.checked) {
+    setLoading(spinnerDiv, mainContainer);
     try {
       const credentials = {
         name: nameInput.value,
@@ -41,6 +45,7 @@ const registerUser = async (event) => {
         isPasswordError = true;
         passwordInput.classList.add('border-danger');
       };
+      setNotLoading(spinnerDiv, mainContainer);
     };
   } else if (!nameInput.value) {
     isNameError = true;

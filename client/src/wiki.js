@@ -121,21 +121,11 @@ const editor = new EditorJS({
     }
 });
 
-const showAuthError = () => {
-  const errorElement = document.getElementById('auth-error');
-  errorElement.classList.remove('d-none');
-  
-};
-
 const goEditMode = () => {
-  if (!isAuth) {
-    showAuthError();
-  } else {
-    editor.readOnly.toggle();
-    editRow.classList.add('d-none');
-    descriptionRow.classList.remove('d-none');
-    cancelPublish.classList.remove('d-none');
-  }
+  editor.readOnly.toggle();
+  editRow.classList.add('d-none');
+  descriptionRow.classList.remove('d-none');
+  cancelPublish.classList.remove('d-none');
 };
 
 const refresh = () => {
@@ -254,6 +244,10 @@ const handleHistoryClick = () => {
   window.location.href = url;
 };
 
+const checkAuth = () => {
+  if (isAuth) editButton.disabled = false;
+};
+
 editButton.addEventListener('click', goEditMode);
 confirmCancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
@@ -262,6 +256,8 @@ publishButton.addEventListener('click', checkDescription);
 confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
+
+checkAuth();
 
 /* Make sure this is the last line of code */
 setNotLoading(spinnerDiv, mainContainer);
