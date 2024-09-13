@@ -15,6 +15,7 @@ const navbar = document.getElementById('navbar');
 setNotLoading(spinnerDiv, mainContainer, navbar);
 
 import { getProfileData, putProfile, postAvatar } from './api/main';
+import { configureNav, logout } from './utils/navbar';
 
 import UploadIcon from './images/upload.png';
 import PlusIcon from './images/plus.png';
@@ -34,6 +35,11 @@ const descriptionInput = document.getElementById('description');
 const saveButton = document.getElementById('save');
 const serviceErrorMessage = document.getElementById('error-message');
 const userName = document.getElementById('name');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+const logoutLink = document.getElementById('logout-link');
 
 let photoURL;
 
@@ -362,4 +368,8 @@ const saveProfile = async (event) => {
 pictureInput.addEventListener('input', showPreview);
 addServiceButton.addEventListener('click', onAddService);
 saveButton.addEventListener('click', saveProfile);
+logoutLink.addEventListener('click', logout);
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadFields();

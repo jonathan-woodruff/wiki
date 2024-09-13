@@ -17,6 +17,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 import EditorJS from '@editorjs/editorjs';
 
 import { onPostWiki, getCreateWikiData } from './api/main';
+import { configureNav, logout } from './utils/navbar';
 
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -75,6 +76,11 @@ const editor = new EditorJS({
 const button = document.getElementById('submit');
 const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+const logoutLink = document.getElementById('logout-link');
 
 logoImg.src = Logo;
 picturePreview.src = PeaceChicken;
@@ -133,4 +139,8 @@ const loadData = async () => {
 };
 
 button.addEventListener('click', submitContent);
+logoutLink.addEventListener('click', logout);
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadData();

@@ -15,6 +15,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 import EditorJS from '@editorjs/editorjs';
 
 import { onViewWiki, onPutWiki } from './api/main';
+import { configureNav, logout } from './utils/navbar';
 import { arraysAreEqual } from './utils/index';
 
 import EditIcon from './images/edit.png';
@@ -56,6 +57,11 @@ const closeButton = document.getElementById('close-button');
 const editorDiv = document.getElementById('editorjs');
 const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+const logoutLink = document.getElementById('logout-link');
 
 editImg.src = EditIcon;
 cancelImg.src = CancelIconGrey;
@@ -257,7 +263,10 @@ const handleHistoryClick = () => {
 };
 
 const checkAuth = () => {
-  if (isAuth) editButton.disabled = false;
+  if (isAuth) {
+    editButton.classList.remove('disabled');
+    editButton.title = '';
+  }
 };
 
 const checkCancel = () => {
@@ -275,5 +284,8 @@ publishButton.addEventListener('click', checkPublish);
 confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
+logoutLink.addEventListener('click', logout);
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
 
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 checkAuth();

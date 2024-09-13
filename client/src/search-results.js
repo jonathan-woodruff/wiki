@@ -12,10 +12,12 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 
 import Fuse from 'fuse.js';
 
+import { isAuth } from './authenticate';
 import { getWikis } from './api/main';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
 import { goToWiki } from './utils/wiki';
+import { configureNav, logout } from './utils/navbar';
 
 import SearchIcon from './images/search_icon.svg';
 import PeaceChicken from './images/peace_chicken.jpg';
@@ -58,6 +60,11 @@ const searchImg = document.getElementById('search-icon');
 const cardDiv = document.getElementById('card-div');
 const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+const logoutLink = document.getElementById('logout-link');
 
 searchImg.src = SearchIcon;
 logoImg.src = Logo;
@@ -200,7 +207,10 @@ searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
+logoutLink.addEventListener('click', logout);
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
 
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 searchWikis();
 loadCountries();
 loadSectors();

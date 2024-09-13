@@ -10,8 +10,11 @@ const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 setNotLoading(spinnerDiv, mainContainer, navbar);
 
+import { isAuth } from './authenticate';
 import { onViewHistory } from './api/main';
 import { convertTimestamp } from './utils/time';
+import { configureNav, logout } from './utils/navbar';
+
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
@@ -24,6 +27,11 @@ const picturePreview = document.getElementById('pic-preview');
 const title = document.getElementById('title');
 const countryAndSector = document.getElementById('country-sector');
 const cardDiv = document.getElementById('card-div');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+const logoutLink = document.getElementById('logout-link');
 
 logoImg.src = Logo;
 picturePreview.src = PeaceChicken;
@@ -84,14 +92,14 @@ const showCards = (wikiHistory) => {
 const handleMouseover = (event) => {
     const card = event.currentTarget;
     card.classList.add('bg-light');
-  };
+};
   
-  const handleMouseout = (event) => {
+const handleMouseout = (event) => {
     const card = event.currentTarget;
     card.classList.remove('bg-light');
-  };
+};
   
-  const handleClick = (event) => {
+const handleClick = (event) => {
     const card = event.currentTarget;
     const wikiHistoryID = card.id;
     const params = new URLSearchParams();
@@ -100,7 +108,7 @@ const handleMouseover = (event) => {
     const queryString = params.toString();
     const url = `./view-historical-wiki.html?${queryString}`;
     window.location.href = url;
-  };
+};
 
 const loadPage = async () => {
     try {
@@ -113,4 +121,8 @@ const loadPage = async () => {
     }
 };
 
+logoutLink.addEventListener('click', logout);
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadPage();

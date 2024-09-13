@@ -10,6 +10,8 @@ const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 setNotLoading(spinnerDiv, mainContainer, navbar);
 
+import { isAuth } from './authenticate';
+import { configureNav, logout } from './utils/navbar';
 import { onViewProfile } from './api/main';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
@@ -23,6 +25,11 @@ const serviceSection = document.getElementById('service-section');
 const descriptionSection = document.getElementById('description-section');
 const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+const logoutLink = document.getElementById('logout-link');
 
 logoImg.src = Logo;
 picturePreview.src = PeaceChicken;
@@ -76,4 +83,8 @@ const getData = async () => {
     }
 };
 
+logoutLink.addEventListener('click', logout);
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 getData();

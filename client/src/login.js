@@ -15,6 +15,8 @@ const navbar = document.getElementById('navbar');
 setNotLoading(spinnerDiv, mainContainer, navbar);
 
 import { onLogin } from './api/auth';
+import { configureNav, logout } from './utils/navbar';
+
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
@@ -25,6 +27,11 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+const logoutLink = document.getElementById('logout-link');
 
 logoImg.src = Logo;
 picturePreview.src = PeaceChicken;
@@ -52,7 +59,13 @@ const clearError = () => {
   errorElement.innerHTML = '';
 };
 
+const goRegister = () => window.location.href = './register.html';
+
 form.addEventListener('submit', login);
 emailInput.addEventListener('input', clearError);
 passwordInput.addEventListener('input', clearError);
-registerLink.addEventListener('click', () => { window.location.href = './register.html' })
+registerLink.addEventListener('click', goRegister);
+logoutLink.addEventListener('click', logout);
+navRegisterButton.addEventListener('click', goRegister);
+
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
