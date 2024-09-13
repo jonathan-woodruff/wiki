@@ -1,8 +1,14 @@
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
+
+//Display the html
+import { setNotLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
 
 import EditorJS from '@editorjs/editorjs';
 
@@ -14,13 +20,20 @@ import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
 
 import { onViewHistoricalWiki } from './api/main';
-import { setNotLoading, setLoading } from './utils/spinner';
 import { goToWiki } from './utils/wiki';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const wikiHistoryID = urlParams.get('edition');
 const editionHeader = urlParams.get('editionHeader');
+
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 const getData = async () => {
     try {
@@ -86,8 +99,6 @@ const viewCurrentButton = document.getElementById('current');
 const countryAndSector = document.getElementById('country-sector');
 const authorLink = document.getElementById('author-link');
 const descriptionSpan = document.getElementById('change-description');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
 
 const loadHeader = () => {
     //h1
@@ -113,6 +124,3 @@ const goCurrent = () => {
 viewCurrentButton.addEventListener('click', goCurrent);
 
 loadHeader();
-
-/* Make sure this is the last line of code */
-setNotLoading(spinnerDiv, mainContainer);

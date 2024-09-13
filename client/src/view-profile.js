@@ -1,11 +1,18 @@
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
+//Display the html
+import { setNotLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
 import { onViewProfile } from './api/main';
-import { setNotLoading, setLoading } from './utils/spinner';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 
 const descriptionParagraph = document.getElementById('description');
 const h1 = document.getElementById('h1');
@@ -14,8 +21,11 @@ const wikisCreatedLI = document.getElementById('wikis-created');
 const wikiEditsLI = document.getElementById('wiki-edits');
 const serviceSection = document.getElementById('service-section');
 const descriptionSection = document.getElementById('description-section');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 const showHeader = (name) => h1.innerHTML = name;
 
@@ -67,6 +77,3 @@ const getData = async () => {
 };
 
 getData();
-
-/* Make sure this is the last line of code */
-setNotLoading(spinnerDiv, mainContainer);

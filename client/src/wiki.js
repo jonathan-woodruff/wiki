@@ -1,20 +1,27 @@
 import { isAuth } from './authenticate';
 
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
+
+//Display the html
+import { setNotLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
 
 import EditorJS from '@editorjs/editorjs';
 
 import { onViewWiki, onPutWiki } from './api/main';
-import { setNotLoading, setLoading } from './utils/spinner';
 import { arraysAreEqual } from './utils/index';
 
 import EditIcon from './images/edit.png';
 import CancelIconWhite from './images/cancel_white.png';
 import CancelIconGrey from './images/cancel_grey.png';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -47,16 +54,19 @@ const historyButton = document.getElementById('history');
 const xButton = document.getElementById('x-button');
 const closeButton = document.getElementById('close-button');
 const editorDiv = document.getElementById('editorjs');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
 
 editImg.src = EditIcon;
 cancelImg.src = CancelIconGrey;
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 const maxLengthStr = changeDescription.getAttribute('maxlength');
 charactersRemaining.innerHTML = maxLengthStr;
 const maxDescriptionLength = parseInt(maxLengthStr);
 
+const cancelModal = new bootstrap.Modal(document.getElementById('cancel-modal'));
 const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
 
 const getWiki = async () => {
@@ -248,16 +258,20 @@ const checkAuth = () => {
   if (isAuth) editButton.disabled = false;
 };
 
+const openCancelModal = () => {
+  const cancelModalDiv = document.getElementById('cancel-modal');
+  cancelModalDiv.style.display = 'block';
+  cancelModal.show();
+};
+
 editButton.addEventListener('click', goEditMode);
 confirmCancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
 cancelButton.addEventListener('mouseout', useGreyIcon);
+cancelButton.addEventListener('click', openCancelModal);
 publishButton.addEventListener('click', checkDescription);
 confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
 
 checkAuth();
-
-/* Make sure this is the last line of code */
-setNotLoading(spinnerDiv, mainContainer);

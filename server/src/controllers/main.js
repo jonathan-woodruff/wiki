@@ -90,12 +90,19 @@ exports.getProfileData = (req, res) => {
 };
 
 exports.postAvatar = async (req, res) => {
-    console.log('sup backend');
-    console.log(req.file);
-    console.log(req.body);
-    return res.status(200).json({
-        message: 'yay'
-    });
+    try {
+        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        user.photo.data = req.file.filename;
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: 'updated avatar'
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: 'Did not post avatar successfully'
+        });
+    }
 };
 
 exports.updateProfile = async (req, res) => {
@@ -104,14 +111,6 @@ exports.updateProfile = async (req, res) => {
         user.name = req.body.name;
         user.services = req.body.services;
         user.description = req.body.description;
-        /*upload(req, res, (err) => {
-            if (err) {
-                console.log(err)
-            } else {
-                user.photo.data = req.file.filename;
-                user.photo.contentType = 'image/png';
-            }
-        })*/
         await user.save();
         return res.status(200).json({
             success: true,

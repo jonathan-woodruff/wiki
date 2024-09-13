@@ -1,11 +1,18 @@
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
-import { onRegister } from './api/auth';
+//Display the html
 import { setNotLoading, setLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+import { onRegister } from './api/auth';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 
 const form = document.getElementById('form');
 const nameInput = document.getElementById('name');
@@ -14,8 +21,11 @@ const passwordInput = document.getElementById('password');
 const checkboxInput = document.getElementById('checkbox');
 const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 let isNameError = false;
 let isEmailError = false;
@@ -25,7 +35,7 @@ let isCheckboxError = false;
 const registerUser = async (event) => {
   event.preventDefault();
   if (nameInput.value && checkboxInput.checked) {
-    setLoading(spinnerDiv, mainContainer);
+    setLoading(spinnerDiv, mainContainer, navbar);
     try {
       const credentials = {
         name: nameInput.value,
@@ -45,7 +55,7 @@ const registerUser = async (event) => {
         isPasswordError = true;
         passwordInput.classList.add('border-danger');
       };
-      setNotLoading(spinnerDiv, mainContainer);
+      setNotLoading(spinnerDiv, mainContainer, navbar);
     };
   } else if (!nameInput.value) {
     isNameError = true;

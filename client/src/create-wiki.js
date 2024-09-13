@@ -2,16 +2,21 @@ import { isAuth } from './authenticate';
 
 if (!isAuth) window.location.href = './login.html';
 
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
+
+//Display the html
+import { setNotLoading, setLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
 
 import EditorJS from '@editorjs/editorjs';
 
 import { onPostWiki, getCreateWikiData } from './api/main';
-import { setNotLoading, setLoading } from './utils/spinner';
 
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -20,11 +25,12 @@ import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
 
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
+
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
 const titleInput = document.getElementById('title');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
 
 const editor = new EditorJS({
   holder: 'editorjs',
@@ -67,9 +73,14 @@ const editor = new EditorJS({
 })
 
 const button = document.getElementById('submit');
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 const submitContent = () => {
-  setLoading(spinnerDiv, mainContainer);
+  setLoading(spinnerDiv, mainContainer, navbar);
   editor.save()
   .then((outputData) => {
     const postData = {
@@ -89,7 +100,7 @@ const submitContent = () => {
   .catch((error) => {
     console.log('Saving failed: ', error);
   });
-  setNotLoading(spinnerDiv, mainContainer);
+  setNotLoading(spinnerDiv, mainContainer, navbar);
 };
 
 const loadCountries = (countries) => {
@@ -123,6 +134,3 @@ const loadData = async () => {
 
 button.addEventListener('click', submitContent);
 loadData();
-
-/* Make sure this is the last line of code */
-setNotLoading(spinnerDiv, mainContainer);

@@ -1,22 +1,32 @@
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
+//Display the html
+import { setNotLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
 import { onViewHistory } from './api/main';
-import { setNotLoading, setLoading } from './utils/spinner';
 import { convertTimestamp } from './utils/time';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const wikiID = urlParams.get('wiki');
 
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
 const title = document.getElementById('title');
 const countryAndSector = document.getElementById('country-sector');
 const cardDiv = document.getElementById('card-div');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
+
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 const displayWikiHeader = (wiki) => {
     title.innerHTML = wiki.title;
@@ -104,6 +114,3 @@ const loadPage = async () => {
 };
 
 loadPage();
-
-/* Make sure this is the last line of code */
-setNotLoading(spinnerDiv, mainContainer);

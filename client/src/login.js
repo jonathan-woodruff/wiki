@@ -2,26 +2,36 @@ import { isAuth } from './authenticate';
 
 if (isAuth) window.location.href = './index.html';
 
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
-import { onLogin } from './api/auth';
+//Display the html
 import { setNotLoading, setLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
 
+import { onLogin } from './api/auth';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
+
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
 const form = document.getElementById('form');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
+
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
 
 const login = async (event) => {
   event.preventDefault();
-  setLoading(spinnerDiv, mainContainer);
+  setLoading(spinnerDiv, mainContainer, navbar);
   try {
     const credentials = {
         email: emailInput.value,
@@ -33,7 +43,7 @@ const login = async (event) => {
     const errorMessage = 'Incorrect email or password';
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none');
-    setNotLoading(spinnerDiv, mainContainer);
+    setNotLoading(spinnerDiv, mainContainer, navbar);
   };
 };
 

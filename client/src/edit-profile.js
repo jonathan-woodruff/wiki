@@ -2,22 +2,29 @@ import { isAuth } from './authenticate';
 
 if (!isAuth) window.location.href = './login.html';
 
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
-import { getProfileData, putProfile, postAvatar } from './api/main';
+//Display the html
 import { setNotLoading, setLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+import { getProfileData, putProfile, postAvatar } from './api/main';
 
 import UploadIcon from './images/upload.png';
 import PlusIcon from './images/plus.png';
 import RemoveIcon from './images/remove.png';
-import PeaceChicken from './images/peace_chicken.jpg';
 import { sectors, countries } from './constants/profile';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 
 const pictureInput = document.getElementById('profile-picture');
+const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
 const uploadIcon = document.getElementById('upload-icon');
 const plusIcon = document.getElementById('plus-icon');
@@ -27,14 +34,13 @@ const descriptionInput = document.getElementById('description');
 const saveButton = document.getElementById('save');
 const serviceErrorMessage = document.getElementById('error-message');
 const userName = document.getElementById('name');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
 
 let photoURL;
 
 picturePreview.src = PeaceChicken;
 uploadIcon.src = UploadIcon;
 plusIcon.src = PlusIcon;
+logoImg.src = Logo;
 
 const showPreview = () => {
   // Get the selected file
@@ -333,7 +339,7 @@ const saveProfile = async (event) => {
     serviceErrorMessage.innerHTML = 'Please complete your services';
     serviceErrorMessage.classList.remove('d-none');
   } else {
-    setLoading(spinnerDiv, mainContainer);
+    setLoading(spinnerDiv, mainContainer, navbar);
     const dataToSave = {
       name: userName.value,
       file: pictureInput.files[0],
@@ -349,7 +355,7 @@ const saveProfile = async (event) => {
       const errorMessage = error.response.data.errors[0].msg; //error from axios
       console.log(errorMessage);
     }
-    setNotLoading(spinnerDiv, mainContainer);
+    setNotLoading(spinnerDiv, mainContainer, navbar);
   }
 };
 
@@ -357,6 +363,3 @@ pictureInput.addEventListener('input', showPreview);
 addServiceButton.addEventListener('click', onAddService);
 saveButton.addEventListener('click', saveProfile);
 loadFields();
-
-/* Make sure this is the last line of code */
-setNotLoading(spinnerDiv, mainContainer);

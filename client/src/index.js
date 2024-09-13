@@ -1,12 +1,17 @@
-import { isAuth } from './authenticate';
-
-// Import our custom CSS
+//Import Bootstrap CSS
 import './scss/styles.scss';
-
-// Import all of Bootstrap's JS
+//Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
+//Display the html
 import { setNotLoading } from './utils/spinner';
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+import { isAuth } from './authenticate';
+
 import { configureNav, logout } from './utils/navbar';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
@@ -28,8 +33,6 @@ const navCreateLI = document.getElementById('nav-create-li');
 const navCreateA = document.getElementById('nav-create-a');
 const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
 
 searchImg.src = SearchIcon;
 logoImg.src = Logo;
@@ -65,6 +68,3 @@ navRegisterButton.addEventListener('click', () => window.location.href = './logi
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadCountries();
 loadSectors();
-
-/* Make sure this is the last line of code */
-setNotLoading(spinnerDiv, mainContainer);
