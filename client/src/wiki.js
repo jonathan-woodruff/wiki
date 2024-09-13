@@ -237,13 +237,15 @@ const handleDescriptionInput = () => {
   showCharactersRemaining();
 };
 
-const checkDescription = () => {
+const checkPublish = () => {
   if (!changeDescription.value) {
     errorParagraph.innerHTML = 'Please describe the changes you made';
     errorRow.classList.remove('d-none');
     changeDescription.classList.add('border');
     changeDescription.classList.add('border-danger');
   } else {
+    const publishModalDiv = document.getElementById('publish-modal');
+    publishModalDiv.style.display = 'block';
     publishModal.show();
   }
 };
@@ -258,7 +260,7 @@ const checkAuth = () => {
   if (isAuth) editButton.disabled = false;
 };
 
-const openCancelModal = () => {
+const checkCancel = () => {
   const cancelModalDiv = document.getElementById('cancel-modal');
   cancelModalDiv.style.display = 'block';
   cancelModal.show();
@@ -268,8 +270,8 @@ editButton.addEventListener('click', goEditMode);
 confirmCancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
 cancelButton.addEventListener('mouseout', useGreyIcon);
-cancelButton.addEventListener('click', openCancelModal);
-publishButton.addEventListener('click', checkDescription);
+cancelButton.addEventListener('click', checkCancel);
+publishButton.addEventListener('click', checkPublish);
 confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
