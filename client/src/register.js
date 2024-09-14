@@ -109,7 +109,7 @@ const clearError = (field) => {
   }
 };
 
-const goLogin = () => window.location.href = './login.html';
+const goLogin = () => window.location.href = `./login.html?${window.location.search}`;
 
 form.addEventListener('submit', registerUser);
 nameInput.addEventListener('input', () => { clearError('name') });

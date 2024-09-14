@@ -116,7 +116,7 @@ const loadPage = async () => {
         displayWikiHeader(data.wiki);
         showCards(data.wikiHistory);
     } catch(error) {
-        const errorMessage = error.response.data.error; //error from axios
+        const errorMessage = error.response.data.errors[0].msg; //error from axios
         console.log(errorMessage);
     }
 };

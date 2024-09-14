@@ -47,6 +47,7 @@ const login = async (event) => {
     await onLogin(credentials);
     goPlaces();
   } catch(error) {
+    //console.log(error.response.data.errors[0].msg);
     const errorMessage = 'Incorrect email or password';
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none');
@@ -59,7 +60,7 @@ const clearError = () => {
   errorElement.innerHTML = '';
 };
 
-const goRegister = () => window.location.href = './register.html';
+const goRegister = () => window.location.href = `./register.html?${window.location.search}`;
 
 form.addEventListener('submit', login);
 emailInput.addEventListener('input', clearError);
