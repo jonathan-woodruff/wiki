@@ -82,7 +82,17 @@ const showCards = (wikiHistory) => {
         const queryString = params.toString();
         authorLink.href = `./view-profile.html?${queryString}`;
         authorLink.alt = 'Link to user profile';
-        authorLink.innerHTML = edition.user[0].name;
+        
+        const userAvatar = document.createElement('img');
+        userAvatar.alt = 'User profile picture';
+        userAvatar.classList.add('img-fluid');
+        userAvatar.classList.add('rounded-circle');
+        userAvatar.classList.add('d-inline-block');
+        userAvatar.classList.add('align-text-center');
+        userAvatar.width = '40';
+        userAvatar.height = '40';
+        authorLink.appendChild(userAvatar);
+        authorLink.innerHTML += edition.user[0].name;
         dateAndAuthor.appendChild(authorLink);
 
         editionNum--;

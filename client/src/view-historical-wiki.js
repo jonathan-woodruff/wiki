@@ -118,7 +118,7 @@ const loadHeader = () => {
     params.append('user', data.userID);
     const queryString = params.toString();
     authorLink.href = `./view-profile.html?${queryString}`;
-    authorLink.innerHTML = data.authorName;
+    authorLink.innerHTML += data.authorName;
     //change description
     descriptionSpan.innerHTML = data.changeDescription;
 };
