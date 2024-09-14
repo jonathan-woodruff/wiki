@@ -369,7 +369,6 @@ pictureInput.addEventListener('input', showPreview);
 addServiceButton.addEventListener('click', onAddService);
 saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadFields();

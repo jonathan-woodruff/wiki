@@ -264,8 +264,9 @@ const handleHistoryClick = () => {
 
 const checkAuth = () => {
   if (isAuth) {
-    editButton.classList.remove('disabled');
-    editButton.title = '';
+    editButton.disabled = false;
+    const editButtonWrapper = document.getElementById('edit-button-wrapper');
+    editButtonWrapper.title = '';
   }
 };
 
@@ -273,6 +274,14 @@ const checkCancel = () => {
   const cancelModalDiv = document.getElementById('cancel-modal');
   cancelModalDiv.style.display = 'block';
   cancelModal.show();
+};
+
+const goLogin = () => {
+  const params = new URLSearchParams();
+  params.append('prev', 'wiki');
+  params.append('wiki', wikiID);
+  const url = `./login.html?${params.toString()}`;
+  window.location.href = url;
 };
 
 editButton.addEventListener('click', goEditMode);
@@ -285,7 +294,7 @@ confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+navRegisterButton.addEventListener('click', goLogin);
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 checkAuth();

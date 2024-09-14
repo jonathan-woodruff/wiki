@@ -121,8 +121,16 @@ const loadPage = async () => {
     }
 };
 
+const goLogin = () => {
+    const params = new URLSearchParams();
+    params.append('prev', 'history');
+    params.append('wiki', wikiID);
+    const url = `./login.html?${params.toString()}`;
+    window.location.href = url;
+};
+
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+navRegisterButton.addEventListener('click', goLogin);
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadPage();

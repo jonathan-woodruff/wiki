@@ -201,6 +201,16 @@ const handleClick = (event) => {
   goToWiki(wikiID);
 };
 
+const goLogin = () => {
+  const params = new URLSearchParams();
+  params.append('prev', 'search-results');
+  params.append('search', searchPattern);
+  params.append('country', selectedCountry);
+  params.append('sector', selectedSector);
+  const url = `./login.html?${params.toString()}`;
+  window.location.href = url;
+};
+
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
@@ -208,7 +218,7 @@ searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+navRegisterButton.addEventListener('click', goLogin);
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 searchWikis();

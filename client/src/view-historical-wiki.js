@@ -124,14 +124,22 @@ const loadHeader = () => {
 };
 
 const goCurrent = () => {
-    const params = new URLSearchParams();
     const wikiID = data.wikiID;
     goToWiki(wikiID);
 };
 
+const goLogin = () => {
+    const params = new URLSearchParams();
+    params.append('prev', 'view-historical-wiki');
+    params.append('edition', wikiHistoryID);
+    params.append('editionHeader', editionHeader);
+    const url = `./login.html?${params.toString()}`;
+    window.location.href = url;
+};
+
 viewCurrentButton.addEventListener('click', goCurrent);
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+navRegisterButton.addEventListener('click', goLogin);
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadHeader();

@@ -45,7 +45,7 @@
               <button class="btn btn-outline-success">Buy Me a Beer</button>
             </li>
             <li class="nav-item p-2">
-              <button id="nav-register-button" class="btn btn-outline-primary">Log In/Sign Up</button>
+              <button id="nav-register-button" class="btn btn-outline-primary">Log In</button>
             </li>
           </ul>
         </div>
@@ -67,7 +67,9 @@
       <div id="edit-row" class="row mb-3">
         <div class="col col-md-11 col-lg-10 col-xl-9 mx-auto">
           <div class="mx-auto col-auto">
-            <button id="edit-button" class="btn btn-secondary rounded disabled" data-bs-toggle="tooltip" title="Log in to edit the wiki"><img id="edit-icon" class="p-1" alt="edit icon" width="24" height="24">Edit Wiki</button>
+            <span id="edit-button-wrapper" data-bs-toggle="tooltip" title="Log in to edit the wiki"> <!-- bootstrap tooltips don't work on disabled buttons, so this div serves as a wrapper to show the tooltip -->
+              <button id="edit-button" class="btn btn-secondary rounded" disabled><img id="edit-icon" class="p-1" alt="edit icon" width="24" height="24">Edit Wiki</button>
+            </span>
             <button id="history" class="btn btn-link text-decoration-none">View history</button>
           </div>
         </div>

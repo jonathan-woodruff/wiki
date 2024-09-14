@@ -140,7 +140,6 @@ const loadData = async () => {
 
 button.addEventListener('click', submitContent);
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadData();

@@ -34,6 +34,10 @@ const logoutLink = document.getElementById('logout-link');
 logoImg.src = Logo;
 picturePreview.src = PeaceChicken;
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const userID = urlParams.get('user');
+
 const showHeader = (name) => h1.innerHTML = name;
 
 const showPhoto = (photo) => {
@@ -67,9 +71,6 @@ const showActivity = (numWikisCreated, numWikiEdits) => {
 };
 
 const getData = async () => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const userID = urlParams.get('user');
     try {
         const { data } = await onViewProfile(userID);
         showHeader(data.name);
@@ -83,8 +84,16 @@ const getData = async () => {
     }
 };
 
+const goLogin = () => {
+    const params = new URLSearchParams();
+    params.append('prev', 'view-profile');
+    params.append('user', userID);
+    const url = `./login.html?${params.toString()}`;
+    window.location.href = url;
+};
+
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+navRegisterButton.addEventListener('click', goLogin);
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 getData();
