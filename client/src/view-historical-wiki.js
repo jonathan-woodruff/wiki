@@ -1,44 +1,37 @@
-//Import Bootstrap CSS
-import './scss/styles.scss';
-//Import Bootstrap JS
-import * as bootstrap from 'bootstrap';
+/************************************************************ 
+ * Import Bootstrap CSS and JavaScript 
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
 
-import EditorJS from '@editorjs/editorjs';
-
-import Quote from '@editorjs/quote';
-import SimpleImage from '@editorjs/simple-image';
-import Header from '@editorjs/header';
-import Table from '@editorjs/table';
-import NestedList from '@editorjs/nested-list';
-import Underline from '@editorjs/underline';
-
-import { onViewHistoricalWiki } from './api/main';
-import { goToWiki } from './utils/wiki';
+/************************************************************
+ * Configure the navbar
+************************************************************/
 import { isAuth } from './authenticate';
 import { configureNav, logout } from './utils/navbar';
-import { setNotLoading } from './utils/spinner';
-
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
+
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
+
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+
+/************************************************************
+ * Load data from backend 
+************************************************************/
+import { onViewHistoricalWiki } from './api/main';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const wikiHistoryID = urlParams.get('edition');
 const editionHeader = urlParams.get('editionHeader');
-
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
-const logoutLink = document.getElementById('logout-link');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
 
 const getData = async () => {
     try {
@@ -52,6 +45,38 @@ const getData = async () => {
 };
 
 const data = await getData();
+
+const loadHeader = () => {
+    //h1
+    const h1 = document.getElementById('h1');
+    h1.innerHTML = data.title + ' (' + editionHeader + ')';
+    //country and sector
+    const countryAndSector = document.getElementById('country-sector');
+    countryAndSector.innerHTML = 'Country: ' + data.country + '\xa0\xa0\xa0' + 'Sector: ' + data.sector;
+    //link to author profile
+    const params = new URLSearchParams();
+    params.append('user', data.userID);
+    const authorLink = document.getElementById('author-link');
+    authorLink.href = `./view-profile.html?${params.toString()}`;
+    authorLink.innerHTML += data.authorName;
+    //change description
+    const descriptionSpan = document.getElementById('change-description');
+    descriptionSpan.innerHTML = data.changeDescription;
+};
+
+loadHeader();
+
+
+/************************************************************
+ * Configure the editor
+************************************************************/
+import EditorJS from '@editorjs/editorjs';
+import Quote from '@editorjs/quote';
+import SimpleImage from '@editorjs/simple-image';
+import Header from '@editorjs/header';
+import Table from '@editorjs/table';
+import NestedList from '@editorjs/nested-list';
+import Underline from '@editorjs/underline';
 
 const editor = new EditorJS({
     holder: 'editorjs',
@@ -99,26 +124,23 @@ const editor = new EditorJS({
     }
 });
 
-const h1 = document.getElementById('h1');
-const viewCurrentButton = document.getElementById('current');
-const countryAndSector = document.getElementById('country-sector');
-const authorLink = document.getElementById('author-link');
-const descriptionSpan = document.getElementById('change-description');
+/************************************************************
+ * Show the page to the user
+************************************************************/
+import { setNotLoading } from './utils/spinner';
 
-const loadHeader = () => {
-    //h1
-    h1.innerHTML = data.title + ' (' + editionHeader + ')';
-    //country and sector
-    countryAndSector.innerHTML = 'Country: ' + data.country + '\xa0\xa0\xa0' + 'Sector: ' + data.sector;
-    //link to author profile
-    const params = new URLSearchParams();
-    params.append('user', data.userID);
-    const queryString = params.toString();
-    authorLink.href = `./view-profile.html?${queryString}`;
-    authorLink.innerHTML += data.authorName;
-    //change description
-    descriptionSpan.innerHTML = data.changeDescription;
-};
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+/************************************************************
+ * All other JavaScript
+************************************************************/
+import { goToWiki } from './utils/wiki';
+
+const logoutLink = document.getElementById('logout-link');
+const viewCurrentButton = document.getElementById('current');
 
 const goCurrent = () => {
     const wikiID = data.wikiID;
@@ -137,9 +159,3 @@ const goLogin = () => {
 viewCurrentButton.addEventListener('click', goCurrent);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
-loadHeader();
-
-//Display the page to the user
-setNotLoading(spinnerDiv, mainContainer, navbar);

@@ -284,7 +284,6 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');

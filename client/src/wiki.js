@@ -1,29 +1,44 @@
+/************************************************************ 
+ * Import Bootstrap CSS and JavaScript 
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
+
+/************************************************************
+ * Configure the navbar
+************************************************************/
 import { isAuth } from './authenticate';
-
-//Import Bootstrap CSS
-import './scss/styles.scss';
-//Import Bootstrap JS
-import * as bootstrap from 'bootstrap';
-
-//Display the html
-import { setNotLoading } from './utils/spinner';
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
-
-import EditorJS from '@editorjs/editorjs';
-
-import { onViewWiki, onPutWiki } from './api/main';
 import { configureNav, logout } from './utils/navbar';
-import { arraysAreEqual } from './utils/index';
-
-import EditIcon from './images/edit.png';
-import CancelIconWhite from './images/cancel_white.png';
-import CancelIconGrey from './images/cancel_grey.png';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
+
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+
+/************************************************************
+ * Configure other images
+************************************************************/
+import EditIcon from './images/edit.png';
+import CancelIconGrey from './images/cancel_grey.png';
+
+const editImg = document.getElementById('edit-icon');
+const cancelImg = document.getElementById('cancel-img');
+editImg.src = EditIcon;
+cancelImg.src = CancelIconGrey;
+
+/************************************************************
+ * Configure the editor
+************************************************************/
+import { onViewWiki, onPutWiki } from './api/main';
+import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
 import Header from '@editorjs/header';
@@ -35,58 +50,12 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const wikiID = urlParams.get('wiki');
 
-const title = document.getElementById('title');
-const countryAndSector = document.getElementById('country-sector');
-const editImg = document.getElementById('edit-icon');
-const editRow = document.getElementById('edit-row');
-const cancelPublish = document.getElementById('cancel-publish');
-const editButton = document.getElementById('edit-button');
-const cancelImg = document.getElementById('cancel-img');
-const cancelButton = document.getElementById('cancel');
-const confirmCancelButton = document.getElementById('confirm-cancel');
-const publishButton = document.getElementById('publish');
-const confirmPublishButton = document.getElementById('confirm-publish');
-const descriptionRow = document.getElementById('description-row');
-const changeDescription = document.getElementById('change-description');
-const errorRow = document.getElementById('error-row');
-const errorParagraph = document.getElementById('error-paragraph');
-const charactersRemaining = document.getElementById('characters-remaining');
-const historyButton = document.getElementById('history');
-const xButton = document.getElementById('x-button');
-const closeButton = document.getElementById('close-button');
-const editorDiv = document.getElementById('editorjs');
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
-const logoutLink = document.getElementById('logout-link');
-
-const cancelModal = new bootstrap.Modal(document.getElementById('cancel-modal'));
-const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
-
-editImg.src = EditIcon;
-cancelImg.src = CancelIconGrey;
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
-
-const maxLengthStr = changeDescription.getAttribute('maxlength');
-charactersRemaining.innerHTML = maxLengthStr;
-const maxDescriptionLength = parseInt(maxLengthStr);
-
 const getWiki = async () => {
   const { data } = await onViewWiki(wikiID);
   return data.wiki;
 };
 
-const displayWiki = (wiki) => {
-  title.innerHTML = wiki.title;
-  countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
-};
-
 const wiki = await getWiki();
-displayWiki(wiki);
 
 let editorData = {
   time: wiki.contentTime,
@@ -138,6 +107,73 @@ const editor = new EditorJS({
       },
     }
 });
+
+/************************************************************
+ * Configure the edit button
+************************************************************/
+const editButton = document.getElementById('edit-button');
+
+const configureEditButton = () => {
+  if (isAuth) {
+    editButton.disabled = false;
+    const editButtonWrapper = document.getElementById('edit-button-wrapper');
+    editButtonWrapper.title = '';
+  }
+};
+
+configureEditButton();
+
+/************************************************************
+ * Show page data
+************************************************************/
+const displayWiki = (wiki) => {
+  const title = document.getElementById('title');
+  title.innerHTML = wiki.title;
+  const countryAndSector = document.getElementById('country-sector');
+  countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
+};
+
+displayWiki(wiki);
+
+/************************************************************
+ * Show the page to the user
+************************************************************/
+import { setNotLoading } from './utils/spinner';
+
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+/************************************************************
+ * All other JavaScript
+************************************************************/
+import { arraysAreEqual } from './utils/index';
+import CancelIconWhite from './images/cancel_white.png';
+
+const editRow = document.getElementById('edit-row');
+const cancelPublish = document.getElementById('cancel-publish');
+const cancelButton = document.getElementById('cancel');
+const confirmCancelButton = document.getElementById('confirm-cancel');
+const publishButton = document.getElementById('publish');
+const confirmPublishButton = document.getElementById('confirm-publish');
+const descriptionRow = document.getElementById('description-row');
+const changeDescription = document.getElementById('change-description');
+const errorRow = document.getElementById('error-row');
+const errorParagraph = document.getElementById('error-paragraph');
+const charactersRemaining = document.getElementById('characters-remaining');
+const historyButton = document.getElementById('history');
+const xButton = document.getElementById('x-button');
+const closeButton = document.getElementById('close-button');
+const editorDiv = document.getElementById('editorjs');
+const logoutLink = document.getElementById('logout-link');
+
+const cancelModal = new bootstrap.Modal(document.getElementById('cancel-modal'));
+const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
+
+const maxLengthStr = changeDescription.getAttribute('maxlength');
+charactersRemaining.innerHTML = maxLengthStr;
+const maxDescriptionLength = parseInt(maxLengthStr);
 
 const goEditMode = () => {
   editor.readOnly.toggle();
@@ -300,17 +336,8 @@ const checkPublish = () => {
 };
 
 const handleHistoryClick = () => {
-  const queryString = urlParams.toString();
-  const url = `./history.html?${queryString}`;
+  const url = `./history.html?${urlParams.toString()}`;
   window.location.href = url;
-};
-
-const checkAuth = () => {
-  if (isAuth) {
-    editButton.disabled = false;
-    const editButtonWrapper = document.getElementById('edit-button-wrapper');
-    editButtonWrapper.title = '';
-  }
 };
 
 const checkCancel = () => {
@@ -338,6 +365,3 @@ changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
-checkAuth();

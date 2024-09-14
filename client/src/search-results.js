@@ -1,86 +1,102 @@
-//Import Bootstrap CSS
-import './scss/styles.scss';
-//Import Bootstrap JS
-import * as bootstrap from 'bootstrap';
+/************************************************************ 
+ * Import Bootstrap CSS and JavaScript 
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
 
-import Fuse from 'fuse.js';
-
+/************************************************************
+ * Configure the navbar
+************************************************************/
 import { isAuth } from './authenticate';
-import { getWikis } from './api/main';
-import { countries, sectors } from './constants/profile';
-import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
-import { goToWiki } from './utils/wiki';
 import { configureNav, logout } from './utils/navbar';
-import { setNotLoading } from './utils/spinner';
-
-import SearchIcon from './images/search_icon.svg';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
-const fuseOptions = {
-	// isCaseSensitive: false,
-	// includeScore: false,
-	// shouldSort: true,
-	// includeMatches: false,
-	// findAllMatches: false,
-	// minMatchCharLength: 1,
-	// location: 0,
-	// threshold: 0.6,
-	// distance: 100,
-	// useExtendedSearch: false,
-	// ignoreLocation: false,
-	// ignoreFieldNorm: false,
-	// fieldNormWeight: 1,
-	keys: [
-    "title",
-    "country",
-    "sector",
-		"contentBlocks.data.text"
-	]
-};
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
+
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+
+/************************************************************
+ * Configure other images
+************************************************************/
+import SearchIcon from './images/search_icon.svg';
+
+const searchImg = document.getElementById('search-icon');
+searchImg.src = SearchIcon;
+
+/************************************************************
+ * Load data from backend 
+************************************************************/
+import { getWikis } from './api/main';
+import { goToWiki } from './utils/wiki';
+import { countries, sectors } from './constants/profile';
+import Fuse from 'fuse.js';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const searchPattern = urlParams.get('search');
 const selectedCountry = urlParams.get('country');
 const selectedSector = urlParams.get('sector');
-
-const countryInput = document.getElementById('country');
-const sectorInput = document.getElementById('sector');
 const searchEngine = document.getElementById('search-engine');
-const submitButton = document.getElementById('submit');
-const searchDiv = document.getElementById('search-div');
-const searchImg = document.getElementById('search-icon');
-const cardDiv = document.getElementById('card-div');
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
-const logoutLink = document.getElementById('logout-link');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-
-searchImg.src = SearchIcon;
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
 
 const loadWikis = async () => {
-    try {
-      const wikis = await getWikis(selectedCountry, selectedSector);
-      return wikis.data.wikis;
-    } catch(error) {
-      console.log(error);
-    }
+  try {
+    const wikis = await getWikis(selectedCountry, selectedSector);
+    return wikis.data.wikis;
+  } catch(error) {
+    console.log(error);
+  }
 };
-  
+
 const allWikis = loadWikis();
+
+const handleMouseover = (event) => {
+  const card = event.currentTarget;
+  card.classList.add('bg-light');
+};
+
+const handleMouseout = (event) => {
+  const card = event.currentTarget;
+  card.classList.remove('bg-light');
+};
+
+const handleClick = (event) => {
+  const card = event.currentTarget;
+  const wikiID = card.id;
+  goToWiki(wikiID);
+};
+
+const showPreview = (contentBlocks) => {
+  const previewLimit = 80;
+  let preview = '';
+  let reachedPreviewLimit = false;
+  let blockIndex = 0;
+  while (!reachedPreviewLimit && blockIndex < contentBlocks.length) {
+    let block = contentBlocks[blockIndex];
+    if (block.type === 'paragraph') {
+      preview += block.data.text + ' ';
+      if (preview.length > previewLimit) {
+        preview = preview.slice(0, previewLimit);
+        reachedPreviewLimit = true;
+      }
+    }
+    blockIndex++;
+  }
+  preview = preview.trimEnd();
+  return preview + '...';
+};
 
 const showCards = (wikis) => {
   if (wikis.length) {
     wikis.forEach(wiki => {
+      const cardDiv = document.getElementById('card-div');
       const card = document.createElement('div');
       card.id = wiki.item._id; //useful so when the user clicks the card, you can pass the id to the wiki page via urlParams query string
       card.role = 'button';
@@ -127,35 +143,37 @@ const showCards = (wikis) => {
   }
 };
 
-const showPreview = (contentBlocks) => {
-  const previewLimit = 80;
-  let preview = '';
-  let reachedPreviewLimit = false;
-  let blockIndex = 0;
-  while (!reachedPreviewLimit && blockIndex < contentBlocks.length) {
-    let block = contentBlocks[blockIndex];
-    if (block.type === 'paragraph') {
-      preview += block.data.text + ' ';
-      if (preview.length > previewLimit) {
-        preview = preview.slice(0, previewLimit);
-        reachedPreviewLimit = true;
-      }
-    }
-    blockIndex++;
-  }
-  preview = preview.trimEnd();
-  return preview + '...';
+const fuseOptions = {
+	// isCaseSensitive: false,
+	// includeScore: false,
+	// shouldSort: true,
+	// includeMatches: false,
+	// findAllMatches: false,
+	// minMatchCharLength: 1,
+	// location: 0,
+	// threshold: 0.6,
+	// distance: 100,
+	// useExtendedSearch: false,
+	// ignoreLocation: false,
+	// ignoreFieldNorm: false,
+	// fieldNormWeight: 1,
+	keys: [
+    "title",
+    "country",
+    "sector",
+		"contentBlocks.data.text"
+	]
 };
-  
+
 const searchWikis = async () => {
-    allWikis
-    .then((wikis) => {
-      const fuse = new Fuse(wikis, fuseOptions);
-      showCards(fuse.search(searchPattern));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  allWikis
+  .then((wikis) => {
+    const fuse = new Fuse(wikis, fuseOptions);
+    showCards(fuse.search(searchPattern));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 };
 
 const loadCountries = () => {
@@ -164,6 +182,7 @@ const loadCountries = () => {
     option.value = country;
     option.innerHTML = country;
     if (country === selectedCountry) option.selected = true;
+    const countryInput = document.getElementById('country');
     countryInput.appendChild(option);
   })
 };
@@ -174,6 +193,7 @@ const loadSectors = () => {
     option.value = sector;
     option.innerHTML = sector;
     if (sector === selectedSector) option.selected = true;
+    const sectorInput = document.getElementById('sector');
     sectorInput.appendChild(option);
   });
 };
@@ -182,21 +202,29 @@ const populateSearchEngine = () => {
   searchEngine.value = searchPattern;
 };
 
-const handleMouseover = (event) => {
-  const card = event.currentTarget;
-  card.classList.add('bg-light');
-};
+searchWikis();
+loadCountries();
+loadSectors();
+populateSearchEngine();
 
-const handleMouseout = (event) => {
-  const card = event.currentTarget;
-  card.classList.remove('bg-light');
-};
+/************************************************************
+ * Show the page to the user
+************************************************************/
+import { setNotLoading } from './utils/spinner';
 
-const handleClick = (event) => {
-  const card = event.currentTarget;
-  const wikiID = card.id;
-  goToWiki(wikiID);
-};
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+/************************************************************
+ * All other JavaScript
+************************************************************/
+import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
+
+const submitButton = document.getElementById('submit');
+const searchDiv = document.getElementById('search-div');
+const logoutLink = document.getElementById('logout-link');
 
 const goLogin = () => {
   const params = new URLSearchParams();
@@ -216,12 +244,3 @@ searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
-searchWikis();
-loadCountries();
-loadSectors();
-populateSearchEngine();
-
-//Show the page to the user
-setNotLoading(spinnerDiv, mainContainer, navbar);

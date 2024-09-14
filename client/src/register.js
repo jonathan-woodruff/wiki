@@ -1,28 +1,42 @@
-//Import Bootstrap CSS
-import './scss/styles.scss';
-//Import Bootstrap JS
-import * as bootstrap from 'bootstrap';
+/************************************************************ 
+ * Import Bootstrap CSS and JavaScript 
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
 
-//Configure the navbar
+/************************************************************
+ * Configure the navbar
+************************************************************/
 import { isAuth } from './authenticate';
+import { configureNav, logout } from './utils/navbar';
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
+
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
+
 const navCreateLI = document.getElementById('nav-create-li');
 const navCreateA = document.getElementById('nav-create-a');
 const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 
-//Display the html
+/************************************************************
+ * Show the page to the user
+************************************************************/
 import { setNotLoading, setLoading } from './utils/spinner';
+
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 setNotLoading(spinnerDiv, mainContainer, navbar);
 
+/************************************************************
+ * All other JavaScript
+************************************************************/
 import { onRegister } from './api/auth';
-import { configureNav, logout } from './utils/navbar';
-
-import PeaceChicken from './images/peace_chicken.jpg';
-import Logo from './images/logo.png';
 
 const form = document.getElementById('form');
 const nameInput = document.getElementById('name');
@@ -31,12 +45,7 @@ const passwordInput = document.getElementById('password');
 const checkboxInput = document.getElementById('checkbox');
 const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
 const logoutLink = document.getElementById('logout-link');
-
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
 
 let isNameError = false;
 let isEmailError = false;

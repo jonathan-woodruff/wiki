@@ -1,39 +1,63 @@
-//Import Bootstrap CSS
-import './scss/styles.scss';
-//Import Bootstrap JS
-import * as bootstrap from 'bootstrap';
+/************************************************************
+ * Import Bootstrap CSS and JavaScript
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
 
+/************************************************************
+ * Configure the navbar
+************************************************************/
 import { isAuth } from './authenticate';
-import { onViewHistory } from './api/main';
-import { convertTimestamp } from './utils/time';
 import { configureNav, logout } from './utils/navbar';
-import { setNotLoading } from './utils/spinner';
-
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const wikiID = urlParams.get('wiki');
-
 const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
-const title = document.getElementById('title');
-const countryAndSector = document.getElementById('country-sector');
-const cardDiv = document.getElementById('card-div');
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
+
 const navCreateLI = document.getElementById('nav-create-li');
 const navCreateA = document.getElementById('nav-create-a');
 const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
-const logoutLink = document.getElementById('logout-link');
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
+/************************************************************
+ * Load data from backend 
+************************************************************/
+import { onViewHistory } from './api/main';
+import { convertTimestamp } from './utils/time';
+
+const cardDiv = document.getElementById('card-div');
+const currentQueryString = window.location.search;
+const currentUrlParams = new URLSearchParams(currentQueryString);
+const wikiID = currentUrlParams.get('wiki');
+
+const handleMouseover = (event) => {
+    const card = event.currentTarget;
+    card.classList.add('bg-light');
+};
+  
+const handleMouseout = (event) => {
+    const card = event.currentTarget;
+    card.classList.remove('bg-light');
+};
+  
+const handleClick = (event) => {
+    const card = event.currentTarget;
+    const wikiHistoryID = card.id;
+    const params = new URLSearchParams();
+    params.append('edition', wikiHistoryID);
+    params.append('editionHeader', event.currentTarget.children[0].children[0].innerHTML);
+    const queryString = params.toString();
+    const url = `./view-historical-wiki.html?${queryString}`;
+    window.location.href = url;
+};
 
 const displayWikiHeader = (wiki) => {
+    const title = document.getElementById('title');
+    const countryAndSector = document.getElementById('country-sector');
     title.innerHTML = wiki.title;
     countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
 };
@@ -96,27 +120,6 @@ const showCards = (wikiHistory) => {
     });
 };
 
-const handleMouseover = (event) => {
-    const card = event.currentTarget;
-    card.classList.add('bg-light');
-};
-  
-const handleMouseout = (event) => {
-    const card = event.currentTarget;
-    card.classList.remove('bg-light');
-};
-  
-const handleClick = (event) => {
-    const card = event.currentTarget;
-    const wikiHistoryID = card.id;
-    const params = new URLSearchParams();
-    params.append('edition', wikiHistoryID);
-    params.append('editionHeader', event.currentTarget.children[0].children[0].innerHTML);
-    const queryString = params.toString();
-    const url = `./view-historical-wiki.html?${queryString}`;
-    window.location.href = url;
-};
-
 const loadPage = async () => {
     try {
         const { data } = await onViewHistory(wikiID);
@@ -128,6 +131,23 @@ const loadPage = async () => {
     }
 };
 
+loadPage();
+
+/************************************************************
+ * Show the page to the user
+************************************************************/
+import { setNotLoading } from './utils/spinner';
+
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+/************************************************************
+ * All other JavaScript
+************************************************************/
+const logoutLink = document.getElementById('logout-link');
+
 const goLogin = () => {
     const params = new URLSearchParams();
     params.append('prev', 'history');
@@ -138,9 +158,3 @@ const goLogin = () => {
 
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
-loadPage();
-
-//Display the page to the user
-setNotLoading(spinnerDiv, mainContainer, navbar);
