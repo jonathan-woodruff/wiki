@@ -3,6 +3,14 @@ import './scss/styles.scss';
 //Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
+//Configure the navbar
+import { isAuth } from './authenticate';
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+
 //Display the html
 import { setNotLoading, setLoading } from './utils/spinner';
 const spinnerDiv = document.getElementById('spinner');
@@ -10,7 +18,6 @@ const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 setNotLoading(spinnerDiv, mainContainer, navbar);
 
-import { isAuth } from './authenticate';
 import { onRegister } from './api/auth';
 import { configureNav, logout } from './utils/navbar';
 
@@ -26,10 +33,6 @@ const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
 const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
 const logoutLink = document.getElementById('logout-link');
 
 logoImg.src = Logo;
@@ -119,5 +122,3 @@ checkboxInput.addEventListener('input', () => { clearError('checkbox') });
 loginLink.addEventListener('click', goLogin);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);

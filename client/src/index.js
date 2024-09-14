@@ -3,18 +3,12 @@ import './scss/styles.scss';
 //Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
-//Display the html
-import { setNotLoading } from './utils/spinner';
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
-
 import { isAuth } from './authenticate';
 
 import { configureNav, logout } from './utils/navbar';
 import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
+import { setNotLoading } from './utils/spinner';
 
 import SearchIcon from './images/search_icon.svg';
 import PeaceChicken from './images/peace_chicken.jpg';
@@ -33,6 +27,9 @@ const navCreateLI = document.getElementById('nav-create-li');
 const navCreateA = document.getElementById('nav-create-a');
 const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
 
 searchImg.src = SearchIcon;
 logoImg.src = Logo;
@@ -68,3 +65,6 @@ navRegisterButton.addEventListener('click', () => window.location.href = './logi
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadCountries();
 loadSectors();
+
+//Display the page to the user
+setNotLoading(spinnerDiv, mainContainer, navbar);

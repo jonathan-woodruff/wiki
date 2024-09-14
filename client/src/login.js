@@ -7,8 +7,15 @@ import './scss/styles.scss';
 //Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
-//Display the html
+//Configure the navbar
 import { setNotLoading, setLoading } from './utils/spinner';
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+
+//Display the html
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
@@ -27,10 +34,6 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
 const logoutLink = document.getElementById('logout-link');
 
 logoImg.src = Logo;
@@ -68,5 +71,3 @@ passwordInput.addEventListener('input', clearError);
 registerLink.addEventListener('click', goRegister);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goRegister);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);

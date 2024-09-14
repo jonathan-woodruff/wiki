@@ -1,71 +1,67 @@
+/************************************************************
+ * Ensure the user is authenticated 
+************************************************************/
 import { isAuth } from './authenticate';
-
 if (!isAuth) window.location.href = './login.html';
 
-//Import Bootstrap CSS
-import './scss/styles.scss';
-//Import Bootstrap JS
-import * as bootstrap from 'bootstrap';
+/************************************************************
+ * Import Bootstrap CSS and JavaScript
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
 
-//Display the html
-import { setNotLoading, setLoading } from './utils/spinner';
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
-
-import { getProfileData, putProfile, postAvatar } from './api/main';
-import { configureNav, logout } from './utils/navbar';
-
-import UploadIcon from './images/upload.png';
-import PlusIcon from './images/plus.png';
-import RemoveIcon from './images/remove.png';
-import { sectors, countries } from './constants/profile';
+/************************************************************
+ * Configure the navbar
+************************************************************/
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
-
-const pictureInput = document.getElementById('profile-picture');
 const logoImg = document.getElementById('logo-img');
 const picturePreview = document.getElementById('pic-preview');
-const uploadIcon = document.getElementById('upload-icon');
-const plusIcon = document.getElementById('plus-icon');
-const addServiceButton = document.getElementById('add-service');
-const serviceSection = document.getElementById('service-section');
-const descriptionInput = document.getElementById('description');
-const saveButton = document.getElementById('save');
-const serviceErrorMessage = document.getElementById('error-message');
-const userName = document.getElementById('name');
+picturePreview.src = PeaceChicken;
+logoImg.src = Logo;
+
+import { configureNav, logout } from './utils/navbar';
 const navCreateLI = document.getElementById('nav-create-li');
 const navCreateA = document.getElementById('nav-create-a');
 const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
-const logoutLink = document.getElementById('logout-link');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 
-let photoURL;
+/************************************************************
+ * Configure buttons
+************************************************************/
+import UploadIcon from './images/upload.png';
+import PlusIcon from './images/plus.png';
 
-picturePreview.src = PeaceChicken;
+const uploadIcon = document.getElementById('upload-icon');
+const plusIcon = document.getElementById('plus-icon');
 uploadIcon.src = UploadIcon;
 plusIcon.src = PlusIcon;
-logoImg.src = Logo;
 
-const showPreview = () => {
-  // Get the selected file
-  const file = pictureInput.files[0];
+/************************************************************
+ * Load data from backend 
+************************************************************/
+import { getProfileData, putProfile, postAvatar } from './api/main';
+import { sectors, countries } from './constants/profile';
+import RemoveIcon from './images/remove.png';
 
-  // Create a FileReader object
-  const reader = new FileReader();
+const serviceSection = document.getElementById('service-section');
+const serviceErrorMessage = document.getElementById('error-message');
+const descriptionInput = document.getElementById('description');
+const userName = document.getElementById('name');
+const addServiceButton = document.getElementById('add-service');
 
-  // Set up the reader's onload event handler
-  reader.onload = (event) => {
-    // Get the image data URL
-    photoURL = event.target.result;
+addServiceButton.addEventListener('click', onAddService);
 
-    // Display the uploaded image
-    picturePreview.src = photoURL;
-  };
-
-  // Read the selected file as Data URL
-  reader.readAsDataURL(file);
+const addServiceRow = () => {
+  const row = document.createElement('div');
+  row.classList.add('row');
+  row.classList.add('mx-auto');
+  row.classList.add('bg-light');
+  row.classList.add('mb-2');
+  row.classList.add('p-3');
+  serviceSection.appendChild(row);
+  return row;
 };
 
 const addCountryField = (rowElement) => {
@@ -86,6 +82,14 @@ const addCountryField = (rowElement) => {
   countrySelect.ariaLabel = 'Country where you served';
   countryDiv.appendChild(countrySelect);
   return countrySelect;
+};
+
+const clearServiceError = (event) => {
+  const service = event.target.parentNode.parentNode;
+  service.classList.remove('border');
+  service.classList.remove('border-danger');
+  serviceErrorMessage.classList.add('d-none');
+  serviceErrorMessage.innerHTML = '';
 };
 
 const loadCountries = (countrySelectElement) => {
@@ -191,23 +195,19 @@ const addTrashButton = (rowElement) => {
   return button;
 };
 
-const addServiceRow = () => {
-  const row = document.createElement('div');
-  row.classList.add('row');
-  row.classList.add('mx-auto');
-  row.classList.add('bg-light');
-  row.classList.add('mb-2');
-  row.classList.add('p-3');
-  serviceSection.appendChild(row);
-  return row;
-};
+const removeService = (event) => {
+  event.preventDefault();
+  const button = event.currentTarget;
+  button.removeEventListener('click', removeService);
+  const serviceToRemove = button.parentNode.parentNode;
+  const countrySelect = serviceToRemove.children[0].children[1];
+  countrySelect.removeEventListener('input', clearServiceError);
+  const sectorSelect = serviceToRemove.children[1].children[1];
+  sectorSelect.removeEventListener('input', clearServiceError);
+  const yearSelect = serviceToRemove.children[2].children[1];
+  yearSelect.removeEventListener('input', clearServiceError);
 
-const clearServiceError = (event) => {
-  const service = event.target.parentNode.parentNode;
-  service.classList.remove('border');
-  service.classList.remove('border-danger');
-  serviceErrorMessage.classList.add('d-none');
-  serviceErrorMessage.innerHTML = '';
+  serviceSection.removeChild(serviceToRemove)
 };
 
 const addService = (countryValue='Select', sectorValue='Select', yearValue='Select') => {
@@ -235,30 +235,6 @@ const addService = (countryValue='Select', sectorValue='Select', yearValue='Sele
 const onAddService = (event) => {
   event.preventDefault();
   addService();
-};
-
-const getNumServices = (nodesList) => {
-  let count = 0;
-  nodesList.forEach(node => {
-    if (node.nodeType === 1) count++; //only count children that are elements, not things like comments or new line characters
-  });
-  return count;
-};
-
-const removeService = (event) => {
-  event.preventDefault();
-
-  const button = event.currentTarget;
-  button.removeEventListener('click', removeService);
-  const serviceToRemove = button.parentNode.parentNode;
-  const countrySelect = serviceToRemove.children[0].children[1];
-  countrySelect.removeEventListener('input', clearServiceError);
-  const sectorSelect = serviceToRemove.children[1].children[1];
-  sectorSelect.removeEventListener('input', clearServiceError);
-  const yearSelect = serviceToRemove.children[2].children[1];
-  yearSelect.removeEventListener('input', clearServiceError);
-
-  serviceSection.removeChild(serviceToRemove)
 };
 
 const loadPhoto = (photo) => {
@@ -292,6 +268,56 @@ const loadFields = async () => {
     console.log(errorMessage);
   }
 };
+
+loadFields();
+
+/************************************************************
+ * Show the page to the user
+************************************************************/
+import { setNotLoading, setLoading } from './utils/spinner';
+
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+/************************************************************
+ * All other JavaScript
+************************************************************/
+
+const pictureInput = document.getElementById('profile-picture');
+const saveButton = document.getElementById('save');
+const logoutLink = document.getElementById('logout-link');
+
+const showPreview = () => {
+  // Get the selected file
+  const file = pictureInput.files[0];
+
+  // Create a FileReader object
+  const reader = new FileReader();
+
+  // Set up the reader's onload event handler
+  reader.onload = (event) => {
+    // Get the image data URL
+    const photoURL = event.target.result;
+
+    // Display the uploaded image
+    picturePreview.src = photoURL;
+  };
+
+  // Read the selected file as Data URL
+  reader.readAsDataURL(file);
+};
+
+/*
+const getNumServices = (nodesList) => {
+  let count = 0;
+  nodesList.forEach(node => {
+    if (node.nodeType === 1) count++; //only count children that are elements, not things like comments or new line characters
+  });
+  return count;
+};
+*/
 
 const processServicesForBackend = () => {
   const services = [];
@@ -366,9 +392,5 @@ const saveProfile = async (event) => {
 };
 
 pictureInput.addEventListener('input', showPreview);
-addServiceButton.addEventListener('click', onAddService);
 saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
-loadFields();

@@ -1,38 +1,43 @@
+/************************************************************
+ * Ensure the user is authenticated 
+************************************************************/
 import { isAuth } from './authenticate';
-
 if (!isAuth) window.location.href = './login.html';
 
-//Import Bootstrap CSS
-import './scss/styles.scss';
-//Import Bootstrap JS
-import * as bootstrap from 'bootstrap';
+/************************************************************ 
+ * Import Bootstrap CSS and JavaScript 
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
 
-//Display the html
-import { setNotLoading, setLoading } from './utils/spinner';
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
-
-import EditorJS from '@editorjs/editorjs';
-
-import { onPostWiki, getCreateWikiData } from './api/main';
+/************************************************************
+ * Configure the navbar 
+************************************************************/
+import PeaceChicken from './images/peace_chicken.jpg';
+import Logo from './images/logo.png';
 import { configureNav, logout } from './utils/navbar';
 
+const logoImg = document.getElementById('logo-img');
+const picturePreview = document.getElementById('pic-preview');
+logoImg.src = Logo;
+picturePreview.src = PeaceChicken;
+
+const navCreateLI = document.getElementById('nav-create-li');
+const navCreateA = document.getElementById('nav-create-a');
+const navDropdown = document.getElementById('nav-dropdown');
+const navRegisterButton = document.getElementById('nav-register-button');
+configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+
+/************************************************************
+ * Configure the editor
+************************************************************/
+import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
 import Header from '@editorjs/header';
 import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
-
-import PeaceChicken from './images/peace_chicken.jpg';
-import Logo from './images/logo.png';
-
-const countryInput = document.getElementById('country');
-const sectorInput = document.getElementById('sector');
-const titleInput = document.getElementById('title');
-
 const editor = new EditorJS({
   holder: 'editorjs',
   tools: {
@@ -71,43 +76,15 @@ const editor = new EditorJS({
       },
     },
   }
-})
+});
 
-const button = document.getElementById('submit');
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
-const logoutLink = document.getElementById('logout-link');
+/************************************************************
+ * Load data from backend
+************************************************************/
+import { onPostWiki, getCreateWikiData } from './api/main';
 
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
-
-const submitContent = () => {
-  setLoading(spinnerDiv, mainContainer, navbar);
-  editor.save()
-  .then((outputData) => {
-    const postData = {
-      country: countryInput.value,
-      sector: sectorInput.value,
-      title: titleInput.value,
-      article: outputData
-    };
-    onPostWiki(postData)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error => {
-      console.log('Submit failed: ', error)
-    }))
-  })
-  .catch((error) => {
-    console.log('Saving failed: ', error);
-  });
-  setNotLoading(spinnerDiv, mainContainer, navbar);
-};
+const countryInput = document.getElementById('country');
+const sectorInput = document.getElementById('sector');
 
 const loadCountries = (countries) => {
   countries.forEach(country => {
@@ -138,8 +115,48 @@ const loadData = async () => {
   }
 };
 
+loadData();
+
+/************************************************************
+ * Show the page to the user
+************************************************************/
+import { setNotLoading, setLoading } from './utils/spinner';
+
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+setNotLoading(spinnerDiv, mainContainer, navbar);
+
+/************************************************************
+ * All other JavaScript
+************************************************************/
+const button = document.getElementById('submit');
+const logoutLink = document.getElementById('logout-link');
+
+const submitContent = () => {
+  setLoading(spinnerDiv, mainContainer, navbar);
+  editor.save()
+  .then((outputData) => {
+    const titleInput = document.getElementById('title');
+    const postData = {
+      country: countryInput.value,
+      sector: sectorInput.value,
+      title: titleInput.value,
+      article: outputData
+    };
+    onPostWiki(postData)
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error => {
+      console.log('Submit failed: ', error)
+    }))
+  })
+  .catch((error) => {
+    console.log('Saving failed: ', error);
+  });
+  setNotLoading(spinnerDiv, mainContainer, navbar);
+};
+
 button.addEventListener('click', submitContent);
 logoutLink.addEventListener('click', logout);
-
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
-loadData();

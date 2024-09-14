@@ -3,13 +3,6 @@ import './scss/styles.scss';
 //Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
-//Display the html
-import { setNotLoading } from './utils/spinner';
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
-
 import Fuse from 'fuse.js';
 
 import { isAuth } from './authenticate';
@@ -18,6 +11,7 @@ import { countries, sectors } from './constants/profile';
 import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
 import { goToWiki } from './utils/wiki';
 import { configureNav, logout } from './utils/navbar';
+import { setNotLoading } from './utils/spinner';
 
 import SearchIcon from './images/search_icon.svg';
 import PeaceChicken from './images/peace_chicken.jpg';
@@ -65,6 +59,9 @@ const navCreateA = document.getElementById('nav-create-a');
 const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
 const logoutLink = document.getElementById('logout-link');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
 
 searchImg.src = SearchIcon;
 logoImg.src = Logo;
@@ -225,3 +222,6 @@ searchWikis();
 loadCountries();
 loadSectors();
 populateSearchEngine();
+
+//Show the page to the user
+setNotLoading(spinnerDiv, mainContainer, navbar);

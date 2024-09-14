@@ -3,17 +3,11 @@ import './scss/styles.scss';
 //Import Bootstrap JS
 import * as bootstrap from 'bootstrap';
 
-//Display the html
-import { setNotLoading } from './utils/spinner';
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
-
 import { isAuth } from './authenticate';
 import { onViewHistory } from './api/main';
 import { convertTimestamp } from './utils/time';
 import { configureNav, logout } from './utils/navbar';
+import { setNotLoading } from './utils/spinner';
 
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
@@ -32,6 +26,9 @@ const navCreateA = document.getElementById('nav-create-a');
 const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
 const logoutLink = document.getElementById('logout-link');
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
 
 logoImg.src = Logo;
 picturePreview.src = PeaceChicken;
@@ -144,3 +141,6 @@ navRegisterButton.addEventListener('click', goLogin);
 
 configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 loadPage();
+
+//Display the page to the user
+setNotLoading(spinnerDiv, mainContainer, navbar);
