@@ -63,6 +63,9 @@ const navDropdown = document.getElementById('nav-dropdown');
 const navRegisterButton = document.getElementById('nav-register-button');
 const logoutLink = document.getElementById('logout-link');
 
+const cancelModal = new bootstrap.Modal(document.getElementById('cancel-modal'));
+const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
+
 editImg.src = EditIcon;
 cancelImg.src = CancelIconGrey;
 logoImg.src = Logo;
@@ -71,9 +74,6 @@ picturePreview.src = PeaceChicken;
 const maxLengthStr = changeDescription.getAttribute('maxlength');
 charactersRemaining.innerHTML = maxLengthStr;
 const maxDescriptionLength = parseInt(maxLengthStr);
-
-const cancelModal = new bootstrap.Modal(document.getElementById('cancel-modal'));
-const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
 
 const getWiki = async () => {
   const { data } = await onViewWiki(wikiID);
@@ -88,14 +88,16 @@ const displayWiki = (wiki) => {
 const wiki = await getWiki();
 displayWiki(wiki);
 
+let editorData = {
+  time: wiki.contentTime,
+  blocks: wiki.contentBlocks,
+  version: wiki.contentVersion
+};
+
 const editor = new EditorJS({
   holder: 'editorjs',
   readOnly: true,
-  data: {
-    time: wiki.contentTime,
-    blocks: wiki.contentBlocks,
-    version: wiki.contentVersion
-  },
+  data: editorData,
   onChange: (api, event) => {
     hideNoEditsError();
   },
@@ -185,6 +187,30 @@ const hideNoEditsError = () => {
 
 const publishEdits = async () => {
   showLoadingButton();
+  const putData = {
+    wikiId: wikiID,
+    changeDescription: changeDescription.value,
+    article: editorData
+  };
+  try {
+    await onPutWiki(putData);
+    refresh();
+  } catch(error) {
+    publishModal.hide();
+    dontShowLoadingButton();
+    alert('Publish failed: ', error.response.data.errors[0].msg);
+  }
+  /*
+  onPutWiki(putData)
+      .then((response) => {
+        refresh();
+      })
+      .catch((error) => {
+        publishModal.hide();
+        dontShowLoadingButton();
+        alert('Submit failed: ', error)
+      })
+  
   editor.save()
   .then((outputData) => {
     const putData = {
@@ -192,8 +218,6 @@ const publishEdits = async () => {
       changeDescription: changeDescription.value,
       article: outputData
     };
-    console.log(outputData.blocks);
-    console.log(wiki.contentBlocks);
     const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
     if (wikiChanged) {
       onPutWiki(putData)
@@ -216,6 +240,7 @@ const publishEdits = async () => {
     dontShowLoadingButton();
     alert('Saving failed: ', error);
   });
+  */
 };
 
 const hideError = () => {
@@ -250,9 +275,27 @@ const checkPublish = () => {
     changeDescription.classList.add('border');
     changeDescription.classList.add('border-danger');
   } else {
-    const publishModalDiv = document.getElementById('publish-modal');
-    publishModalDiv.style.display = 'block';
-    publishModal.show();
+    showLoadingButton();
+    editor.save()
+    .then((outputData) => {
+      const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
+      if (wikiChanged) {
+        dontShowLoadingButton();
+        editorData = outputData;
+        const publishModalDiv = document.getElementById('publish-modal');
+        publishModalDiv.style.display = 'block';
+        publishModal.show();
+      } else { //no edits were made to the wiki, so there is nothing to save
+        publishModal.hide();
+        dontShowLoadingButton();
+        showNoEditsError();
+      }
+    })
+    .catch((error) => {
+      publishModal.hide();
+      dontShowLoadingButton();
+      alert('Saving failed: ', error);
+    });
   }
 };
 
