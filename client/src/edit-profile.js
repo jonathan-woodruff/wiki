@@ -13,19 +13,27 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Configure the navbar
 ************************************************************/
+import { configureNav, logout } from './utils/navbar';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
-picturePreview.src = PeaceChicken;
-logoImg.src = Logo;
 
-import { configureNav, logout } from './utils/navbar';
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+const setSources = () => {
+  const logoImg = document.getElementById('logo-img');
+  const picturePreview = document.getElementById('pic-preview');
+  picturePreview.src = PeaceChicken;
+  logoImg.src = Logo;
+};
+
+const setNav = () => {
+  const navCreateLI = document.getElementById('nav-create-li');
+  const navCreateA = document.getElementById('nav-create-a');
+  const navDropdown = document.getElementById('nav-dropdown');
+  const navRegisterButton = document.getElementById('nav-register-button');
+  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+};
+
+setSources();
+setNav();
 
 /************************************************************
  * Configure buttons
@@ -33,10 +41,14 @@ configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 import UploadIcon from './images/upload.png';
 import PlusIcon from './images/plus.png';
 
-const uploadIcon = document.getElementById('upload-icon');
-const plusIcon = document.getElementById('plus-icon');
-uploadIcon.src = UploadIcon;
-plusIcon.src = PlusIcon;
+const configureButtons = () => {
+  const upload = document.getElementById('upload-icon');
+  const plus = document.getElementById('plus-icon');
+  upload.src = UploadIcon;
+  plus.src = PlusIcon;
+};
+
+configureButtons();
 
 /************************************************************
  * Load data from backend 

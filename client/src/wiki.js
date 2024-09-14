@@ -12,16 +12,23 @@ import { configureNav, logout } from './utils/navbar';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
+const setSources = () => {
+  const logoImg = document.getElementById('logo-img');
+  const picturePreview = document.getElementById('pic-preview');
+  logoImg.src = Logo;
+  picturePreview.src = PeaceChicken;
+};
 
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+const setNav = () => {
+  const navCreateLI = document.getElementById('nav-create-li');
+  const navCreateA = document.getElementById('nav-create-a');
+  const navDropdown = document.getElementById('nav-dropdown');
+  const navRegisterButton = document.getElementById('nav-register-button');
+  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+};
+
+setSources();
+setNav();
 
 /************************************************************
  * Configure other images
@@ -140,10 +147,14 @@ displayWiki(wiki);
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
 
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
+const showPage = () => {
+  const spinnerDiv = document.getElementById('spinner');
+  const mainContainer = document.getElementById('main-container');
+  const navbar = document.getElementById('navbar');
+  setNotLoading(spinnerDiv, mainContainer, navbar);
+};
+
+showPage();
 
 /************************************************************
  * All other JavaScript
@@ -151,13 +162,10 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 import { arraysAreEqual } from './utils/index';
 import CancelIconWhite from './images/cancel_white.png';
 
-const editRow = document.getElementById('edit-row');
-const cancelPublish = document.getElementById('cancel-publish');
 const cancelButton = document.getElementById('cancel');
 const confirmCancelButton = document.getElementById('confirm-cancel');
 const publishButton = document.getElementById('publish');
 const confirmPublishButton = document.getElementById('confirm-publish');
-const descriptionRow = document.getElementById('description-row');
 const changeDescription = document.getElementById('change-description');
 const errorRow = document.getElementById('error-row');
 const errorParagraph = document.getElementById('error-paragraph');
@@ -167,8 +175,6 @@ const xButton = document.getElementById('x-button');
 const closeButton = document.getElementById('close-button');
 const editorDiv = document.getElementById('editorjs');
 const logoutLink = document.getElementById('logout-link');
-
-const cancelModal = new bootstrap.Modal(document.getElementById('cancel-modal'));
 const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
 
 const maxLengthStr = changeDescription.getAttribute('maxlength');
@@ -177,8 +183,11 @@ const maxDescriptionLength = parseInt(maxLengthStr);
 
 const goEditMode = () => {
   editor.readOnly.toggle();
+  const editRow = document.getElementById('edit-row');
   editRow.classList.add('d-none');
+  const descriptionRow = document.getElementById('description-row');
   descriptionRow.classList.remove('d-none');
+  const cancelPublish = document.getElementById('cancel-publish');
   cancelPublish.classList.remove('d-none');
 };
 
@@ -343,6 +352,7 @@ const handleHistoryClick = () => {
 const checkCancel = () => {
   const cancelModalDiv = document.getElementById('cancel-modal');
   cancelModalDiv.style.display = 'block';
+  const cancelModal = new bootstrap.Modal(document.getElementById('cancel-modal'));
   cancelModal.show();
 };
 

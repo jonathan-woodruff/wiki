@@ -12,16 +12,23 @@ import { configureNav, logout } from './utils/navbar';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
-const logoImg = document.getElementById('logo-img');
-const picturePreview = document.getElementById('pic-preview');
-logoImg.src = Logo;
-picturePreview.src = PeaceChicken;
-
-const navCreateLI = document.getElementById('nav-create-li');
-const navCreateA = document.getElementById('nav-create-a');
-const navDropdown = document.getElementById('nav-dropdown');
-const navRegisterButton = document.getElementById('nav-register-button');
-configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+const setSources = () => {
+    const logoImg = document.getElementById('logo-img');
+    const picturePreview = document.getElementById('pic-preview');
+    logoImg.src = Logo;
+    picturePreview.src = PeaceChicken;
+};
+  
+const setNav = () => {
+    const navCreateLI = document.getElementById('nav-create-li');
+    const navCreateA = document.getElementById('nav-create-a');
+    const navDropdown = document.getElementById('nav-dropdown');
+    const navRegisterButton = document.getElementById('nav-register-button');
+    configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
+};
+  
+setSources();
+setNav();
 
 /************************************************************
  * Load data from backend 
@@ -29,7 +36,6 @@ configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 import { onViewHistory } from './api/main';
 import { convertTimestamp } from './utils/time';
 
-const cardDiv = document.getElementById('card-div');
 const currentQueryString = window.location.search;
 const currentUrlParams = new URLSearchParams(currentQueryString);
 const wikiID = currentUrlParams.get('wiki');
@@ -65,6 +71,7 @@ const displayWikiHeader = (wiki) => {
 const showCards = (wikiHistory) => {
     let editionNum = wikiHistory.length;
     wikiHistory.forEach(edition => {
+        const cardDiv = document.getElementById('card-div');
         const card = document.createElement('div');
         card.id = edition._id;
         card.role = 'button';
@@ -138,10 +145,14 @@ loadPage();
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
 
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-setNotLoading(spinnerDiv, mainContainer, navbar);
+const showPage = () => {
+    const spinnerDiv = document.getElementById('spinner');
+    const mainContainer = document.getElementById('main-container');
+    const navbar = document.getElementById('navbar');
+    setNotLoading(spinnerDiv, mainContainer, navbar);
+};
+
+showPage();
 
 /************************************************************
  * All other JavaScript
