@@ -92,8 +92,13 @@ const login = async (event) => {
     await onLogin(credentials);
     goPlaces();
   } catch(error) {
-    //console.log(error.response.data.errors[0].msg);
-    const errorMessage = 'Incorrect email or password';
+    const axiosError = error.response.data.errors[0].msg.toLowerCase();
+    let errorMessage;
+    if (axiosError.includes('email') || axiosError.includes('password')) {
+      errorMessage = 'Incorrect email or password';
+    } else {
+      errorMessage = 'Could not log in. Check your network connection.'
+    }
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none');
     setNotLoading(spinnerDiv, mainContainer, navbar);
