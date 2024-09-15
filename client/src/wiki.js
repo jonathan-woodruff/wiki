@@ -197,9 +197,9 @@ const refresh = () => {
 };
 
 const showLoadingButton = () => {
-  xButton.setAttribute('disabled', true);
-  closeButton.setAttribute('disabled', true);
-  confirmPublishButton.setAttribute('disabled', true);
+  xButton.classList.add('disabled');
+  closeButton.classList.add('disabled');
+  confirmPublishButton.classList.add('disabled');
   const spinnerSpan = document.createElement('span');
   spinnerSpan.classList.add('spinner-border');
   spinnerSpan.classList.add('spinner-border-sm');
@@ -212,9 +212,9 @@ const showLoadingButton = () => {
 };
 
 const dontShowLoadingButton = () => {
-  xButton.disabled = false;
-  closeButton.disabled = false;
-  confirmPublishButton.disabled = false;
+  xButton.classList.remove('disabled');
+  closeButton.classList.remove('disabled');
+  confirmPublishButton.classList.remove('disabled');
   confirmPublishButton.innerHTML = 'Publish';
 };
 

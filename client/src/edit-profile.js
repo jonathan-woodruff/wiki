@@ -383,7 +383,7 @@ const saveProfile = async (event) => {
     serviceErrorMessage.innerHTML = 'Please complete your services';
     serviceErrorMessage.classList.remove('d-none');
   } else {
-    //setLoading(spinnerDiv, mainContainer, navbar);
+    setLoading(spinnerDiv, mainContainer, navbar);
     const dataToSave = {
       name: userName.value,
       file: pictureInput.files[0],
