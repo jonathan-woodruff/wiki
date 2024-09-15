@@ -53,6 +53,12 @@ const searchPattern = urlParams.get('search');
 const selectedCountry = urlParams.get('country');
 const selectedSector = urlParams.get('sector');
 const searchEngine = document.getElementById('search-engine');
+const showMoreDiv = document.getElementById('show-more-div');
+const showMoreButton = document.getElementById('show-more-button');
+
+const numCardsToShow = 10;
+let numShowMoreClicked = 0;
+let matchingWikis = [];
 
 const loadWikis = async () => {
   try {
@@ -103,7 +109,10 @@ const showPreview = (contentBlocks) => {
 
 const showCards = (wikis) => {
   if (wikis.length) {
-    wikis.forEach(wiki => {
+    const baseSlice = numShowMoreClicked * numCardsToShow;
+    const endSlice = numCardsToShow;
+    const wikisToShow = wikis.slice(baseSlice, baseSlice + endSlice);
+    wikisToShow.forEach(wiki => {
       const cardDiv = document.getElementById('card-div');
       const card = document.createElement('div');
       card.id = wiki.item._id; //useful so when the user clicks the card, you can pass the id to the wiki page via urlParams query string
@@ -135,7 +144,12 @@ const showCards = (wikis) => {
       p2.style.fontSize = '0.9em';
       p2.innerHTML = 'Country: ' + wiki.item.country + '\xa0\xa0\xa0\xa0' + 'Sector: ' + wiki.item.sector;
       cardBody.appendChild(p2);
-    })
+    });
+    if (wikis.length > baseSlice + endSlice) {
+      showMoreDiv.style.display = 'block';
+    } else {
+      showMoreDiv.style.display = 'none';
+    };
   } else { //no wikis found based on the search
     const p1 = document.createElement('p');
     p1.classList.add('fs-6');
@@ -159,7 +173,7 @@ const searchWikis = async () => {
       // includeScore: false,
       // shouldSort: true,
       // includeMatches: false,
-      // findAllMatches: false,
+      findAllMatches: true,
       // minMatchCharLength: 1,
       // location: 0,
       // threshold: 0.6,
@@ -176,7 +190,8 @@ const searchWikis = async () => {
       ]
     };
     const fuse = new Fuse(wikis, fuseOptions);
-    showCards(fuse.search(searchPattern));
+    matchingWikis = fuse.search(searchPattern);
+    showCards(matchingWikis);
   })
   .catch((error) => {
     console.log(error);
@@ -247,6 +262,11 @@ const goLogin = () => {
   window.location.href = url;
 };
 
+const showMoreCards = () => {
+  numShowMoreClicked++;
+  showCards(matchingWikis);
+};
+
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
@@ -255,3 +275,4 @@ searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
+showMoreButton.addEventListener('click', showMoreCards);
