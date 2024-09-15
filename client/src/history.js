@@ -40,6 +40,13 @@ import { convertTimestamp } from './utils/time';
 const currentQueryString = window.location.search;
 const currentUrlParams = new URLSearchParams(currentQueryString);
 const wikiID = currentUrlParams.get('wiki');
+const showMoreDiv = document.getElementById('show-more-div');
+const showMoreButton = document.getElementById('show-more-button');
+
+const numCardsToShow = 5;
+let numShowMoreClicked = 0;
+let allEditions = [];
+let editionNum;
 
 const handleMouseover = (event) => {
     const card = event.currentTarget;
@@ -70,8 +77,10 @@ const displayWikiHeader = (wiki) => {
 };
 
 const showCards = (wikiHistory) => {
-    let editionNum = wikiHistory.length;
-    wikiHistory.forEach(edition => {
+    const baseSlice = numShowMoreClicked * numCardsToShow;
+    const endSlice = numCardsToShow;
+    const editionsToShow = wikiHistory.slice(baseSlice, baseSlice + endSlice);
+    editionsToShow.forEach(edition => {
         const cardDiv = document.getElementById('card-div');
         const card = document.createElement('div');
         card.id = edition._id;
@@ -126,13 +135,20 @@ const showCards = (wikiHistory) => {
 
         editionNum--;
     });
+    if (wikiHistory.length > baseSlice + endSlice) {
+        showMoreDiv.style.display = 'block';
+    } else {
+        showMoreDiv.style.display = 'none';
+    };
 };
 
 const loadPage = async () => {
     try {
         const { data } = await onViewHistory(wikiID);
         displayWikiHeader(data.wiki);
-        showCards(data.wikiHistory);
+        allEditions = data.wikiHistory;
+        editionNum = allEditions.length;
+        showCards(allEditions);
     } catch(error) {
         const errorMessage = error.response.data.errors[0].msg; //error from axios
         console.log(errorMessage);
@@ -168,5 +184,11 @@ const goLogin = () => {
     window.location.href = url;
 };
 
+const showMoreCards = () => {
+    numShowMoreClicked++;
+    showCards(allEditions);
+};
+
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
+showMoreButton.addEventListener('click', showMoreCards);
