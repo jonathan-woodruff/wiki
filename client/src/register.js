@@ -73,7 +73,11 @@ const registerUser = async (event) => {
       await onRegister(credentials);
       window.location.href = './edit-profile.html';
     } catch(error) {
-      const errorMessage = error.response.data.errors[0].msg; //error from axios
+      let errorMessage = error.response.data.errors[0].msg;
+      const axiosError = errorMessage.toLowerCase();
+      if (!(axiosError.includes('email') || axiosError.includes('password'))) {
+        errorMessage = 'Could not sign you up. Check your network connection.'
+      };
       errorElement.innerHTML = errorMessage;
       errorElement.classList.remove('d-none')
       if (errorMessage === 'Email already exists' || errorMessage === 'Please enter a valid email address') {
