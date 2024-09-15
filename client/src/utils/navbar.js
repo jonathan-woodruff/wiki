@@ -18,27 +18,6 @@ export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, cre
     }
 };
 
-//helper function for goPlaces
-const getURL = (params, prevPageName) => {
-  params.delete('prev', prevPageName);
-  return `./${prevPageName}.html?${params.toString()}`;
-};
-
-export const goPlaces = () => {
-  const currentQueryString = window.location.search;
-  const params = new URLSearchParams(currentQueryString);
-  const prevPageName = currentParams.get('prev');
-  const pages = [
-    'history', 
-    'search-results', 
-    'view-historical-wiki', 
-    'view-profile', 
-    'wiki'
-  ];
-  const url = pages.includes(prevPageName) ? getURL(params, prevPageName) : './index.html';
-  window.location.href = url;
-};
-
 export const logout = async () => {
     try {
       await onLogout();

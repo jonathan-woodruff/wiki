@@ -63,8 +63,6 @@ const descriptionInput = document.getElementById('description');
 const userName = document.getElementById('name');
 const addServiceButton = document.getElementById('add-service');
 
-addServiceButton.addEventListener('click', onAddService);
-
 const addServiceRow = () => {
   const row = document.createElement('div');
   row.classList.add('row');
@@ -253,6 +251,8 @@ const loadPhoto = (photo) => {
   //picturePreview.src = photo;
   console.log(photo);
 };
+
+addServiceButton.addEventListener('click', onAddService);
 
 const loadServices = (storedServices) => {
   if (!storedServices.length) {
