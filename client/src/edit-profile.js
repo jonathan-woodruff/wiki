@@ -299,6 +299,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
+const toastDiv = document.getElementById('toast');
 
 const showPreview = () => {
   // Get the selected file
@@ -382,7 +383,7 @@ const saveProfile = async (event) => {
     serviceErrorMessage.innerHTML = 'Please complete your services';
     serviceErrorMessage.classList.remove('d-none');
   } else {
-    setLoading(spinnerDiv, mainContainer, navbar);
+    //setLoading(spinnerDiv, mainContainer, navbar);
     const dataToSave = {
       name: userName.value,
       file: pictureInput.files[0],
@@ -391,10 +392,11 @@ const saveProfile = async (event) => {
     };
     try {
       await putProfile(dataToSave);
-      const formData = new FormData();
-      formData.append('avatar', pictureInput.files[0], 'avatar')
-      await postAvatar(formData);
-      const toast = new bootstrap.Toast(document.getElementById('toast'));
+      //const formData = new FormData();
+      //formData.append('avatar', pictureInput.files[0], 'avatar')
+      //await postAvatar(formData);
+      toastDiv.style.display = 'block';
+      const toast = new bootstrap.Toast(toastDiv);
       toast.show();
     } catch(error) {
       const errorMessage = error.response.data.errors[0].msg; //error from axios
@@ -404,6 +406,11 @@ const saveProfile = async (event) => {
   }
 };
 
+const hideToast = () => {
+  toastDiv.style.display = 'none';
+};
+
 pictureInput.addEventListener('input', showPreview);
 saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
