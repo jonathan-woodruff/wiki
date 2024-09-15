@@ -394,6 +394,8 @@ const saveProfile = async (event) => {
       const formData = new FormData();
       formData.append('avatar', pictureInput.files[0], 'avatar')
       await postAvatar(formData);
+      const toast = new bootstrap.Toast(document.getElementById('toast'));
+      toast.show();
     } catch(error) {
       const errorMessage = error.response.data.errors[0].msg; //error from axios
       console.log(errorMessage);

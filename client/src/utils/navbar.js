@@ -21,7 +21,7 @@ export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, cre
 export const logout = async () => {
     try {
       await onLogout();
-      window.location.href = '../index.html';
+      window.location.reload();
     } catch(error) {
       const errorMessage = error.response.data.error; //error from axios
       console.log(errorMessage);

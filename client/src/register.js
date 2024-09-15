@@ -62,7 +62,7 @@ let isCheckboxError = false;
 
 const registerUser = async (event) => {
   event.preventDefault();
-  if (nameInput.value && checkboxInput.checked) {
+  if (nameInput.value && emailInput.value && passwordInput.value && checkboxInput.checked) {
     setLoading(spinnerDiv, mainContainer, navbar);
     try {
       const credentials = {
@@ -94,6 +94,16 @@ const registerUser = async (event) => {
     isCheckboxError = true;
     errorElement.innerHTML = 'You must check the box in order to sign up';
     errorElement.classList.remove('d-none');
+  } else if (!emailInput.value) {
+    isEmailError = true;
+    emailInput.classList.add('border-danger');
+    errorElement.innerHTML = 'Please enter an email address';
+    errorElement.classList.remove('d-none');
+  } else if (!passwordInput.value) {
+    isPasswordError = true;
+    passwordInput.classList.add('border-danger');
+    errorElement.innerHTML = 'Please enter a password';
+    errorElement.classList.remove('d-none');
   }
 };
 
@@ -109,21 +119,15 @@ const resetErrorStates = () => {
   isCheckboxError = false;
 };
 
-const clearError = (field) => {
-  if (field === 'name' && isNameError) {
-    nameInput.classList.remove('border-danger');
-    clearErrorMessage();
-    resetErrorStates();
-  } else if (field === 'email' && isEmailError) {
-    emailInput.classList.remove('border-danger');
-    clearErrorMessage();
-    resetErrorStates();
-  } else if (field === 'password' && isPasswordError) {
-    passwordInput.classList.remove('border-danger');
-    clearErrorMessage();
-    resetErrorStates();
-  } else if (field === 'checkbox' && isCheckboxError) {
-    checkboxInput.classList.remove('border-danger');
+const clearError = (event) => {
+  const inputField = event.currentTarget;
+  if (
+    (inputField.id === 'name' && isNameError)
+    || (inputField.id === 'email' && isEmailError)
+    || (inputField.id === 'password' && isPasswordError)
+    || (inputField.id === 'checkbox' && isCheckboxError)
+  ) {
+    inputField.classList.remove('border-danger');
     clearErrorMessage();
     resetErrorStates();
   }
@@ -132,10 +136,10 @@ const clearError = (field) => {
 const goLogin = () => window.location.href = `./login.html${window.location.search}`;
 
 form.addEventListener('submit', registerUser);
-nameInput.addEventListener('input', () => { clearError('name') });
-emailInput.addEventListener('input', () => { clearError('email') });
-passwordInput.addEventListener('input', () => { clearError('password') });
-checkboxInput.addEventListener('input', () => { clearError('checkbox') });
+nameInput.addEventListener('input', clearError);
+emailInput.addEventListener('input', clearError);
+passwordInput.addEventListener('input', clearError);
+checkboxInput.addEventListener('input', clearError);
 loginLink.addEventListener('click', goLogin);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
