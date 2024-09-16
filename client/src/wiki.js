@@ -317,11 +317,11 @@ const checkPublish = () => {
     .then((outputData) => {
       const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
       if (wikiChanged) {
-        dontShowLoadingButton();
         editorData = outputData;
         const publishModalDiv = document.getElementById('publish-modal');
         publishModalDiv.style.display = 'block';
         publishModal.show();
+        dontShowLoadingButton();
       } else { //no edits were made to the wiki, so there is nothing to save
         publishModal.hide();
         dontShowLoadingButton();
