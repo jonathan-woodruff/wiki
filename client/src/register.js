@@ -34,7 +34,7 @@ setNav();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading, setLoading } from './utils/spinner';
+import { setNotLoading } from './utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -45,6 +45,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
  * All other JavaScript
 ************************************************************/
 import { onRegister } from './api/auth';
+import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
 const nameInput = document.getElementById('name');
@@ -63,7 +64,8 @@ let isCheckboxError = false;
 const registerUser = async (event) => {
   event.preventDefault();
   if (nameInput.value && emailInput.value && passwordInput.value && checkboxInput.checked) {
-    setLoading(spinnerDiv, mainContainer, navbar);
+    const registerButton = document.getElementById('submit');
+    setLoadingButton(registerButton, 'Signing Up...');
     try {
       const credentials = {
         name: nameInput.value,
@@ -87,7 +89,7 @@ const registerUser = async (event) => {
         isPasswordError = true;
         passwordInput.classList.add('border-danger');
       };
-      setNotLoading(spinnerDiv, mainContainer, navbar);
+      setNotLoadingButton(registerButton, 'Sign Up');
     };
   } else if (!nameInput.value) {
     isNameError = true;

@@ -161,6 +161,7 @@ showPage();
  * All other JavaScript
 ************************************************************/
 import { arraysAreEqual } from './utils/index';
+import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 import CancelIconWhite from './images/cancel_white.png';
 
 const cancelButton = document.getElementById('cancel');
@@ -199,23 +200,13 @@ const refresh = () => {
 const showLoadingButton = () => {
   xButton.classList.add('disabled');
   closeButton.classList.add('disabled');
-  confirmPublishButton.classList.add('disabled');
-  const spinnerSpan = document.createElement('span');
-  spinnerSpan.classList.add('spinner-border');
-  spinnerSpan.classList.add('spinner-border-sm');
-  spinnerSpan.classList.add('me-1');
-  spinnerSpan.role = 'status';
-  spinnerSpan.ariaHidden = 'true';
-  confirmPublishButton.innerHTML = '';
-  confirmPublishButton.appendChild(spinnerSpan);
-  confirmPublishButton.innerHTML += 'Publishing...';
+  setLoadingButton(confirmPublishButton, 'Publishing...');
 };
 
 const dontShowLoadingButton = () => {
   xButton.classList.remove('disabled');
   closeButton.classList.remove('disabled');
-  confirmPublishButton.classList.remove('disabled');
-  confirmPublishButton.innerHTML = 'Publish';
+  setNotLoadingButton(confirmPublishButton, 'Publish');
 };
 
 const showNoEditsError = () => {

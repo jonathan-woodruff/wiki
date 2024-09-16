@@ -18,8 +18,8 @@ import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
 const setSources = () => {
-  const logoImg = document.getElementById('logo-img');
   const picturePreview = document.getElementById('pic-preview');
+  const logoImg = document.getElementById('logo-img');
   picturePreview.src = PeaceChicken;
   logoImg.src = Logo;
 };
@@ -62,6 +62,7 @@ const serviceErrorMessage = document.getElementById('error-message');
 const descriptionInput = document.getElementById('description');
 const userName = document.getElementById('name');
 const addServiceButton = document.getElementById('add-service');
+const avatarPreview = document.getElementById('avatar-preview');
 
 const addServiceRow = () => {
   const row = document.createElement('div');
@@ -248,7 +249,7 @@ const onAddService = (event) => {
 };
 
 const loadPhoto = (photo) => {
-  //picturePreview.src = photo;
+  //avatarPreview.src = photo;
   console.log(photo);
 };
 
@@ -296,6 +297,8 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 /************************************************************
  * All other JavaScript
 ************************************************************/
+import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
@@ -314,7 +317,7 @@ const showPreview = () => {
     const photoURL = event.target.result;
 
     // Display the uploaded image
-    picturePreview.src = photoURL;
+    avatarPreview.src = photoURL;
   };
 
   // Read the selected file as Data URL
@@ -383,7 +386,7 @@ const saveProfile = async (event) => {
     serviceErrorMessage.innerHTML = 'Please complete your services';
     serviceErrorMessage.classList.remove('d-none');
   } else {
-    setLoading(spinnerDiv, mainContainer, navbar);
+    setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
       name: userName.value,
       file: pictureInput.files[0],
@@ -392,9 +395,9 @@ const saveProfile = async (event) => {
     };
     try {
       await putProfile(dataToSave);
-      //const formData = new FormData();
-      //formData.append('avatar', pictureInput.files[0], 'avatar')
-      //await postAvatar(formData);
+      const formData = new FormData();
+      formData.append('avatar', pictureInput.files[0], 'avatar')
+      await postAvatar(formData);
       toastDiv.style.display = 'block';
       const toast = new bootstrap.Toast(toastDiv);
       toast.show();
@@ -402,7 +405,7 @@ const saveProfile = async (event) => {
       const errorMessage = error.response.data.errors[0].msg; //error from axios
       console.log(errorMessage);
     }
-    setNotLoading(spinnerDiv, mainContainer, navbar);
+    setNotLoadingButton(saveButton, 'Save Profile');
   }
 };
 

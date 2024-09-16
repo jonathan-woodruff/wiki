@@ -127,7 +127,7 @@ loadData();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading, setLoading } from './utils/spinner';
+import { setNotLoading } from './utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -137,11 +137,14 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 /************************************************************
  * All other JavaScript
 ************************************************************/
+import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+
 const button = document.getElementById('submit');
 const logoutLink = document.getElementById('logout-link');
 
-const submitContent = () => {
-  setLoading(spinnerDiv, mainContainer, navbar);
+const submitContent = (event) => {
+  event.preventDefault();
+  setLoadingButton(button, 'Creating...');
   editor.save()
   .then((outputData) => {
     const titleInput = document.getElementById('title');
@@ -154,15 +157,21 @@ const submitContent = () => {
     onPostWiki(postData)
     .then((response) => {
       console.log(response);
+      const wikiID = response.data.wikiID;
+      const params = new URLSearchParams();
+      params.append('wiki', wikiID);
+      const url = `./wiki.html?${params.toString()}`;
+      window.location.href = url;
     })
     .catch((error => {
       console.log('Submit failed: ', error)
+      setNotLoadingButton(button, 'Create');
     }))
   })
   .catch((error) => {
     console.log('Saving failed: ', error);
+    setNotLoadingButton(button, 'Create');
   });
-  setNotLoading(spinnerDiv, mainContainer, navbar);
 };
 
 button.addEventListener('click', submitContent);

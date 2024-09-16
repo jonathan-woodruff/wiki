@@ -38,9 +38,9 @@ exports.postWiki = async (req, res) => {
         /* update the user model */
         user.wikisCreated++;
         await user.save();
+
         return res.status(201).json({
-            success: true,
-            message: 'new wiki created'
+            wikiID: savedWiki._id
         });
     } catch(error) {
         res.status(500).json({

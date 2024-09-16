@@ -39,7 +39,7 @@ setNav();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading, setLoading } from './utils/spinner';
+import { setNotLoading } from './utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -50,6 +50,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
  * All other JavaScript
 ************************************************************/
 import { onLogin } from './api/auth';
+import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
 const emailInput = document.getElementById('email');
@@ -65,7 +66,6 @@ const getURL = (params, prevPageName) => {
 };
 
 export const goPlaces = () => {
-  console.log('suppp');
   const currentQueryString = window.location.search;
   const params = new URLSearchParams(currentQueryString);
   const prevPageName = params.get('prev');
@@ -83,7 +83,8 @@ export const goPlaces = () => {
 
 const login = async (event) => {
   event.preventDefault();
-  setLoading(spinnerDiv, mainContainer, navbar);
+  const loginButton = document.getElementById('submit');
+  setLoadingButton(loginButton, 'Logging In...');
   try {
     const credentials = {
         email: emailInput.value,
@@ -101,7 +102,7 @@ const login = async (event) => {
     }
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none');
-    setNotLoading(spinnerDiv, mainContainer, navbar);
+    setNotLoadingButton(loginButton, 'Log In');
   };
 };
 
