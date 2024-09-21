@@ -1,18 +1,24 @@
 const { UserModel } = require('../models/index');
-const db = require('../db');
 const { hash } = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 const { SECRET } = require('../constants/index');
 
+/*
 exports.protected = (req, res) => {
-    try {
+    console.log(req.user);
+    console.log('y01');
+    if (req.user) {
+        console.log('di');
         res.status(200).json({
-            message: 'user is logged in'
+            isAuth: true
         });
-    } catch(error) {
-        console.log(error.message); 
+    } else {
+        res.status(200).json({
+            isAuth: false
+        });
     }
 };
+*/
 
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;

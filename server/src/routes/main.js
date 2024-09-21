@@ -3,9 +3,9 @@ const router = Router();
 const multer = require('multer');
 //const upload = multer({ dest: './uploads/' })
 const storage = multer.diskStorage({
-    destination: "uploads",
+    destination: "./public/avatars",
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
+        cb(null, Date.now() + '-' + file.originalname);
     }
 });
 const upload = multer({ storage: storage });

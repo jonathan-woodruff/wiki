@@ -1,7 +1,7 @@
 /************************************************************
  * Ensure the user is authenticated 
 ************************************************************/
-import { isAuth } from './authenticate';
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 if (!isAuth) window.location.href = './login.html';
 
 /************************************************************
@@ -53,7 +53,8 @@ configureButtons();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { getProfileData, putProfile, postAvatar } from './api/main';
+import { getProfileData, putProfile, postAvatar, getAvatar } from './api/main';
+import { SERVER_URL } from './constants/index';
 import { sectors, countries } from './constants/profile';
 import RemoveIcon from './images/remove.png';
 
@@ -248,11 +249,6 @@ const onAddService = (event) => {
   addService();
 };
 
-const loadPhoto = (photo) => {
-  //avatarPreview.src = photo;
-  console.log(photo);
-};
-
 addServiceButton.addEventListener('click', onAddService);
 
 const loadServices = (storedServices) => {
@@ -265,6 +261,25 @@ const loadServices = (storedServices) => {
   };
 };
 
+const loadAvatar = (avatarFilename) => {
+  console.log('data:image/png;base64,' + avatarFilename);
+  picturePreview.src = 'data:image/png;base64,' + avatarFilename;
+  //const avatars = require('./avatars');
+  /*console.log(avatarFilename);
+  console.log(SERVER_URL);
+  console.log(`${SERVER_URL}/avatars/${avatarFilename}`);
+  */
+  /*console.log(`${SERVER_URL}/avatars/${avatarFilename}`);
+  const logo = new URL(`${SERVER_URL}/avatars/${avatarFilename}`, import.meta.url);
+  console.log(logo);
+  console.log(RemoveIcon);
+  picturePreview.src = "<%=require('localhost:8000/avatars/' + avatarFilename)%>";*/
+  /*
+  picturePreview.src = avatarSource;
+  console.log('uuuuuuu');*/
+  //const src = require(`./avatars/${avatar}`);
+};
+
 const loadDescription = (description) => descriptionInput.innerHTML || '';
 
 const loadName = (nameOfUser) => userName.value = nameOfUser || '';
@@ -273,12 +288,14 @@ const loadFields = async () => {
   try {
     const { data } = await getProfileData();
     loadName(data.name);
-    loadPhoto(data.photo);
+    loadAvatar(data.photo);
     loadServices(data.services);
     loadDescription(data.description);
   } catch(error) {
-    const errorMessage = error.response.data.errors[0].msg; //error from axios
-    console.log(errorMessage);
+    if (error.response.status === 401) {
+      localStorage.setItem('isAuth', false);
+      window.location.reload();
+    }
   }
 };
 
@@ -298,6 +315,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
  * All other JavaScript
 ************************************************************/
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { checkForCookie } from './api/auth';
 
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
@@ -396,19 +414,23 @@ const saveProfile = async (event) => {
     try {
       await putProfile(dataToSave);
     } catch(error) {
-      const errorMessage = error.response.data.errors[0].msg; //error from axios
-      console.log(errorMessage);
+      if (error.response.status === 401) {
+        localStorage.setItem('isAuth', false);
+        window.location.reload();
+      }
     }
     try {
       const formData = new FormData();
-      formData.append('avatar', pictureInput.files[0], 'avatar')
+      formData.append('avatar', pictureInput.files[0])
       await postAvatar(formData);
       toastDiv.style.display = 'block';
       const toast = new bootstrap.Toast(toastDiv);
       toast.show();
     } catch(error) {
-      const errorMessage = error.response.data.errors[0].msg; //error from axios
-      console.log(errorMessage);
+      if (error.response.status === 401) {
+        localStorage.setItem('isAuth', false);
+        window.location.reload();
+      }
     }
     setNotLoadingButton(saveButton, 'Save Profile');
   }
@@ -418,7 +440,19 @@ const hideToast = () => {
   toastDiv.style.display = 'none';
 };
 
+const handlePageshow = async () => {
+  try {
+    await checkForCookie();
+  } catch(error) {
+    if (error.response.status === 401) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.href = './login.html';
+    }
+  }
+};
+
 pictureInput.addEventListener('input', showPreview);
 saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
+window.addEventListener('pageshow', handlePageshow);

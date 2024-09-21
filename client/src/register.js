@@ -7,7 +7,7 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { isAuth } from './authenticate';
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 import { configureNav, logout } from './utils/navbar';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
@@ -149,3 +149,4 @@ checkboxInput.addEventListener('input', clearError);
 loginLink.addEventListener('click', goLogin);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
+//window.addEventListener("pageshow", handlePageshow)

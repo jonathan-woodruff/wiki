@@ -7,7 +7,6 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { isAuth } from './authenticate';
 import { configureNav, logout } from './utils/navbar';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
@@ -22,6 +21,7 @@ const setSources = () => {
 };
 
 const setNav = () => {
+  const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
   const navCreateLI = document.getElementById('nav-create-li');
   const navCreateA = document.getElementById('nav-create-a');
   const navDropdown = document.getElementById('nav-dropdown');
@@ -276,3 +276,4 @@ searchEngine.addEventListener('input', hideError);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goLogin);
 showMoreButton.addEventListener('click', showMoreCards);
+//window.addEventListener("pageshow", handlePageshow)

@@ -1,6 +1,7 @@
 const { UserModel, WikisModel, WikiHistoryModel } = require('../models/index');
 const { parseServices } = require('../utils/index');
-const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 exports.postWiki = async (req, res) => {
     const country = req.body.country;
@@ -76,9 +77,11 @@ exports.getWikis = async (req, res) => {
 exports.getProfileData = (req, res) => {
     const user = req.user;
     if (user) {
+        const avatarPath = path.resolve(`./public/avatars/${user.photo}`);
+        const base64Avatar = fs.readFileSync(avatarPath, { encoding: 'base64' })
         return res.status(200).json({
             name: user.name,
-            photo: user.photo,
+            photo: base64Avatar,
             services: user.services,
             description: user.description
         });
@@ -92,7 +95,7 @@ exports.getProfileData = (req, res) => {
 exports.postAvatar = async (req, res) => {
     try {
         const user = await UserModel.findOne({ email: req.user.email }).exec();
-        user.photo.data = req.file.filename;
+        user.photo = req.file.filename;
         await user.save();
         return res.status(200).json({
             success: true,

@@ -1,5 +1,55 @@
 /*!
+       * Codex JavaScript Notification module
+       * https://github.com/codex-team/js-notifier
+       */
+
+/*!
   * Bootstrap v5.3.3 (https://getbootstrap.com/)
   * Copyright 2011-2024 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
+
+/*!
+ * CodeX.Tooltips
+ * 
+ * @version 1.0.5
+ * 
+ * @licence MIT
+ * @author CodeX <https://codex.so>
+ * 
+ * 
+ */
+
+/*!
+ * Library for handling keyboard shortcuts
+ * @copyright CodeX (https://codex.so)
+ * @license MIT
+ * @author CodeX (https://codex.so)
+ * @version 1.2.0
+ */
+
+/**
+ * Base Paragraph Block for the Editor.js.
+ * Represents a regular text block
+ *
+ * @author CodeX (team@codex.so)
+ * @copyright CodeX 2018
+ * @license The MIT License (MIT)
+ */
+
+/**
+ * Editor.js
+ *
+ * @license Apache-2.0
+ * @see Editor.js <https://editorjs.io>
+ * @author CodeX Team <https://codex.so>
+ */
+
+/**
+ * Header block for the Editor.js.
+ *
+ * @author CodeX (team@ifmo.su)
+ * @copyright CodeX 2018
+ * @license MIT
+ * @version 2.0.0
+ */

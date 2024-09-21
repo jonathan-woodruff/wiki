@@ -1,7 +1,7 @@
 /************************************************************
  * Ensure the user is authenticated 
 ************************************************************/
-import { isAuth } from './authenticate';
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 if (!isAuth) window.location.href = './login.html';
 
 /************************************************************ 
@@ -117,8 +117,10 @@ const loadData = async () => {
     loadCountries(data.countries);
     loadSectors(data.sectors);
   } catch(error) {
-    const errorMessage = error.response.data.errors[0].msg; //error from axios
-    console.log(errorMessage);
+    if (error.response.status === 401) {
+      localStorage.setItem('isAuth', false);
+      window.location.reload();
+    }
   }
 };
 
@@ -138,6 +140,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
  * All other JavaScript
 ************************************************************/
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { checkForCookie } from './api/auth';
 
 const button = document.getElementById('submit');
 const logoutLink = document.getElementById('logout-link');
@@ -165,6 +168,10 @@ const submitContent = (event) => {
     })
     .catch((error => {
       console.log('Submit failed: ', error)
+      if (error.response.status === 401) {
+        localStorage.setItem('isAuth', false);
+        window.location.reload();
+      }
       setNotLoadingButton(button, 'Create');
     }))
   })
@@ -174,5 +181,17 @@ const submitContent = (event) => {
   });
 };
 
+const handlePageshow = async () => {
+  try {
+    await checkForCookie();
+  } catch(error) {
+    if (error.response.status === 401) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.href = './login.html';
+    }
+  }
+};
+
 button.addEventListener('click', submitContent);
 logoutLink.addEventListener('click', logout);
+window.addEventListener('pageshow', handlePageshow);

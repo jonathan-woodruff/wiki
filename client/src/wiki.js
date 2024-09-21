@@ -7,12 +7,12 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { isAuth } from './authenticate';
 import { configureNav, logout } from './utils/navbar';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -163,6 +163,7 @@ showPage();
 import { arraysAreEqual } from './utils/index';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 import CancelIconWhite from './images/cancel_white.png';
+import { checkForCookie } from './api/auth';
 
 const cancelButton = document.getElementById('cancel');
 const confirmCancelButton = document.getElementById('confirm-cancel');
@@ -183,14 +184,22 @@ const maxLengthStr = changeDescription.getAttribute('maxlength');
 charactersRemaining.innerHTML = maxLengthStr;
 const maxDescriptionLength = parseInt(maxLengthStr);
 
-const goEditMode = () => {
-  editor.readOnly.toggle();
-  const editRow = document.getElementById('edit-row');
-  editRow.classList.add('d-none');
-  const descriptionRow = document.getElementById('description-row');
-  descriptionRow.classList.remove('d-none');
-  const cancelPublish = document.getElementById('cancel-publish');
-  cancelPublish.classList.remove('d-none');
+const goEditMode = async () => {
+  try {
+    await checkForCookie();
+    editor.readOnly.toggle();
+    const editRow = document.getElementById('edit-row');
+    editRow.classList.add('d-none');
+    const descriptionRow = document.getElementById('description-row');
+    descriptionRow.classList.remove('d-none');
+    const cancelPublish = document.getElementById('cancel-publish');
+    cancelPublish.classList.remove('d-none');
+  } catch(error) {
+    if (error.response.status === 401) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.reload();
+    }
+  }
 };
 
 const refresh = () => {
@@ -233,9 +242,12 @@ const publishEdits = async () => {
     await onPutWiki(putData);
     refresh();
   } catch(error) {
+    if (error.response.status === 401) {
+      localStorage.setItem('isAuth', false);
+      window.location.reload();
+    };
     publishModal.hide();
     dontShowLoadingButton();
-    alert('Publish failed: ', error.response.data.errors[0].msg);
   }
   /*
   onPutWiki(putData)

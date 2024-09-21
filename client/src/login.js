@@ -1,7 +1,7 @@
 /************************************************************
  * Ensure the user is not authenticated 
 ************************************************************/
-import { isAuth } from './authenticate';
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 if (isAuth) window.location.href = './index.html';
 
 /************************************************************ 
@@ -91,6 +91,7 @@ const login = async (event) => {
         password: passwordInput.value
     };
     await onLogin(credentials);
+    localStorage.setItem('isAuth', 'true');
     goPlaces();
   } catch(error) {
     const axiosError = error.response.data.errors[0].msg.toLowerCase();
@@ -119,3 +120,4 @@ passwordInput.addEventListener('input', clearError);
 registerLink.addEventListener('click', goRegister);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goRegister);
+//window.addEventListener("pageshow", handlePageshow)

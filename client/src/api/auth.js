@@ -16,5 +16,9 @@ export async function onLogout() {
 };
 
 export async function checkProtected() {
-    return await axios.get(`${SERVER_URL}/auth/protected`);
+    //return await axios.get(`${SERVER_URL}/auth/protected`);
+};
+
+export async function checkForCookie() {
+    return await axios.get(`${SERVER_URL}/auth/checkForCookie`);
 };
