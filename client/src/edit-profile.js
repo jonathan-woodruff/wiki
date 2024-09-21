@@ -51,6 +51,53 @@ const configureButtons = () => {
 configureButtons();
 
 /************************************************************
+ * Configure the editor
+************************************************************/
+import EditorJS from '@editorjs/editorjs';
+import SimpleImage from '@editorjs/simple-image';
+import ImageTool from '@editorjs/image';
+const editor = new EditorJS({
+  holder: 'editorjs',
+  tools: {
+    //image: SimpleImage,
+    image: {
+      class: ImageTool,
+      config: {
+        endpoints: {
+          byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
+          byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
+        }
+      }
+    }
+    //paragraph: false
+  },
+  inlineToolbar: false,
+  hideToolbar: true,
+  //defaultBlock: 'nullText'
+  data: {
+    blocks: [
+      {
+        type: 'paragraph',
+        data: { text: 'beedoh' }
+      }
+    ]
+  }
+});
+
+const handleTestClick = (event) => {
+  event.preventDefault();
+  editor.save()
+  .then((outputData) => {
+    console.log('hiiiiiiiii');
+    console.log(outputData);
+  })
+  .catch((error) => {
+    console.log('yoooooooooooo');
+    console.log( error);
+  });
+};
+
+/************************************************************
  * Load data from backend 
 ************************************************************/
 import { getProfileData, putProfile, postAvatar, getAvatar } from './api/main';
@@ -456,3 +503,6 @@ saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);
+
+const testButton = document.getElementById('test-button');
+testButton.addEventListener('click', handleTestClick);

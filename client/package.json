@@ -27,6 +27,7 @@
   "dependencies": {
     "@editorjs/editorjs": "^2.30.5",
     "@editorjs/header": "^2.8.7",
+    "@editorjs/image": "^2.9.3",
     "@editorjs/list": "^1.10.0",
     "@editorjs/nested-list": "^1.4.3",
     "@editorjs/quote": "^2.7.1",
