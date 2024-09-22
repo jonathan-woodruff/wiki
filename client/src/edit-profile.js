@@ -55,20 +55,11 @@ configureButtons();
 ************************************************************/
 import EditorJS from '@editorjs/editorjs';
 import SimpleImage from '@editorjs/simple-image';
-import ImageTool from '@editorjs/image';
+import './editor.css';
 const editor = new EditorJS({
   holder: 'editorjs',
   tools: {
-    //image: SimpleImage,
-    image: {
-      class: ImageTool,
-      config: {
-        endpoints: {
-          byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
-          byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
-        }
-      }
-    }
+    image: SimpleImage,
     //paragraph: false
   },
   inlineToolbar: false,
@@ -79,6 +70,15 @@ const editor = new EditorJS({
       {
         type: 'paragraph',
         data: { text: 'beedoh' }
+      },
+      {
+        type: 'image',
+        data: { 
+          url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHRSURBVHgBjVNdTttAEJ7ZXacvrcoN6hvUPUHLCQgnaPsWlURdCYJQFZS1hCokKsVIFcpb0xOQnIAewT1BcwSk8hSvd5iNWVisIPE92OOZb/7HCC30D0YfUOCOA+giQdpoqUTAsqqqfFqcLmM+BkFrvVV3Xo+J3CcgOrdWzaaFWZO/DE0moc4cwlgAzOXqf14UxfV9AO9sk5dXRPA3sUoXhbmGDdDabFlpDQh4r6qb7RAEBofjSX84KuCZ2DsYzQaHxxMvq54+Sh24blKpd0253zL/vjj7XsZOsd5XaVX9j+e1EDJJuG/IH8rucF/qMjgEZ0R56W0eDZfOmdgVSMjE+j7bxZkpCcRuCBKcieSutwWeVWrGm9kRgJS1y42DbHL2mJ6aJQGkAp7EinfEFMJGfgKC7cu9/ZM37YGFzHE7jziav5FKgTUtEFefNzn7stszCTyZyIznV/IMYM6RvvpjgrsttHsOQcIWPJdPfVxJma8V/f1RMRge/4JnIj48tX7Uyljhrvx1xXfehs9cvXg1IVdnqlLbXhf9TM2dE/+JPPvc30ZYb0+bVHXcR3Ckud3f7GzC4WE7S+/IpNJaw4a3gLgeGgdcItCChfnPHyd/Yv4tvSj3rnbnNWAAAAAASUVORK5CYII=',
+          caption: false, 
+          withBorder: false, 
+          withBackground: false
+        }
       }
     ]
   }
@@ -86,6 +86,12 @@ const editor = new EditorJS({
 
 const handleTestClick = (event) => {
   event.preventDefault();
+  editor.data.blocks.forEach(block => {
+    if (block.type === 'image') {
+
+    }
+  })
+
   editor.save()
   .then((outputData) => {
     console.log('hiiiiiiiii');
