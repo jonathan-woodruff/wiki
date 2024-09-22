@@ -55,22 +55,16 @@ configureButtons();
 ************************************************************/
 import EditorJS from '@editorjs/editorjs';
 import SimpleImage from '@editorjs/simple-image';
-import './editor.css';
+import './css/editor.css';
 const editor = new EditorJS({
   holder: 'editorjs',
+  readOnly: true,
   tools: {
     image: SimpleImage,
     //paragraph: false
   },
-  inlineToolbar: false,
-  hideToolbar: true,
-  //defaultBlock: 'nullText'
   data: {
     blocks: [
-      {
-        type: 'paragraph',
-        data: { text: 'beedoh' }
-      },
       {
         type: 'image',
         data: { 
@@ -83,25 +77,6 @@ const editor = new EditorJS({
     ]
   }
 });
-
-const handleTestClick = (event) => {
-  event.preventDefault();
-  editor.data.blocks.forEach(block => {
-    if (block.type === 'image') {
-
-    }
-  })
-
-  editor.save()
-  .then((outputData) => {
-    console.log('hiiiiiiiii');
-    console.log(outputData);
-  })
-  .catch((error) => {
-    console.log('yoooooooooooo');
-    console.log( error);
-  });
-};
 
 /************************************************************
  * Load data from backend 
@@ -314,23 +289,9 @@ const loadServices = (storedServices) => {
   };
 };
 
-const loadAvatar = (avatarFilename) => {
-  console.log('data:image/png;base64,' + avatarFilename);
-  picturePreview.src = 'data:image/png;base64,' + avatarFilename;
-  //const avatars = require('./avatars');
-  /*console.log(avatarFilename);
-  console.log(SERVER_URL);
-  console.log(`${SERVER_URL}/avatars/${avatarFilename}`);
-  */
-  /*console.log(`${SERVER_URL}/avatars/${avatarFilename}`);
-  const logo = new URL(`${SERVER_URL}/avatars/${avatarFilename}`, import.meta.url);
-  console.log(logo);
-  console.log(RemoveIcon);
-  picturePreview.src = "<%=require('localhost:8000/avatars/' + avatarFilename)%>";*/
-  /*
-  picturePreview.src = avatarSource;
-  console.log('uuuuuuu');*/
-  //const src = require(`./avatars/${avatar}`);
+const loadAvatar = (avatarURL) => {
+  editor.blocks.clear();
+  editor.blocks.insert('image', { url: avatarURL || PeaceChicken });
 };
 
 const loadDescription = (description) => descriptionInput.innerHTML || '';
@@ -345,10 +306,11 @@ const loadFields = async () => {
     loadServices(data.services);
     loadDescription(data.description);
   } catch(error) {
-    if (error.response.status === 401) {
+    console.log(error);
+    /*if (error.response.status === 401) {
       localStorage.setItem('isAuth', false);
       window.location.reload();
-    }
+    }*/
   }
 };
 
@@ -375,6 +337,8 @@ const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
 const toastDiv = document.getElementById('toast');
 
+let avatarURL;
+
 const showPreview = () => {
   // Get the selected file
   const file = pictureInput.files[0];
@@ -385,10 +349,11 @@ const showPreview = () => {
   // Set up the reader's onload event handler
   reader.onload = (event) => {
     // Get the image data URL
-    const photoURL = event.target.result;
+    avatarURL = event.target.result;
 
     // Display the uploaded image
-    avatarPreview.src = photoURL;
+    editor.blocks.clear();
+    editor.blocks.insert('image', { url: avatarURL });
   };
 
   // Read the selected file as Data URL
@@ -460,22 +425,12 @@ const saveProfile = async (event) => {
     setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
       name: userName.value,
-      file: pictureInput.files[0],
+      avatarURL: avatarURL,
       services: services,
       description: descriptionInput.value
     };
     try {
       await putProfile(dataToSave);
-    } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
-        window.location.reload();
-      }
-    }
-    try {
-      const formData = new FormData();
-      formData.append('avatar', pictureInput.files[0])
-      await postAvatar(formData);
       toastDiv.style.display = 'block';
       const toast = new bootstrap.Toast(toastDiv);
       toast.show();
@@ -485,6 +440,16 @@ const saveProfile = async (event) => {
         window.location.reload();
       }
     }
+    /*try {
+      const formData = new FormData();
+      formData.append('avatar', pictureInput.files[0])
+      await postAvatar(formData);
+    } catch(error) {
+      if (error.response.status === 401) {
+        localStorage.setItem('isAuth', false);
+        window.location.reload();
+      }
+    }*/
     setNotLoadingButton(saveButton, 'Save Profile');
   }
 };
@@ -509,6 +474,3 @@ saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);
-
-const testButton = document.getElementById('test-button');
-testButton.addEventListener('click', handleTestClick);

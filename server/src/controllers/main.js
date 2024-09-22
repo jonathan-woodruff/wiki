@@ -77,11 +77,11 @@ exports.getWikis = async (req, res) => {
 exports.getProfileData = (req, res) => {
     const user = req.user;
     if (user) {
-        const avatarPath = path.resolve(`./public/avatars/${user.photo}`);
-        const base64Avatar = fs.readFileSync(avatarPath, { encoding: 'base64' })
+        //const avatarPath = path.resolve(`./public/avatars/${user.photo}`);
+        //const base64Avatar = fs.readFileSync(avatarPath, { encoding: 'base64' })
         return res.status(200).json({
             name: user.name,
-            photo: base64Avatar,
+            photo: user.photo,
             services: user.services,
             description: user.description
         });
@@ -112,6 +112,7 @@ exports.updateProfile = async (req, res) => {
     try {
         const user = await UserModel.findOne({ email: req.user.email }).exec();
         user.name = req.body.name;
+        user.photo = req.body.avatarURL;
         user.services = req.body.services;
         user.description = req.body.description;
         await user.save();
