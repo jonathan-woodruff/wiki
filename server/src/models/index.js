@@ -124,4 +124,4 @@ const communitySchema = new Schema({
 exports.UserModel = mongoose.model('User', userSchema);
 exports.WikisModel = mongoose.model('Wikis', wikisSchema);
 exports.WikiHistoryModel = mongoose.model('WikiHistory', wikiHistorySchema);
-exports.communityModel = mongoose.model('Community', communitySchema);
+exports.CommunityModel = mongoose.model('Community', communitySchema);
