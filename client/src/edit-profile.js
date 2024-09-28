@@ -53,34 +53,6 @@ const configureButtons = () => {
 configureButtons();
 
 /************************************************************
- * Configure the editor
-************************************************************/
-import EditorJS from '@editorjs/editorjs';
-import SimpleImage from '@editorjs/simple-image';
-import './css/editor.css';
-const editor = new EditorJS({
-  holder: 'editorjs',
-  readOnly: true,
-  tools: {
-    image: SimpleImage,
-    //paragraph: false
-  },
-  data: {
-    blocks: [
-      {
-        type: 'image',
-        data: { 
-          url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHRSURBVHgBjVNdTttAEJ7ZXacvrcoN6hvUPUHLCQgnaPsWlURdCYJQFZS1hCokKsVIFcpb0xOQnIAewT1BcwSk8hSvd5iNWVisIPE92OOZb/7HCC30D0YfUOCOA+giQdpoqUTAsqqqfFqcLmM+BkFrvVV3Xo+J3CcgOrdWzaaFWZO/DE0moc4cwlgAzOXqf14UxfV9AO9sk5dXRPA3sUoXhbmGDdDabFlpDQh4r6qb7RAEBofjSX84KuCZ2DsYzQaHxxMvq54+Sh24blKpd0253zL/vjj7XsZOsd5XaVX9j+e1EDJJuG/IH8rucF/qMjgEZ0R56W0eDZfOmdgVSMjE+j7bxZkpCcRuCBKcieSutwWeVWrGm9kRgJS1y42DbHL2mJ6aJQGkAp7EinfEFMJGfgKC7cu9/ZM37YGFzHE7jziav5FKgTUtEFefNzn7stszCTyZyIznV/IMYM6RvvpjgrsttHsOQcIWPJdPfVxJma8V/f1RMRge/4JnIj48tX7Uyljhrvx1xXfehs9cvXg1IVdnqlLbXhf9TM2dE/+JPPvc30ZYb0+bVHXcR3Ckud3f7GzC4WE7S+/IpNJaw4a3gLgeGgdcItCChfnPHyd/Yv4tvSj3rnbnNWAAAAAASUVORK5CYII=',
-          caption: false, 
-          withBorder: false, 
-          withBackground: false
-        }
-      }
-    ]
-  }
-});
-
-/************************************************************
  * Load data from backend 
 ************************************************************/
 import { getProfileData, putProfile, postAvatar, getAvatar } from './api/main';
@@ -94,6 +66,7 @@ const descriptionInput = document.getElementById('description');
 const userName = document.getElementById('name');
 const addServiceButton = document.getElementById('add-service');
 const avatarPreview = document.getElementById('avatar-preview');
+const holderElement = document.getElementById('avatar-holder');
 
 const addServiceRow = () => {
   const row = document.createElement('div');
@@ -291,9 +264,25 @@ const loadServices = (storedServices) => {
   };
 };
 
-const loadAvatar = (avatarURL) => {
-  editor.blocks.clear();
-  editor.blocks.insert('image', { url: avatarURL || PeaceChicken });
+//clear avatar from the DOM
+const clearAvatar = () => {
+  const currentAvatar = document.getElementById('avatar');
+  if (currentAvatar) holderElement.removeChild(currentAvatar);
+};
+
+//add avatar to the DOM
+const showAvatar = (avatarURL) => {
+  const newAvatar = document.createElement('img');
+  newAvatar.id = 'avatar';
+  newAvatar.src = avatarURL || PeaceChicken;
+  newAvatar.classList.add('w-100');
+  newAvatar.classList.add('h-auto');
+  holderElement.appendChild(newAvatar);
+};
+
+const refreshAvatar = (avatarURL) => {
+  clearAvatar();
+  showAvatar(avatarURL);
 };
 
 const loadDescription = (description) => descriptionInput.innerHTML || '';
@@ -304,7 +293,7 @@ const loadFields = async () => {
   try {
     const { data } = await getProfileData();
     loadName(data.name);
-    loadAvatar(data.photo);
+    refreshAvatar(data.photo);
     loadServices(data.services);
     loadDescription(data.description);
   } catch(error) {
@@ -339,8 +328,6 @@ const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
 const toastDiv = document.getElementById('toast');
 
-let avatarURL;
-
 const showPreview = () => {
   // Get the selected file
   const file = pictureInput.files[0];
@@ -350,12 +337,8 @@ const showPreview = () => {
 
   // Set up the reader's onload event handler
   reader.onload = (event) => {
-    // Get the image data URL
-    avatarURL = event.target.result;
-
     // Display the uploaded image
-    editor.blocks.clear();
-    editor.blocks.insert('image', { url: avatarURL });
+    refreshAvatar(event.target.result);
   };
 
   // Read the selected file as Data URL
@@ -427,7 +410,7 @@ const saveProfile = async (event) => {
     setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
       name: userName.value,
-      avatarURL: avatarURL,
+      avatarURL: holderElement.children[0].src,
       services: services,
       description: descriptionInput.value
     };

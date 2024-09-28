@@ -279,9 +279,7 @@ exports.getHistoricalWikiData = async (req, res) => {
 
 exports.postCommunity = async (req, res) => {
     try {
-        console.log('1');
         const user = await UserModel.findOne({ email: req.user.email }).exec();
-        console.log('2');
         const newCommunityEntry = new CommunityModel({
             userId: user._id,
             userObjectId: user._id,
@@ -289,9 +287,7 @@ exports.postCommunity = async (req, res) => {
             amount: req.body.amount,
             other: req.body.other
         });
-        console.log('3');
         await newCommunityEntry.save();
-        console.log('4');
         return res.status(201).json({
             success: true
         });
