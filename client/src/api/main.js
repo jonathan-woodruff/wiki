@@ -46,3 +46,7 @@ export async function onViewProfile(userID) {
 export async function onViewHistoricalWiki(wikiHistoryID) {
     return await axios.get(`${SERVER_URL}/main/viewHistoricalWiki?wikiHistoryID=${wikiHistoryID}`);
 };
+
+export async function postCommunity(payload) {
+    return await axios.post(`${SERVER_URL}/main/postCommunity`, payload);
+};

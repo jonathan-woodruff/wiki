@@ -20,7 +20,8 @@ const {
     getHistory,
     getViewProfileData,
     getHistoricalWikiData,
-    postAvatar
+    postAvatar,
+    postCommunity
 } = require('../controllers/main');
 const { userAuth } = require('../middlewares/auth-middleware');
 
@@ -35,5 +36,6 @@ router.get('/viewHistory', getHistory);
 router.get('/viewProfile', getViewProfileData);
 router.get('/viewHistoricalWiki', getHistoricalWikiData);
 router.post('/postAvatar', userAuth, upload.single('avatar'), postAvatar);
+router.post('/postCommunity', userAuth, postCommunity);
 
 module.exports = router;

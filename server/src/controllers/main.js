@@ -1,4 +1,4 @@
-const { UserModel, WikisModel, WikiHistoryModel } = require('../models/index');
+const { UserModel, WikisModel, WikiHistoryModel, CommunityModel } = require('../models/index');
 const { parseServices } = require('../utils/index');
 const path = require('path');
 const fs = require('fs');
@@ -273,6 +273,27 @@ exports.getHistoricalWikiData = async (req, res) => {
     } else {
         res.status(500).json({
             error: 'wiki history is falsy'
+        });
+    }
+};
+
+exports.postCommunity = async (req, res) => {
+    try {
+        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const newCommunityEntry = new CommunityModel({
+            userId: user._id,
+            userObjectId: user._id,
+            reason: req.body.reason,
+            amount: req.body.amount,
+            other: req.body.other
+        });
+        await newCommunityEntry.save();
+        return res.status(201).json({
+            success: true
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: error.message
         });
     }
 };

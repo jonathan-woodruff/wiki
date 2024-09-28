@@ -1,8 +1,8 @@
 /************************************************************
- * Ensure the user is not authenticated 
+ * Ensure the user is authenticated 
 ************************************************************/
 const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
-if (isAuth) window.location.href = './index.html';
+if (!isAuth) window.location.href = './login.html';
 
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
@@ -11,13 +11,11 @@ import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 /************************************************************
- * Configure the navbar
+ * Configure the navbar 
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
 import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
-
-const navRegisterButton = document.getElementById('nav-register-button');
+import { configureNav, logout } from './utils/navbar';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -32,6 +30,7 @@ const setNav = () => {
   const navCommunityLI = document.getElementById('nav-community-li');
   const navCommunityA = document.getElementById('nav-community-a');
   const navDropdown = document.getElementById('nav-dropdown');
+  const navRegisterButton = document.getElementById('nav-register-button');
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
@@ -51,74 +50,74 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onLogin } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { postCommunity } from './api/main';
 
 const form = document.getElementById('form');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
+const reasonInput = document.getElementById('reason');
+const amountInput = document.getElementById('amount');
 const errorElement = document.getElementById('error-message');
-const registerLink = document.getElementById('register-link');
 const logoutLink = document.getElementById('logout-link');
+const toastDiv = document.getElementById('toast');
 
-//helper function for goPlaces
-const getURL = (params, prevPageName) => {
-  params.delete('prev', prevPageName);
-  return `./${prevPageName}.html?${params.toString()}`;
-};
-
-export const goPlaces = () => {
-  const currentQueryString = window.location.search;
-  const params = new URLSearchParams(currentQueryString);
-  const prevPageName = params.get('prev');
-  const pages = [
-    'history', 
-    'search-results', 
-    'view-historical-wiki', 
-    'view-profile', 
-    'wiki'
-  ];
-  const url = pages.includes(prevPageName) ? getURL(params, prevPageName) : './index.html';
-  console.log(url);
-  window.location.href = url;
-};
-
-const login = async (event) => {
-  event.preventDefault();
-  const loginButton = document.getElementById('submit');
-  setLoadingButton(loginButton, 'Logging In...');
-  try {
-    const credentials = {
-        email: emailInput.value,
-        password: passwordInput.value
+const handleSubmit = async (event) => {
+    event.preventDefault();
+    const otherInput = document.getElementById('other');
+    const payload = {
+        reason: reasonInput.value,
+        amount: amountInput.value,
+        other: otherInput.value
     };
-    await onLogin(credentials);
-    localStorage.setItem('isAuth', 'true');
-    goPlaces();
-  } catch(error) {
-    const axiosError = error.response.data.errors[0].msg.toLowerCase();
-    let errorMessage;
-    if (axiosError.includes('email') || axiosError.includes('password')) {
-      errorMessage = 'Incorrect email or password';
+    const errorDiv = document.getElementById('error-div');
+    const errorMessage = document.getElementById('error-message');
+    if (!payload.reason) {
+        errorMessage.innerHTML = 'Please describe why you are interested in joining';
+        errorDiv.classList.remove('d-none');
+        reasonInput.classList.add('border');
+        reasonInput.classList.add('border-danger');
+    } else if (!payload.amount) {
+        errorMessage.innerHTML = 'Please specify an amount';
+        errorDiv.classList.remove('d-none');
+        amountInput.classList.add('border');
+        amountInput.classList.add('border-danger');
     } else {
-      errorMessage = 'Could not log in. Check your network connection.'
+        try {
+            await postCommunity(payload);
+            reasonInput.value = null;
+            amountInput.value = null;
+            otherInput.value = null;
+            toastDiv.style.display = 'block';
+            const toast = new bootstrap.Toast(toastDiv);
+            toast.show();
+        } catch(error) {
+            console.log(error);
+        }
     }
-    errorElement.innerHTML = errorMessage;
-    errorElement.classList.remove('d-none');
-    setNotLoadingButton(loginButton, 'Log In');
-  };
 };
+
+const hideToast = () => {
+    toastDiv.style.display = 'none';
+  };
 
 const clearError = () => {
   errorElement.classList.add('d-none');
   errorElement.innerHTML = '';
 };
 
-const goRegister = () => window.location.href = `./register.html${window.location.search}`;
+const handlePageshow = async () => {
+    try {
+      await checkForCookie();
+    } catch(error) {
+      if (error.response.status === 401) {
+        localStorage.setItem('isAuth', 'false');
+        window.location.href = './login.html';
+      }
+    }
+  };
 
-form.addEventListener('submit', login);
-emailInput.addEventListener('input', clearError);
-passwordInput.addEventListener('input', clearError);
-registerLink.addEventListener('click', goRegister);
+form.addEventListener('submit', handleSubmit);
+reasonInput.addEventListener('input', clearError);
+amountInput.addEventListener('input', clearError);
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', goRegister);
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
+window.addEventListener('pageshow', handlePageshow);

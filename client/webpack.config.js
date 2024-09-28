@@ -16,7 +16,8 @@ module.exports = {
     'search-results': './src/search-results.js',
     'history': './src/history.js',
     'view-profile': './src/view-profile.js',
-    'view-historical-wiki': './src/view-historical-wiki.js'
+    'view-historical-wiki': './src/view-historical-wiki.js',
+    'community': './src/community.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -77,6 +78,11 @@ module.exports = {
         template: './src/view-historical-wiki.html',
         filename: 'view-historical-wiki.html',
         chunks: ['view-historical-wiki']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/community.html',
+        filename: 'community.html',
+        chunks: ['community']
       })
   ],
   module: {

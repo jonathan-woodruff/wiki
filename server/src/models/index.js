@@ -99,6 +99,29 @@ const wikiHistorySchema = new Schema({
   }
 });
 
+const communitySchema = new Schema({
+  userId: {
+    type: String,
+    ref: 'User',
+    required: true
+  },
+  userObjectId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  reason: {
+    type: String,
+    required: true
+  },
+  amount: {
+    type: Number,
+    required: true
+  },
+  other: String
+}, { timestamps: true });
+
 exports.UserModel = mongoose.model('User', userSchema);
 exports.WikisModel = mongoose.model('Wikis', wikisSchema);
 exports.WikiHistoryModel = mongoose.model('WikiHistory', wikiHistorySchema);
+exports.communityModel = mongoose.model('Community', communitySchema);
