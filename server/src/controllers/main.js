@@ -111,8 +111,9 @@ exports.postAvatar = async (req, res) => {
 exports.updateProfile = async (req, res) => {
     try {
         const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const avatarURL = req.body.avatarURL;
         user.name = req.body.name;
-        user.photo = req.body.avatarURL;
+        if (avatarURL !== 'not changed') user.photo = req.body.avatarURL;
         user.services = req.body.services;
         user.description = req.body.description;
         await user.save();

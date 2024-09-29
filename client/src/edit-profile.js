@@ -18,9 +18,7 @@ import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 
 const setSources = () => {
-  const picturePreview = document.getElementById('pic-preview');
   const logoImg = document.getElementById('logo-img');
-  picturePreview.src = PeaceChicken;
   logoImg.src = Logo;
 };
 
@@ -265,24 +263,26 @@ const loadServices = (storedServices) => {
 };
 
 //clear avatar from the DOM
-const clearAvatar = () => {
-  const currentAvatar = document.getElementById('avatar');
-  if (currentAvatar) holderElement.removeChild(currentAvatar);
+const clearAvatar = (holder, id) => {
+  const currentAvatar = document.getElementById(id);
+  if (currentAvatar) holder.removeChild(currentAvatar);
 };
 
 //add avatar to the DOM
-const showAvatar = (avatarURL) => {
+const showAvatar = (avatarURL, holder, id, width) => {
   const newAvatar = document.createElement('img');
-  newAvatar.id = 'avatar';
+  newAvatar.id = id;
   newAvatar.src = avatarURL || PeaceChicken;
-  newAvatar.classList.add('w-100');
-  newAvatar.classList.add('h-auto');
-  holderElement.appendChild(newAvatar);
+  newAvatar.classList.add('rounded-circle');
+  newAvatar.style.width = width;
+  newAvatar.style.maxHeight = width;
+  newAvatar.style.height = 'auto';
+  holder.appendChild(newAvatar);
 };
 
-const refreshAvatar = (avatarURL) => {
-  clearAvatar();
-  showAvatar(avatarURL);
+const refreshAvatar = (avatarURL, holder, id, width) => {
+  clearAvatar(holder, id);
+  showAvatar(avatarURL, holder, id, width);
 };
 
 const loadDescription = (description) => descriptionInput.innerHTML || '';
@@ -292,8 +292,10 @@ const loadName = (nameOfUser) => userName.value = nameOfUser || '';
 const loadFields = async () => {
   try {
     const { data } = await getProfileData();
+    const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
     loadName(data.name);
-    refreshAvatar(data.photo);
+    refreshAvatar(data.photo, holderElement, 'avatar', '200px');
+    refreshAvatar(data.photo, navbarHolderSpan, 'navbar-avatar', '40px');
     loadServices(data.services);
     loadDescription(data.description);
   } catch(error) {
@@ -327,18 +329,41 @@ const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
 const toastDiv = document.getElementById('toast');
+const avatarErrorMessage = document.getElementById('avatar-error');
 
-const showPreview = () => {
+let isAvatarError = false;
+let isAvatarUpdated = false;
+
+const hideAvatarError = () => {
+  avatarErrorMessage.classList.add('d-none');
+};
+
+const showAvatarError = () => {
+  avatarErrorMessage.classList.remove('d-none');
+};
+
+const handlePictureInput = () => {
   // Get the selected file
   const file = pictureInput.files[0];
+  if (file.size < 3000000) {
+    isAvatarUpdated = true;
+    hideAvatarError();
+    showPreview(file);
+    isAvatarError = false;
+  } else {
+    isAvatarError = true;
+    showAvatarError();
+  }
+};
 
+const showPreview = (file) => {
   // Create a FileReader object
   const reader = new FileReader();
 
   // Set up the reader's onload event handler
   reader.onload = (event) => {
     // Display the uploaded image
-    refreshAvatar(event.target.result);
+    refreshAvatar(event.target.result, holderElement, 'avatar', '200px');
   };
 
   // Read the selected file as Data URL
@@ -406,11 +431,11 @@ const saveProfile = async (event) => {
     errorService.classList.add('border-danger');
     serviceErrorMessage.innerHTML = 'Please complete your services';
     serviceErrorMessage.classList.remove('d-none');
-  } else {
+  } else if (!isAvatarError) {
     setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
       name: userName.value,
-      avatarURL: holderElement.children[0].src,
+      avatarURL: isAvatarUpdated ? holderElement.children[0].src : 'not changed',
       services: services,
       description: descriptionInput.value
     };
@@ -424,6 +449,7 @@ const saveProfile = async (event) => {
         localStorage.setItem('isAuth', false);
         window.location.reload();
       }
+      console.log(error);
     }
     /*try {
       const formData = new FormData();
@@ -454,7 +480,7 @@ const handlePageshow = async () => {
   }
 };
 
-pictureInput.addEventListener('input', showPreview);
+pictureInput.addEventListener('input', handlePictureInput);
 saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

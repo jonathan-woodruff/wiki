@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Peace Chickens - Edit Proile</title>
+    <title>Peace Chickens - Edit Profile</title>
   </head>
   <body>
     <!-- Spinner -->
@@ -31,7 +31,7 @@
             </li>
             <li id="nav-dropdown" class="dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img alt="Profile picture" id="pic-preview" class="img-fluid rounded-circle d-inline-block align-text-center" width="40" height="40">
+                <span id="navbar-avatar-holder"></span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="./edit-profile.html">Edit Profile</a></li>
@@ -78,13 +78,17 @@
               <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter your name">
             </div>
             <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-5">
-              <div class="rounded-circle mx-auto d-flex align-items-center position-relative mb-1 border" style="width: 200px; height: 200px">
-                <div id="avatar-holder" class="p-0 m-0 w-100 h-auto"></div>
+              <div class="mx-auto d-flex align-items-center position-relative mb-1 rounded-circle border border-dark" style="width: 205px; height: 205px">
+                <div id="avatar-holder" class="mx-auto"></div>
                 <input type="file" name="file" class="form-control position-absolute opacity-0 overflow-hidden bottom-0 left-50 z-1" style="width: 0.1px; height: 0.1px" id="profile-picture" accept=".png,.jpg,.jpeg,.svg">
               </div>
-              <div class="mx-auto p-1 btn btn-secondary rounded">
+              <div class="mx-auto mb-1 p-1 btn btn-secondary rounded">
                 <img id="upload-icon" class="p-1" alt="Upload icon" width="24" height="24">
                 <label for="profile-picture" role="button" class=" p-1">Update profile picture</label>
+              </div>
+              <p class="text-center fw-light" style="font-size: 0.9em">Square images are best (e.g. 200px x 200px)</p>
+              <div class="d-grid col-sm-10 col-md-8 col-lg-6 mx-auto">
+                <p id="avatar-error" class="text-danger text-center d-none">File size too large: max 3MB</p>
               </div>
             </div>
             <div class="row mx-auto">

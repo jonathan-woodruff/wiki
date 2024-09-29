@@ -5,16 +5,17 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
 const path = require('path');
+//const bodyParser = require('body-parser'); 
 
 require('./db'); 
 
 //import passport middleware strategies
 require('./middlewares/passport-middleware');
 
-app.use(express.json()); //parses incoming requests with JSON payloads and enables you to use req.body
+app.use(express.json({limit: '0.5mb'})); //parses incoming requests with JSON payloads and enables you to use req.body
+app.use(express.urlencoded({limit: '0.5mb'})); 
 app.use(cookieParser()); //gives you access to req.cookies or req.signedCookies
 app.use(cors({ origin: CLIENT_URL, credentials: true })); //credentials: true will allow the client to send the cookie containing user credentials
-//app.use(passport.authenticate('jwt', { session: false }));
 app.use(passport.initialize());
 app.use(express.static('./public'));
 
