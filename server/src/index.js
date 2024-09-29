@@ -12,8 +12,8 @@ require('./db');
 //import passport middleware strategies
 require('./middlewares/passport-middleware');
 
-app.use(express.json({limit: '0.5mb'})); //parses incoming requests with JSON payloads and enables you to use req.body
-app.use(express.urlencoded({limit: '0.5mb'})); 
+app.use(express.json({ limit: '2mb' })); //parses incoming requests with JSON payloads and enables you to use req.body
+app.use(express.urlencoded({ limit: '2mb', extended: true })); 
 app.use(cookieParser()); //gives you access to req.cookies or req.signedCookies
 app.use(cors({ origin: CLIENT_URL, credentials: true })); //credentials: true will allow the client to send the cookie containing user credentials
 app.use(passport.initialize());

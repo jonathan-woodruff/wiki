@@ -1,4 +1,5 @@
 import { onLogout } from '../api/auth';
+import PeaceChicken from '../images/peace_chicken.jpg';
 
 export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, createWikiAnchor, communityLI, communityAnchor) => {
     if (isAuth) {
@@ -35,4 +36,27 @@ export const logout = async () => {
       const errorMessage = error.response.data.error; //error from axios
       console.log(errorMessage);
     };
+};
+
+//clear avatar from the DOM
+const clearAvatar = (holder, id) => {
+  const currentAvatar = document.getElementById(id);
+  if (currentAvatar) holder.removeChild(currentAvatar);
+};
+
+//add avatar to the DOM
+const showAvatar = (avatarURL, holder, id, width) => {
+  const newAvatar = document.createElement('img');
+  newAvatar.id = id;
+  newAvatar.src = avatarURL || PeaceChicken;
+  newAvatar.classList.add('rounded-circle');
+  newAvatar.style.width = width;
+  newAvatar.style.maxHeight = width;
+  newAvatar.style.height = 'auto';
+  holder.appendChild(newAvatar);
+};
+
+export const refreshAvatar = (avatarURL, holder, id, width) => {
+  clearAvatar(holder, id);
+  showAvatar(avatarURL, holder, id, width);
 };

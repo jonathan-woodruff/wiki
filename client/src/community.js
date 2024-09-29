@@ -13,15 +13,15 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Configure the navbar 
 ************************************************************/
-import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 import { configureNav, logout } from './utils/navbar';
+import { refreshAvatar } from './utils/navbar';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
-  const picturePreview = document.getElementById('pic-preview');
+  const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
   logoImg.src = Logo;
-  picturePreview.src = PeaceChicken;
+  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
 
 const setNav = () => {

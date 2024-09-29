@@ -51,8 +51,7 @@ exports.login = async (req, res) => {
     try {
         const token = await sign(payload, SECRET); //create jwt token
         return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
-            success: true,
-            message: 'Logged in successfully'
+            avatar: user.photo
         })
     } catch(error) {
         console.log(error.message);

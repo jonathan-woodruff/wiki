@@ -8,17 +8,17 @@ import * as bootstrap from 'bootstrap'; //js
  * Configure the navbar
 ************************************************************/
 import { configureNav, logout } from './utils/navbar';
-import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
+import { refreshAvatar } from './utils/navbar';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
-  const picturePreview = document.getElementById('pic-preview');
   logoImg.src = Logo;
-  picturePreview.src = PeaceChicken;
+  const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
+  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
 
 const setNav = () => {

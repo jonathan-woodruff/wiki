@@ -8,19 +8,19 @@ import * as bootstrap from 'bootstrap'; //js
  * Configure the navbar
 ************************************************************/
 import { configureNav, logout } from './utils/navbar';
-import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
 import SearchIcon from './images/search_icon.svg';
+import { refreshAvatar } from './utils/navbar';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
-  const picturePreview = document.getElementById('pic-preview');
   const searchImg = document.getElementById('search-icon');
   logoImg.src = Logo;
-  picturePreview.src = PeaceChicken;
   searchImg.src = SearchIcon;
+  const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
+  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
 
 const setNav = () => {

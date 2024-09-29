@@ -14,12 +14,14 @@ import * as bootstrap from 'bootstrap'; //js
  * Configure the navbar
 ************************************************************/
 import { configureNav, logout } from './utils/navbar';
-import PeaceChicken from './images/peace_chicken.jpg';
 import Logo from './images/logo.png';
+import { refreshAvatar } from './utils/navbar';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
   logoImg.src = Logo;
+  const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
+  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
 
 const setNav = () => {
@@ -262,29 +264,6 @@ const loadServices = (storedServices) => {
   };
 };
 
-//clear avatar from the DOM
-const clearAvatar = (holder, id) => {
-  const currentAvatar = document.getElementById(id);
-  if (currentAvatar) holder.removeChild(currentAvatar);
-};
-
-//add avatar to the DOM
-const showAvatar = (avatarURL, holder, id, width) => {
-  const newAvatar = document.createElement('img');
-  newAvatar.id = id;
-  newAvatar.src = avatarURL || PeaceChicken;
-  newAvatar.classList.add('rounded-circle');
-  newAvatar.style.width = width;
-  newAvatar.style.maxHeight = width;
-  newAvatar.style.height = 'auto';
-  holder.appendChild(newAvatar);
-};
-
-const refreshAvatar = (avatarURL, holder, id, width) => {
-  clearAvatar(holder, id);
-  showAvatar(avatarURL, holder, id, width);
-};
-
 const loadDescription = (description) => descriptionInput.innerHTML || '';
 
 const loadName = (nameOfUser) => userName.value = nameOfUser || '';
@@ -292,10 +271,8 @@ const loadName = (nameOfUser) => userName.value = nameOfUser || '';
 const loadFields = async () => {
   try {
     const { data } = await getProfileData();
-    const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
     loadName(data.name);
     refreshAvatar(data.photo, holderElement, 'avatar', '200px');
-    refreshAvatar(data.photo, navbarHolderSpan, 'navbar-avatar', '40px');
     loadServices(data.services);
     loadDescription(data.description);
   } catch(error) {
@@ -345,7 +322,7 @@ const showAvatarError = () => {
 const handlePictureInput = () => {
   // Get the selected file
   const file = pictureInput.files[0];
-  if (file.size < 3000000) {
+  if (file.size < 2000000) {
     isAvatarUpdated = true;
     hideAvatarError();
     showPreview(file);
