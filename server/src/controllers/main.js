@@ -266,6 +266,7 @@ exports.getHistoricalWikiData = async (req, res) => {
             title: wiki.title,
             changeDescription: wikiHistory.changeDescription,
             userID: wikiHistory.authorUserId,
+            photo: user.photo,
             authorName: user.name,
             contentTime: wikiHistory.contentTime,
             contentBlocks: wikiHistory.contentBlocks,

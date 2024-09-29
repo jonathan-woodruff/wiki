@@ -33,7 +33,6 @@ const setNav = () => {
 setSources();
 setNav();
 
-
 /************************************************************
  * Load data from backend 
 ************************************************************/
@@ -65,10 +64,12 @@ const loadHeader = () => {
     const countryAndSector = document.getElementById('country-sector');
     countryAndSector.innerHTML = 'Country: ' + data.country + '\xa0\xa0\xa0' + 'Sector: ' + data.sector;
     //link to author profile
+    const holderElement = document.getElementById('avatar-holder');
     const params = new URLSearchParams();
     params.append('user', data.userID);
     const authorLink = document.getElementById('author-link');
     authorLink.href = `./view-profile.html?${params.toString()}`;
+    refreshAvatar(data.photo, holderElement, 'avatar', '40px');
     authorLink.innerHTML += data.authorName;
     //change description
     const descriptionSpan = document.getElementById('change-description');

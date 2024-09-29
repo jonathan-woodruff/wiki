@@ -47,10 +47,6 @@ const showHeader = (name) => {
     h1.innerHTML = name;
 };
 
-const showPhoto = (photo) => {
-
-};
-
 const showDescription = (description) => {
     if (description) {
         const descriptionParagraph = document.getElementById('description');
@@ -86,8 +82,9 @@ const showActivity = (numWikisCreated, numWikiEdits) => {
 const getData = async () => {
     try {
         const { data } = await onViewProfile(userID);
+        const holderElement = document.getElementById('avatar-holder');
         showHeader(data.name);
-        showPhoto(data.photo);
+        refreshAvatar(data.photo, holderElement, 'avatar', '200px');
         showDescription(data.description);
         showServices(data.services);
         showActivity(data.wikisCreated, data.wikiEdits);

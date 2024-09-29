@@ -42,6 +42,7 @@ setNav();
 ************************************************************/
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
+import ImageTool from '@editorjs/image';
 import SimpleImage from '@editorjs/simple-image';
 import Header from '@editorjs/header';
 import Table from '@editorjs/table';

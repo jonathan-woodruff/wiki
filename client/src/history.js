@@ -125,6 +125,7 @@ const showCards = (wikiHistory) => {
         
         const userAvatar = document.createElement('img');
         userAvatar.alt = 'User profile picture';
+        userAvatar.src = edition.user[0].photo;
         userAvatar.classList.add('img-fluid');
         userAvatar.classList.add('rounded-circle');
         userAvatar.classList.add('d-inline-block');

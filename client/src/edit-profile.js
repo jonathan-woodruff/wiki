@@ -65,7 +65,6 @@ const serviceErrorMessage = document.getElementById('error-message');
 const descriptionInput = document.getElementById('description');
 const userName = document.getElementById('name');
 const addServiceButton = document.getElementById('add-service');
-const avatarPreview = document.getElementById('avatar-preview');
 const holderElement = document.getElementById('avatar-holder');
 
 const addServiceRow = () => {
