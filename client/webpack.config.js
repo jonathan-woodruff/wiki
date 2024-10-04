@@ -6,6 +6,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   mode: 'development',
+  externals: {
+    stripe: 'stripe',
+  },
   entry: {
     'home': './src/index.js',
     'create-wiki': './src/create-wiki.js',
@@ -17,7 +20,9 @@ module.exports = {
     'history': './src/history.js',
     'view-profile': './src/view-profile.js',
     'view-historical-wiki': './src/view-historical-wiki.js',
-    'community': './src/community.js'
+    'community': './src/community.js',
+    'beer': './src/beer.js',
+    'beer-complete': './src/beer-complete.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -83,6 +88,16 @@ module.exports = {
         template: './src/community.html',
         filename: 'community.html',
         chunks: ['community']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/beer.html',
+        filename: 'beer.html',
+        chunks: ['beer']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/beer-complete.html',
+        filename: 'beer-complete.html',
+        chunks: ['beer-complete']
       })
   ],
   module: {

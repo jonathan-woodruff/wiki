@@ -21,7 +21,8 @@ const {
     getViewProfileData,
     getHistoricalWikiData,
     postAvatar,
-    postCommunity
+    postCommunity,
+    createPaymentIntent
 } = require('../controllers/main');
 const { userAuth } = require('../middlewares/auth-middleware');
 
@@ -37,5 +38,6 @@ router.get('/viewProfile', getViewProfileData);
 router.get('/viewHistoricalWiki', getHistoricalWikiData);
 router.post('/postAvatar', userAuth, upload.single('avatar'), postAvatar);
 router.post('/postCommunity', userAuth, postCommunity);
+router.post('/createPaymentIntent', createPaymentIntent);
 
 module.exports = router;

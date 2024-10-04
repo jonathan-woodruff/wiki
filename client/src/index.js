@@ -87,6 +87,7 @@ const logoutLink = document.getElementById('logout-link');
 const submitButton = document.getElementById('submit');
 const searchEngine = document.getElementById('search-engine');
 const searchDiv = document.getElementById('search-div');
+const beerButton = document.getElementById('beer');
 
 logoutLink.addEventListener('click', logout);
 submitButton.addEventListener('click', submitSearch);
@@ -95,4 +96,5 @@ searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
+beerButton.addEventListener('click', () => window.location.href = './beer.html');
 navRegisterButton.addEventListener('click', () => window.location.href = './login.html');

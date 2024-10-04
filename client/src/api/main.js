@@ -50,3 +50,7 @@ export async function onViewHistoricalWiki(wikiHistoryID) {
 export async function postCommunity(payload) {
     return await axios.post(`${SERVER_URL}/main/postCommunity`, payload);
 };
+
+export async function createPaymentIntent(payload) {
+    return await axios.post(`${SERVER_URL}/main/createPaymentIntent`, payload);
+};

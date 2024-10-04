@@ -7,5 +7,6 @@ module.exports = {
     SERVER_URL: process.env.SERVER_URL,
     SECRET: process.env.SECRET,
     MONGO_URL: process.env.MONGO_URL,
-    DB_NAME: process.env.DB_NAME
+    DB_NAME: process.env.DB_NAME,
+    STRIPE_KEY: process.env.STRIPE_KEY
 };
