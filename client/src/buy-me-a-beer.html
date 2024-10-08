@@ -56,7 +56,7 @@
     <div id="main-container" class="container py-4 px-3 mx-auto" style="display: none;">
       <div class="row">
         <div class="col">
-          <h1 id="h1" class="text-center mt-5 mb-5"></h1>
+          <h1 id="h1" class="text-center mt-5 mb-5">Buy Me a Beer</h1>
         </div>
       </div>
       <div class="row">
@@ -71,28 +71,32 @@
           <div id="description-section" class="row mb-4">
             <div class="col">
               <div class="col">
-                <h2 class="h5">Description</h2>
-                <p id="description" class="p-1"></p>
+                <p id="description" class="p-1">Thobela! I'm Jonathan, PCV - South Africa, and I've spent hundreds of hours and some $$ creating Peace Chickens so that we can support each other. Your $ is a great way to say thanks, and I'll cheers to that.</p>
               </div>
             </div>
           </div>
-          <div id="service-section" class="row mb-4">
-            <div class="col">
-              <h2 class="h5">Services</h2>
-                <ul id="services" class="list-group list-group-flush">
-                  <!-- sample list item populated using js
-                  <li class="list-group-item">An item</li>
-                  -->
-                </ul>
+          <div id="button-row" class="row mb-4">
+            <span class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+              <button id="button-5" class="btn btn-outline-primary rounded">$5</button>
+            </span>
+            <span class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+              <button id="button-10" class="btn btn-outline-primary rounded">$10</button>
+            </span>
+            <span class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+              <button id="button-custom" class="btn btn-outline-primary rounded">Custom</button>
+            </span>
+          </div>
+          <div id="custom-div" class="row mb-4" style="display: none;">
+            <div class="col col-10 col-sm-11">
+              <span>
+                <label for="custom-input">Custom amount (USD): </label> 
+                <input id="custom-input" type="number" class="form-control border-0 shadow-none"/>
+              </span>
             </div>
           </div>
-          <div class="row mb-4"></div>
-            <div class="col">
-              <h2 class="h5">Activity</h2>
-                <ul class="list-group list-group-flush">
-                  <li id="wikis-created" class="list-group-item"></li>
-                  <li id="wiki-edits" class="list-group-item"></li>
-                </ul>
+          <div class="row">
+            <div class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+              <button id="continue" class="btn btn-primary rounded">Continue</button>
             </div>
           </div>
         </div>
