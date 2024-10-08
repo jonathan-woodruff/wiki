@@ -49,11 +49,22 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
+import Beer from './images/beer.png';
+
 const logoutLink = document.getElementById('logout-link');
 const customButton = document.getElementById('button-custom');
 const button5 = document.getElementById('button-5');
 const button10 = document.getElementById('button-10');
 const customDiv = document.getElementById('custom-div');
+const beerImagesDiv = document.getElementById('beer-images');
+const beerImage1 = document.getElementById('beer-image1');
+const beerImage2 = document.getElementById('beer-image2');
+const beerImage3 = document.getElementById('beer-image3');
+const beerCheers = document.getElementById('beer-cheers');
+
+beerImage1.src = Beer;
+beerImage2.src = Beer;
+beerImage3.src = Beer;
 
 const clearButtons = () => {
     customButton.classList.replace('btn-outline-success', 'btn-outline-primary');
@@ -63,22 +74,32 @@ const clearButtons = () => {
 
 const handleButtonClick = (event) => {
     clearButtons();
-    const fixedButton = event.currentTarget;
-    console.log(fixedButton);
-    fixedButton.classList.replace('btn-outline-primary', 'btn-outline-success')
-};
 
-const handleFixedClick = (event) => {
-    handleButtonClick(event);
-    customDiv.style.display = 'none';
-};
+    const clickedButton = event.currentTarget;
+    clickedButton.classList.replace('btn-outline-primary', 'btn-outline-success')
 
-const handleCustomClick = (event) => {
-    handleButtonClick(event);
-    customDiv.style.display = 'block';
+    customDiv.style.display = clickedButton.id === 'button-custom' ? '' : 'none';
+
+    if (clickedButton.id === 'button-5') {
+        beerImage1.classList.remove('d-none');
+        beerImage2.classList.add('d-none');
+        beerImage3.classList.add('d-none');
+        beerCheers.innerHTML = 'Cheers!'
+    } else if (clickedButton.id === 'button-10') {
+        beerImage1.classList.remove('d-none');
+        beerImage2.classList.remove('d-none');
+        beerImage3.classList.add('d-none');
+        beerCheers.innerHTML = 'Cheers! Cheers!'
+    } else { //custom button clicked
+        beerImage1.classList.remove('d-none');
+        beerImage2.classList.remove('d-none');
+        beerImage3.classList.remove('d-none');    
+        beerCheers.innerHTML = 'Cheeeeeeeeers!'
+    }
+    beerImagesDiv.style.display = '';
 };
 
 logoutLink.addEventListener('click', logout);
-customButton.addEventListener('click', handleCustomClick);
-button5.addEventListener('click', handleFixedClick);
-button10.addEventListener('click', handleFixedClick);
+customButton.addEventListener('click', handleButtonClick);
+button5.addEventListener('click', handleButtonClick);
+button10.addEventListener('click', handleButtonClick);
