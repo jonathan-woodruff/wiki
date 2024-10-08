@@ -63,7 +63,7 @@
         <div class="col col-md-9 col-lg-6 mx-auto">
           <div class="row mb-4">
             <div class="col">
-              <div class="mx-auto d-flex align-items-center rounded-circle border border-dark" style="width: 205px; height: 205px">
+              <div class="mx-auto d-flex align-items-center rounded-circle border border-dark" style="width: 105px; height: 105px">
                 <div id="avatar-holder" class="mx-auto"></div>
               </div>
             </div>
@@ -75,23 +75,30 @@
               </div>
             </div>
           </div>
-          <div id="button-row" class="row mb-4">
-            <span class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
-              <button id="button-5" class="btn btn-outline-primary rounded">$5</button>
-            </span>
-            <span class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
-              <button id="button-10" class="btn btn-outline-primary rounded">$10</button>
-            </span>
-            <span class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
-              <button id="button-custom" class="btn btn-outline-primary rounded">Custom</button>
-            </span>
-          </div>
-          <div id="custom-div" class="row mb-4" style="display: none;">
-            <div class="col col-10 col-sm-11">
-              <span>
-                <label for="custom-input">Custom amount (USD): </label> 
-                <input id="custom-input" type="number" class="form-control border-0 shadow-none"/>
-              </span>
+          <div class="row mb-4 shadow-lg">
+            <div class="col">
+              <div id="button-row">
+                <div class="col col-4 d-grid mt-4">
+                  <button id="button-5" class="btn btn-outline-primary rounded mb-1">$5</button>
+                  <p class="text-center fw-light">1 beer</p>
+                </div>
+                <div class="col col-4 d-grid mt-4">
+                  <button id="button-10" class="btn btn-outline-primary rounded mb-1">$10</button>
+                  <p class="text-center fw-light">2 beers</p>
+                </div>
+                <div class="col col-4 d-grid mt-4">
+                  <button id="button-custom" class="btn btn-outline-primary rounded mb-1">Custom</button>
+                  <p class="text-center fw-light">any beers</p>
+                </div>
+              </div>
+              <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                  <label for="custom-amount" class="col-form-label">Custom amount (USD): </label>
+                </div>
+                <div class="col-auto">
+                  <input id="custom-amount" class="form-control">
+                </div>
+              </div>
             </div>
           </div>
           <div class="row">
