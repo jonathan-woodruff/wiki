@@ -21,7 +21,8 @@ module.exports = {
     'view-profile': './src/view-profile.js',
     'view-historical-wiki': './src/view-historical-wiki.js',
     'community': './src/community.js',
-    'beer': './src/beer.js',
+    'buy-me-a-beer': './src/buy-me-a-beer.js',
+    'beer-pay': './src/beer-pay.js',
     'beer-complete': './src/beer-complete.js'
   },
   output: {
@@ -90,9 +91,14 @@ module.exports = {
         chunks: ['community']
       }),
       new HtmlWebpackPlugin({
-        template: './src/beer.html',
-        filename: 'beer.html',
-        chunks: ['beer']
+        template: './src/buy-me-a-beer.html',
+        filename: 'buy-me-a-beer.html',
+        chunks: ['buy-me-a-beer']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/beer-pay.html',
+        filename: 'beer-pay.html',
+        chunks: ['beer-pay']
       }),
       new HtmlWebpackPlugin({
         template: './src/beer-complete.html',

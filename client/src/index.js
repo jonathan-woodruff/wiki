@@ -96,5 +96,5 @@ searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
-beerButton.addEventListener('click', () => window.location.href = './beer.html');
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
