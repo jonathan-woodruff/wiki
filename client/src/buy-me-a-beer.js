@@ -33,6 +33,21 @@ setSources();
 setNav();
 
 /************************************************************
+ * Configure images
+************************************************************/
+import BeerAvatar from './images/beer_avatar.png';
+import Beer from './images/beer.png';
+const beerAvatar = document.getElementById('beer-avatar');
+const beerImage1 = document.getElementById('beer-image1');
+const beerImage2 = document.getElementById('beer-image2');
+const beerImage3 = document.getElementById('beer-image3');
+
+beerAvatar.src = BeerAvatar
+beerImage1.src = Beer;
+beerImage2.src = Beer;
+beerImage3.src = Beer;
+
+/************************************************************
  * Show the page to the user
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
@@ -49,22 +64,28 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import Beer from './images/beer.png';
 
 const logoutLink = document.getElementById('logout-link');
 const customButton = document.getElementById('button-custom');
 const button5 = document.getElementById('button-5');
 const button10 = document.getElementById('button-10');
-const customDiv = document.getElementById('custom-div');
-const beerImagesDiv = document.getElementById('beer-images');
-const beerImage1 = document.getElementById('beer-image1');
-const beerImage2 = document.getElementById('beer-image2');
-const beerImage3 = document.getElementById('beer-image3');
-const beerCheers = document.getElementById('beer-cheers');
+const continueDiv = document.getElementById('continue-div');
+const continueButton = document.getElementById('continue');
+const customAmountInput = document.getElementById('custom-amount');
 
-beerImage1.src = Beer;
-beerImage2.src = Beer;
-beerImage3.src = Beer;
+const disableContinueButton = () => {
+    continueDiv.setAttribute('title', 'Choose an amount');
+    continueButton.classList.add('disabled');
+    continueButton.setAttribute('tabindex', '-1');
+    continueButton.setAttribute('aria-disabled', 'true');
+};
+
+const enableContinueButton = () => {
+    continueDiv.setAttribute('title', '');
+    continueButton.classList.remove('disabled');
+    continueButton.setAttribute('tabindex', '1');
+    continueButton.setAttribute('aria-disabled', 'false');
+};
 
 const clearButtons = () => {
     customButton.classList.replace('btn-outline-success', 'btn-outline-primary');
@@ -73,33 +94,58 @@ const clearButtons = () => {
 };
 
 const handleButtonClick = (event) => {
+    const beerCheers = document.getElementById('beer-cheers');
+    const beerImagesDiv = document.getElementById('beer-images');
+    const customDiv = document.getElementById('custom-div');
+
+    //make all the buttons have a blue outline
     clearButtons();
 
+    //make the selected button have a green outline
     const clickedButton = event.currentTarget;
     clickedButton.classList.replace('btn-outline-primary', 'btn-outline-success')
 
+    //Show or hide the custom amount input field
     customDiv.style.display = clickedButton.id === 'button-custom' ? '' : 'none';
 
     if (clickedButton.id === 'button-5') {
+        //show/hide beer images and cheers text
         beerImage1.classList.remove('d-none');
         beerImage2.classList.add('d-none');
         beerImage3.classList.add('d-none');
         beerCheers.innerHTML = 'Cheers!'
+
+        enableContinueButton();
     } else if (clickedButton.id === 'button-10') {
+        //show/hide beer images and cheers text
         beerImage1.classList.remove('d-none');
         beerImage2.classList.remove('d-none');
         beerImage3.classList.add('d-none');
         beerCheers.innerHTML = 'Cheers! Cheers!'
+
+        enableContinueButton();
     } else { //custom button clicked
+        //show/hide beer images and cheers text
         beerImage1.classList.remove('d-none');
         beerImage2.classList.remove('d-none');
         beerImage3.classList.remove('d-none');    
         beerCheers.innerHTML = 'Cheeeeeeeeers!'
+        //disable continueButton if input field is empty
+        if (customAmountInput.value === '') disableContinueButton();
     }
     beerImagesDiv.style.display = '';
+};
+
+const handleInput = () => {
+    if (customAmountInput.value === '') {
+        disableContinueButton();
+    } else if (continueButton.classList.contains('disabled')) { //if continueButton is disabled...
+        enableContinueButton();
+    }
 };
 
 logoutLink.addEventListener('click', logout);
 customButton.addEventListener('click', handleButtonClick);
 button5.addEventListener('click', handleButtonClick);
 button10.addEventListener('click', handleButtonClick);
+customAmountInput.addEventListener('input', handleInput);
