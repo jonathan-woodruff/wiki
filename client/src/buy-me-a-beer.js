@@ -73,6 +73,8 @@ const continueDiv = document.getElementById('continue-div');
 const continueButton = document.getElementById('continue');
 const customAmountInput = document.getElementById('custom-amount');
 
+let selectedButton;
+
 const disableContinueButton = () => {
     continueDiv.setAttribute('title', 'Choose an amount');
     continueButton.classList.add('disabled');
@@ -114,6 +116,8 @@ const handleButtonClick = (event) => {
         beerImage2.classList.add('d-none');
         beerImage3.classList.add('d-none');
         beerCheers.innerHTML = 'Cheers!'
+        //set button as selected
+        selectedButton = 'button5';
 
         enableContinueButton();
     } else if (clickedButton.id === 'button-10') {
@@ -122,6 +126,8 @@ const handleButtonClick = (event) => {
         beerImage2.classList.remove('d-none');
         beerImage3.classList.add('d-none');
         beerCheers.innerHTML = 'Cheers! Cheers!'
+        //set button as selected
+        selectedButton = 'button10';
 
         enableContinueButton();
     } else { //custom button clicked
@@ -130,6 +136,8 @@ const handleButtonClick = (event) => {
         beerImage2.classList.remove('d-none');
         beerImage3.classList.remove('d-none');    
         beerCheers.innerHTML = 'Cheeeeeeeeers!'
+        //set button as selected
+        selectedButton = 'custom';
         //disable continueButton if input field is empty
         if (customAmountInput.value === '') disableContinueButton();
     }
@@ -144,8 +152,23 @@ const handleInput = () => {
     }
 };
 
+const getSelectedAmount = () => {
+    if (selectedButton === 'button5') return '500';
+    if (selectedButton === 'button10') return '1000';
+    if (selectedButton === 'custom') return (customAmountInput.value * 100).toString();
+};
+
+const handleContinue = () => {
+    const amount = getSelectedAmount();
+    const params = new URLSearchParams();
+    params.append('amount', amount);
+    const url = `./beer-pay.html?${params.toString()}`;
+    window.location.href = url;
+};
+
 logoutLink.addEventListener('click', logout);
 customButton.addEventListener('click', handleButtonClick);
 button5.addEventListener('click', handleButtonClick);
 button10.addEventListener('click', handleButtonClick);
 customAmountInput.addEventListener('input', handleInput);
+continueButton.addEventListener('click', handleContinue);
