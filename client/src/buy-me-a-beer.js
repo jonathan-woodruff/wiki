@@ -72,8 +72,17 @@ const button10 = document.getElementById('button-10');
 const continueDiv = document.getElementById('continue-div');
 const continueButton = document.getElementById('continue');
 const customAmountInput = document.getElementById('custom-amount');
+const errorRow = document.getElementById('error-row');
 
 let selectedButton;
+
+const hideCustomInputError = () => {
+    errorRow.classList.add('d-none');
+};
+
+const showCustomInputError = () => {
+    errorRow.classList.remove('d-none');
+};
 
 const disableContinueButton = () => {
     continueDiv.setAttribute('title', 'Choose an amount');
@@ -119,6 +128,7 @@ const handleButtonClick = (event) => {
         //set button as selected
         selectedButton = 'button5';
 
+        hideCustomInputError();
         enableContinueButton();
     } else if (clickedButton.id === 'button-10') {
         //show/hide beer images and cheers text
@@ -129,6 +139,7 @@ const handleButtonClick = (event) => {
         //set button as selected
         selectedButton = 'button10';
 
+        hideCustomInputError();
         enableContinueButton();
     } else { //custom button clicked
         //show/hide beer images and cheers text
@@ -145,6 +156,7 @@ const handleButtonClick = (event) => {
 };
 
 const handleInput = () => {
+    hideCustomInputError();
     if (customAmountInput.value === '') {
         disableContinueButton();
     } else if (continueButton.classList.contains('disabled')) { //if continueButton is disabled...
@@ -155,15 +167,22 @@ const handleInput = () => {
 const getSelectedAmount = () => {
     if (selectedButton === 'button5') return '500';
     if (selectedButton === 'button10') return '1000';
-    if (selectedButton === 'custom') return (customAmountInput.value * 100).toString();
+    if (selectedButton === 'custom') {
+        const inputAmount = customAmountInput.value;
+        if (inputAmount >= 1) return Math.floor(inputAmount * 100).toString();
+        disableContinueButton();
+        showCustomInputError();
+    }
 };
 
 const handleContinue = () => {
     const amount = getSelectedAmount();
-    const params = new URLSearchParams();
-    params.append('amount', amount);
-    const url = `./beer-pay.html?${params.toString()}`;
-    window.location.href = url;
+    if (amount) {
+        const params = new URLSearchParams();
+        params.append('amount', amount);
+        const url = `./beer-pay.html?${params.toString()}`;
+        window.location.href = url;
+    }
 };
 
 logoutLink.addEventListener('click', logout);

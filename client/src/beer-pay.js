@@ -5,7 +5,10 @@ import { loadStripe } from '@stripe/stripe-js';
 const stripe = await loadStripe(STRIPE_KEY);
 
 // The items the customer wants to buy
-const items = [{ id: "xl-tshirt", amount: 1000 }];
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const amount = Number(urlParams.get('amount'));
+const items = [{ id: "xl-tshirt", amount: amount }];
 
 let elements;
 
@@ -15,6 +18,9 @@ document.getElementById('payment-form').addEventListener("submit", handleSubmit)
 
 // Fetches a payment intent and captures the client secret
 async function initialize() {
+  //ensure the amount is valid
+  if (!(typeof(amount) === 'number' && amount >= 100 && Number.isInteger(amount))) window.location.href = './buy-me-a-beer.html';
+
   const { data } = await createPaymentIntent(items);
   const clientSecret = data.clientSecret;
   const dpmCheckerLink = data.dpmCheckerLink;
