@@ -1,6 +1,13 @@
 import { createPaymentIntent } from './api/main';
 import { STRIPE_KEY } from './constants/index';
 import { loadStripe } from '@stripe/stripe-js';
+import BeerCheers from './images/beer-cheers.png';
+
+/************************************************************ 
+ * Import Bootstrap CSS and JavaScript 
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
 
 const stripe = await loadStripe(STRIPE_KEY);
 
@@ -8,7 +15,7 @@ const stripe = await loadStripe(STRIPE_KEY);
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const amount = Number(urlParams.get('amount'));
-const items = [{ id: "xl-tshirt", amount: amount }];
+const items = [{ id: "beer", amount: amount }];
 
 let elements;
 
@@ -37,8 +44,11 @@ async function initialize() {
   const paymentElement = elements.create("payment", paymentElementOptions);
   paymentElement.mount("#payment-element");
 
-  // [DEV] For demo purposes only
-  setDpmCheckerLink(dpmCheckerLink);
+  //assign image source
+  document.getElementById('beer-cheers').src = BeerCheers
+
+  //show the total amount the user is paying
+  document.getElementById('total').innerHTML += `$${(amount / 100).toFixed(2)}`;
 }
 
 async function handleSubmit(e) {
@@ -93,8 +103,4 @@ function setLoading(isLoading) {
     document.querySelector("#spinner").classList.add("hidden");
     document.querySelector("#button-text").classList.remove("hidden");
   }
-}
-
-function setDpmCheckerLink(url) {
-  document.querySelector("#dpm-integration-checker").href = url;
 }
