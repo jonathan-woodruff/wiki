@@ -1,6 +1,12 @@
 import { STRIPE_KEY } from './constants/index';
 import { loadStripe } from '@stripe/stripe-js';
 
+/************************************************************ 
+ * Import Bootstrap CSS and JavaScript 
+************************************************************/
+import './scss/styles.scss'; //css
+import * as bootstrap from 'bootstrap'; //js
+
 // ------- UI Resources -------
 const SuccessIcon = 
 `<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,6 +28,7 @@ const InfoIcon =
 // ------- UI helpers -------
 function setPaymentDetails(intent) {
   let statusText = "Something went wrong, please try again.";
+  let statusSubtext = "";
   let iconColor = "#DF1B41";
   let icon = ErrorIcon;
 
@@ -34,6 +41,7 @@ function setPaymentDetails(intent) {
   switch (intent.status) {
     case "succeeded":
       statusText = "Payment succeeded";
+      statusSubtext = "Jonathan says, thank you!!! I'll send you an email confirmation."
       iconColor = "#30B130";
       icon = SuccessIcon;
       break;
@@ -51,7 +59,8 @@ function setPaymentDetails(intent) {
   
   document.querySelector("#status-icon").style.backgroundColor = iconColor;
   document.querySelector("#status-icon").innerHTML = icon;
-  document.querySelector("#status-text").textContent= statusText;
+  document.querySelector("#status-text").textContent = statusText;
+  document.querySelector("#status-subtext").innerHTML = statusSubtext;
   document.querySelector("#intent-id").textContent = intent.id;
   document.querySelector("#intent-status").textContent = intent.status;
   document.querySelector("#view-details").href = `https://dashboard.stripe.com/payments/${intent.id}`;
@@ -60,7 +69,8 @@ function setPaymentDetails(intent) {
 function setErrorState() {
   document.querySelector("#status-icon").style.backgroundColor = "#DF1B41";
   document.querySelector("#status-icon").innerHTML = ErrorIcon;
-  document.querySelector("#status-text").textContent= "Something went wrong, please try again.";
+  document.querySelector("#status-text").textContent = "Something went wrong, please try again.";
+  document.querySelector("#status-subtext").innerHTML = "";
   document.querySelector("#details-table").classList.add("hidden");
   document.querySelector("#view-details").classList.add("hidden");
 }
