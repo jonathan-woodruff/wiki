@@ -84,6 +84,7 @@ exports.getProfileData = (req, res) => {
         //const base64Avatar = fs.readFileSync(avatarPath, { encoding: 'base64' })
         return res.status(200).json({
             name: user.name,
+            email: user.email,
             photo: user.photo,
             services: user.services,
             description: user.description
@@ -116,6 +117,7 @@ exports.updateProfile = async (req, res) => {
         const user = await UserModel.findOne({ email: req.user.email }).exec();
         const avatarURL = req.body.avatarURL;
         user.name = req.body.name;
+        user.email = req.body.email;
         if (avatarURL !== 'not changed') user.photo = req.body.avatarURL;
         user.services = req.body.services;
         user.description = req.body.description;
@@ -333,10 +335,10 @@ exports.createPaymentIntent = async (req, res) => {
   });
 };
 
-exports.sendPaymentConfirmationEmail = async (req, res) => {
+exports.sendEmail = async (req, res) => {
     toEmail = req.body.email;
-    toName = req.body.name;
-    amount = req.body.amount;
+    subject = req.body.subject;
+    body = req.body.body;
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -349,8 +351,8 @@ exports.sendPaymentConfirmationEmail = async (req, res) => {
     const mailOptions = {
         from: EMAIL_ADDRESS,
         to: toEmail,
-        subject: 'Thanks for the beer!!',
-        text: 'Hey, ' + toName + '!\n\nThank you for the $' + (amount / 100).toFixed(2).toString() + '. If you need to reach out to me for anything, you can just email me back. \n\nCheers, \n\nJonathan | Peace Chickens'
+        subject: subject,
+        text: body
     };
       
     transporter.sendMail(mailOptions, function(error, info){

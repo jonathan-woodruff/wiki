@@ -55,6 +55,6 @@ export async function createPaymentIntent(payload) {
     return await axios.post(`${SERVER_URL}/main/createPaymentIntent`, payload);
 };
 
-export async function sendPaymentConfirmationEmail(payload) {
-    return await axios.post(`${SERVER_URL}/main/sendPaymentConfirmationEmail`, payload);
+export async function sendEmail(payload) {
+    return await axios.post(`${SERVER_URL}/main/sendEmail`, payload);
 };

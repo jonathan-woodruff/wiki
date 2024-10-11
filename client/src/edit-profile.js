@@ -61,9 +61,10 @@ import { sectors, countries } from './constants/profile';
 import RemoveIcon from './images/remove.png';
 
 const serviceSection = document.getElementById('service-section');
-const serviceErrorMessage = document.getElementById('error-message');
+const errorMessage = document.getElementById('error-message');
 const descriptionInput = document.getElementById('description');
 const userName = document.getElementById('name');
+const userEmail = document.getElementById('email');
 const addServiceButton = document.getElementById('add-service');
 const holderElement = document.getElementById('avatar-holder');
 
@@ -102,8 +103,8 @@ const clearServiceError = (event) => {
   const service = event.target.parentNode.parentNode;
   service.classList.remove('border');
   service.classList.remove('border-danger');
-  serviceErrorMessage.classList.add('d-none');
-  serviceErrorMessage.innerHTML = '';
+  errorMessage.classList.add('d-none');
+  errorMessage.innerHTML = '';
 };
 
 const loadCountries = (countrySelectElement) => {
@@ -267,10 +268,13 @@ const loadDescription = (description) => descriptionInput.innerHTML || '';
 
 const loadName = (nameOfUser) => userName.value = nameOfUser || '';
 
+const loadEmail = (emailOfUser) => userEmail.value = emailOfUser || '';
+
 const loadFields = async () => {
   try {
     const { data } = await getProfileData();
     loadName(data.name);
+    loadEmail(data.email);
     refreshAvatar(data.photo, holderElement, 'avatar', '200px');
     loadServices(data.services);
     loadDescription(data.description);
@@ -306,9 +310,12 @@ const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
 const toastDiv = document.getElementById('toast');
 const avatarErrorMessage = document.getElementById('avatar-error');
+const pInfoButton = document.getElementById('pinfo-button');
 
 let isAvatarError = false;
 let isAvatarUpdated = false;
+let isNameError = false;
+let isEmailError = false;
 
 const hideAvatarError = () => {
   avatarErrorMessage.classList.add('d-none');
@@ -405,12 +412,23 @@ const saveProfile = async (event) => {
   if (errorService) {
     errorService.classList.add('border');
     errorService.classList.add('border-danger');
-    serviceErrorMessage.innerHTML = 'Please complete your services';
-    serviceErrorMessage.classList.remove('d-none');
+    errorMessage.innerHTML = 'Please complete your services';
+    errorMessage.classList.remove('d-none');
+  } else if (!userName.value) {
+    isNameError = true;
+    userName.classList.add('border-danger');
+    errorMessage.innerHTML = 'Please enter your name';
+    errorMessage.classList.remove('d-none');
+  } else if (!userEmail.value) {
+    isEmailError = true;
+    userEmail.classList.add('border-danger');
+    errorMessage.innerHTML = 'Please enter your email';
+    errorMessage.classList.remove('d-none');
   } else if (!isAvatarError) {
     setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
       name: userName.value,
+      email: userEmail.value,
       avatarURL: isAvatarUpdated ? holderElement.children[0].src : 'not changed',
       services: services,
       description: descriptionInput.value
@@ -456,8 +474,38 @@ const handlePageshow = async () => {
   }
 };
 
+const handlePersonalInfoClick = (event) => {
+  event.preventDefault();
+  const pInfoFields = document.getElementById('pinfo-fields');
+  const pInfoDiv = document.getElementById('pinfo-div');
+  pInfoDiv.style.display = 'none';
+  pInfoFields.style.display = 'block';
+};
+
+const clearErrorMessage = () => {
+  errorMessage.classList.add('d-none');
+  errorMessage.innerHTML = '';
+};
+
+const resetErrorStates = () => {
+  isNameError = false;
+  isEmailError = false;
+};
+
+const clearError = (event) => {
+  const inputField = event.currentTarget;
+  if ((inputField.id === 'name' && isNameError) || (inputField.id === 'email' && isEmailError)) {
+    inputField.classList.remove('border-danger');
+    clearErrorMessage();
+    resetErrorStates();
+  }
+};
+
 pictureInput.addEventListener('input', handlePictureInput);
 saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);
+pInfoButton.addEventListener('click', handlePersonalInfoClick);
+userName.addEventListener('input', clearError);
+userEmail.addEventListener('input', clearError);

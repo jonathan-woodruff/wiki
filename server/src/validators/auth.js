@@ -6,6 +6,16 @@ const { UserModel } = require('../models/index');
 //password
 const password = check('password').isLength({ min: 6, max: 15 }).withMessage('Password must be between 6 and 15 characters');
 
+const changedPassword = check('changedPassword').isLength({ min: 6, max: 15 }).withMessage('Password must be between 6 and 15 characters');
+
+const correctCurrentPassword = check('currentPassword').custom(async(value, { req }) => {
+    const user = req.user;
+    const correctPassword = await compare(req.body.currentPassword, user.password);
+    if (!correctPassword) {
+        throw new Error('Incorrect current password');
+    }
+})
+
 //email
 const email = check('email').isEmail().withMessage('Please enter a valid email address');
 
@@ -33,5 +43,6 @@ const loginFieldsCheck = check('email').custom(async (value, { req }) => {
 
 module.exports = {
     registerValidation: [email, password, emailExists],
-    loginValidation: [email, loginFieldsCheck]
+    loginValidation: [email, loginFieldsCheck],
+    changePasswordValidation: [correctCurrentPassword, changedPassword]
 };

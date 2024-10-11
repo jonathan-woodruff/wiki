@@ -68,12 +68,14 @@ async function setPaymentDetails(intent) {
   if (sendEmail) {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+    const amount = urlParams.get('amount');
+    const toName = urlParams.get('name');
     const payload = {
-      name: urlParams.get('name'),
       email: urlParams.get('email'),
-      amount: urlParams.get('amount')
-    }
-    await sendPaymentConfirmationEmail(payload);
+      subject: 'Thanks for the beer!',
+      body: 'Hey, ' + toName + '!\n\nThank you for the $' + (amount / 100).toFixed(2).toString() + '. If you need to reach out to me for anything, you can just email me back. \n\nCheers, \n\nJonathan | Peace Chickens'
+    };
+    await sendEmail(payload);
   }
   //document.querySelector("#intent-id").textContent = intent.id;
   //document.querySelector("#intent-status").textContent = intent.status;

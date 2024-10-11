@@ -23,7 +23,8 @@ module.exports = {
     'community': './src/community.js',
     'buy-me-a-beer': './src/buy-me-a-beer.js',
     'beer-pay': './src/beer-pay.js',
-    'beer-complete': './src/beer-complete.js'
+    'beer-complete': './src/beer-complete.js',
+    'change-password': './src/change-password.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -104,6 +105,11 @@ module.exports = {
         template: './src/beer-complete.html',
         filename: 'beer-complete.html',
         chunks: ['beer-complete']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/change-password.html',
+        filename: 'change-password.html',
+        chunks: ['change-password']
       })
   ],
   module: {

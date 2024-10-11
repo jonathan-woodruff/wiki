@@ -22,3 +22,7 @@ export async function checkProtected() {
 export async function checkForCookie() {
     return await axios.get(`${SERVER_URL}/auth/checkForCookie`);
 };
+
+export async function putPassword(payload) {
+    return await axios.put(`${SERVER_URL}/auth/changePassword`, payload);
+};
