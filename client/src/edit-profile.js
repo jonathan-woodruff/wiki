@@ -55,7 +55,7 @@ configureButtons();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { getProfileData, putProfile, postAvatar, getAvatar } from './api/main';
+import { getProfileData, putProfile } from './api/main';
 import { SERVER_URL } from './constants/index';
 import { sectors, countries } from './constants/profile';
 import RemoveIcon from './images/remove.png';
@@ -303,14 +303,17 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
  * All other JavaScript
 ************************************************************/
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { checkForCookie } from './api/auth';
+import { checkForCookie, putUserName, putUserEmail } from './api/auth';
 
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
 const toastDiv = document.getElementById('toast');
 const avatarErrorMessage = document.getElementById('avatar-error');
-const pInfoButton = document.getElementById('pinfo-button');
+const nameRevealButton = document.getElementById('name-reveal-button');
+const emailRevealButton = document.getElementById('email-reveal-button');
+const saveNameButton = document.getElementById('save-name');
+const saveEmailButton = document.getElementById('save-email');
 
 let isAvatarError = false;
 let isAvatarUpdated = false;
@@ -414,21 +417,9 @@ const saveProfile = async (event) => {
     errorService.classList.add('border-danger');
     errorMessage.innerHTML = 'Please complete your services';
     errorMessage.classList.remove('d-none');
-  } else if (!userName.value) {
-    isNameError = true;
-    userName.classList.add('border-danger');
-    errorMessage.innerHTML = 'Please enter your name';
-    errorMessage.classList.remove('d-none');
-  } else if (!userEmail.value) {
-    isEmailError = true;
-    userEmail.classList.add('border-danger');
-    errorMessage.innerHTML = 'Please enter your email';
-    errorMessage.classList.remove('d-none');
   } else if (!isAvatarError) {
     setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
-      name: userName.value,
-      email: userEmail.value,
       avatarURL: isAvatarUpdated ? holderElement.children[0].src : 'not changed',
       services: services,
       description: descriptionInput.value
@@ -474,12 +465,20 @@ const handlePageshow = async () => {
   }
 };
 
-const handlePersonalInfoClick = (event) => {
+const handleNameReveal = (event) => {
   event.preventDefault();
-  const pInfoFields = document.getElementById('pinfo-fields');
-  const pInfoDiv = document.getElementById('pinfo-div');
-  pInfoDiv.style.display = 'none';
-  pInfoFields.style.display = 'block';
+  const nameRevealDiv = document.getElementById('name-reveal-div');
+  const nameDiv = document.getElementById('name-div');
+  nameRevealDiv.style.display = 'none';
+  nameDiv.style.display = 'block';
+};
+
+const handleEmailReveal = (event) => {
+  event.preventDefault();
+  const emailRevealDiv = document.getElementById('email-reveal-div');
+  const emailDiv = document.getElementById('email-div');
+  emailRevealDiv.style.display = 'none';
+  emailDiv.style.display = 'block';
 };
 
 const clearErrorMessage = () => {
@@ -492,12 +491,76 @@ const resetErrorStates = () => {
   isEmailError = false;
 };
 
-const clearError = (event) => {
+const handleInput = (event) => {
   const inputField = event.currentTarget;
+  //clear any error
   if ((inputField.id === 'name' && isNameError) || (inputField.id === 'email' && isEmailError)) {
     inputField.classList.remove('border-danger');
     clearErrorMessage();
     resetErrorStates();
+  }
+  if (inputField.id === 'name') {
+    saveNameButton.style.display = '';
+    nameSavedSpan.style.display = 'none';
+  } else if (inputField.id === 'email') {
+    saveEmailButton.style.display = '';
+    emailSavedSpan.style.display = 'none';
+  }
+};
+
+const saveName = async (event) => {
+  event.preventDefault();
+  if (!userName.value) {
+    isNameError = true;
+    userName.classList.add('border-danger');
+    errorMessage.innerHTML = 'Please enter your name';
+    errorMessage.classList.remove('d-none');
+  } else {
+    setLoadingButton(saveNameButton, 'Saving...');
+    try {
+      const payload = {
+        name: userName.value
+      }
+      await putUserName(payload);
+      const nameSavedSpan = document.getElementById('name-saved');
+      saveNameButton.style.display = 'none';
+      nameSavedSpan.style.display = '';
+    } catch(error) {
+      if (error.response.status === 401) {
+        localStorage.setItem('isAuth', false);
+        window.location.reload();
+      }
+      console.log(error);
+    }
+    setNotLoadingButton(saveNameButton, 'Save Name');
+  }
+};
+
+const saveEmail = async (event) => {
+  event.preventDefault();
+  if (!userEmail.value) {
+    isEmailError = true;
+    userEmail.classList.add('border-danger');
+    errorMessage.innerHTML = 'Please enter your email';
+    errorMessage.classList.remove('d-none');
+  } else {
+    setLoadingButton(saveEmailButton, 'Saving...');
+    try {
+      const payload = {
+        email: userEmail.value
+      }
+      await putUserEmail(payload);
+      const emailSavedSpan = document.getElementById('email-saved');
+      saveEmailButton.style.display = 'none';
+      emailSavedSpan.style.display = '';
+    } catch(error) {
+      if (error.response.status === 401) {
+        localStorage.setItem('isAuth', false);
+        window.location.reload();
+      }
+      console.log(error);
+    }
+    setNotLoadingButton(saveEmailButton, 'Save Email');
   }
 };
 
@@ -506,6 +569,9 @@ saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);
-pInfoButton.addEventListener('click', handlePersonalInfoClick);
-userName.addEventListener('input', clearError);
-userEmail.addEventListener('input', clearError);
+nameRevealButton.addEventListener('click', handleNameReveal);
+emailRevealButton.addEventListener('click', handleEmailReveal);
+userName.addEventListener('input', handleInput);
+userEmail.addEventListener('input', handleInput);
+saveNameButton.addEventListener('click', saveName);
+saveEmailButton.addEventListener('click', saveEmail);

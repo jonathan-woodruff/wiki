@@ -126,21 +126,34 @@
             </div>
             <div class="row mx-auto mb-5">
               <div class="form-group col col-md-10 col-lg-9 mx-auto">
-                <div id="pinfo-div" class="form-group col-md-11 col-lg-10 col-xl-9 mb-5">
-                  <button id="pinfo-button" class="btn btn-link text-decoration-none p-0">Edit name, email, password</button>
+                <div id="name-reveal-div" class="form-group col-md-11 col-lg-10 col-xl-9 mb-5">
+                  <button id="name-reveal-button" class="btn btn-link text-decoration-none p-0">Change your name</button>
                 </div>
-                <div id="pinfo-fields" style="display: none;">
-                  <div class="mb-3"">
+                <div id="name-div" class="row mb-3" style="display: none;">
+                  <div class="col col-12 col-sm-9 col-md-8">
                     <label for="name">Your name</label>
                     <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter your name">
                   </div>
-                  <div class="mb-3"">
+                  <div class="col col-xs-6 col-sm-3 col-md-4">
+                    <button id="save-name" class="btn btn-outline-primary">Save Name</button>
+                    <span id="name-saved" class="fst-italic" style="display: none;">Saved!</span>
+                  </div>
+                </div>
+                <div id="email-reveal-div" class="form-group col-md-11 col-lg-10 col-xl-9 mb-5">
+                  <button id="email-reveal-button" class="btn btn-link text-decoration-none p-0">Change your email</button>
+                </div>
+                <div id="email-div" class="row mb-3" style="display: none;">
+                  <div class="col col-12 col-sm-9 col-md-8">
                     <label for="email">Your email</label>
                     <input type="email" class="form-control" id="email" placeholder="Enter your email">
                   </div>
-                  <div class="mb-5">
-                    <a href="./change-password.html" alt="edit password" class="text-decoration-none">Change Password</a>
+                  <div class="col col-xs-6 col-sm-3 col-md-4">
+                    <button id="save-email" class="btn btn-outline-primary">Save Email</button>
+                    <span id="email-saved" class="fst-italic" style="display: none;">Saved!</span>
                   </div>
+                </div>
+                <div class="mb-5">
+                  <a href="./change-password.html" alt="edit password" class="text-decoration-none">Change your password</a>
                 </div>
               </div>
             </div>

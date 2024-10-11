@@ -121,3 +121,35 @@ exports.changePassword = async (req, res) => {
         });
     }
 };
+
+exports.updateUserName = async (req, res) => {
+    try {
+        const user = req.user;
+        user.name = req.body.name;
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: 'updated user name'
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: 'Did not update user name successfully'
+        });
+    }
+};
+
+exports.updateUserEmail = async (req, res) => {
+    try {
+        const user = req.user;
+        user.email = req.body.email;
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: 'updated user email'
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: 'Did not update user email successfully'
+        });
+    }
+};

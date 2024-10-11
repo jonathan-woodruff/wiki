@@ -26,3 +26,11 @@ export async function checkForCookie() {
 export async function putPassword(payload) {
     return await axios.put(`${SERVER_URL}/auth/changePassword`, payload);
 };
+
+export async function putUserName(payload) {
+    return await axios.put(`${SERVER_URL}/auth/updateUserName`, payload);
+};
+
+export async function putUserEmail(payload) {
+    return await axios.put(`${SERVER_URL}/auth/updateUserEmail`, payload);
+};
