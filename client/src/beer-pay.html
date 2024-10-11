@@ -6,40 +6,48 @@
     <title>Buy Me a Beer | Peace Chickens</title>
 </head>
 <body>
-  <div class="row mt-5 mb-2">
-    <div class="col d-flex justify-content-center">
-      <img id="beer-cheers" alt="two pints of beer clanking">
-    </div>
+  <!-- Spinner -->
+  <div id="spinner" class="spinner-border position-fixed top-50 start-50" role="status">
+    <span style="visibility: hidden">Loading...</span>
   </div>
-  <div class="row mb-4">
-    <div class="col">
-      <p id="total" class="text-center fw-bold h5">Your total is: </p>
+
+  <!--Main content -->
+  <div id="main-container" style="display: none;">
+    <div class="row mt-5 mb-2">
+      <div class="col d-flex justify-content-center">
+        <img id="beer-cheers" alt="two pints of beer clanking">
+      </div>
     </div>
-  </div>
-  <div class="row p-1">
-    <div class="col col-md-9 col-lg-6 mx-auto">
-      <form id="payment-form">
-        <div class="row mb-3">
-          <div class="col">
-            <div id="payment-element">
-              <!--Stripe.js injects the Payment Element-->
+    <div class="row mb-4">
+      <div class="col">
+        <p id="total" class="text-center fw-bold h5">Your total is: </p>
+      </div>
+    </div>
+    <div class="row p-1">
+      <div class="col col-md-9 col-lg-6 mx-auto">
+        <form id="payment-form">
+          <div class="row mb-3">
+            <div class="col">
+              <div id="payment-element">
+                <!--Stripe.js injects the Payment Element-->
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col">
-            <div id="payment-message" class="hidden text-danger text-center"></div>
+          <div class="row mb-3">
+            <div class="col">
+              <div id="payment-message" class="hidden text-danger text-center"></div>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div id="continue-div" class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2" data-bs-toggle="tooltip" title="Choose an amount">
-            <button id="submit" class="btn btn-primary rounded">
-              <div class="spinner hidden" id="spinner"></div>
-              <span id="button-text">Pay now</span>
-            </button>
+          <div class="row">
+            <div id="continue-div" class="col d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2" data-bs-toggle="tooltip" title="Choose an amount">
+              <button id="submit" class="btn btn-primary rounded">
+                <div class="spinner hidden" id="spinner"></div>
+                <span id="button-text">Pay now</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </body>

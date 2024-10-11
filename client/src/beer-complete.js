@@ -7,6 +7,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/beer.css';
+
 // ------- UI Resources -------
 const SuccessIcon = 
 `<svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,9 +63,9 @@ function setPaymentDetails(intent) {
   document.querySelector("#status-icon").innerHTML = icon;
   document.querySelector("#status-text").textContent = statusText;
   document.querySelector("#status-subtext").innerHTML = statusSubtext;
-  document.querySelector("#intent-id").textContent = intent.id;
-  document.querySelector("#intent-status").textContent = intent.status;
-  document.querySelector("#view-details").href = `https://dashboard.stripe.com/payments/${intent.id}`;
+  //document.querySelector("#intent-id").textContent = intent.id;
+  //document.querySelector("#intent-status").textContent = intent.status;
+  //document.querySelector("#view-details").href = `https://dashboard.stripe.com/payments/${intent.id}`;
 }
 
 function setErrorState() {
@@ -72,7 +74,7 @@ function setErrorState() {
   document.querySelector("#status-text").textContent = "Something went wrong, please try again.";
   document.querySelector("#status-subtext").innerHTML = "";
   document.querySelector("#details-table").classList.add("hidden");
-  document.querySelector("#view-details").classList.add("hidden");
+  //document.querySelector("#view-details").classList.add("hidden");
 }
 
 // Stripe.js instance
@@ -96,3 +98,14 @@ async function checkStatus() {
   setPaymentDetails(paymentIntent);
 }
 
+/************************************************************
+ * Show the page to the user
+************************************************************/
+const showPage = () => {
+  const spinnerDiv = document.getElementById('spinner');
+  const mainContainer = document.getElementById('main-container');
+  mainContainer.style.display = 'block';
+  spinnerDiv.style.display = 'none';
+};
+
+showPage();

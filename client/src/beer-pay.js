@@ -104,3 +104,15 @@ function setLoading(isLoading) {
     document.querySelector("#button-text").classList.remove("hidden");
   }
 }
+
+/************************************************************
+ * Show the page to the user
+************************************************************/
+const showPage = () => {
+  const spinnerDiv = document.getElementById('spinner');
+  const mainContainer = document.getElementById('main-container');
+  mainContainer.style.display = 'block';
+  spinnerDiv.style.display = 'none';
+};
+
+showPage();
