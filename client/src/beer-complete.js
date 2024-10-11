@@ -1,5 +1,6 @@
 import { STRIPE_KEY } from './constants/index';
 import { loadStripe } from '@stripe/stripe-js';
+import { sendPaymentConfirmationEmail } from './api/main';
 
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
@@ -28,12 +29,12 @@ const InfoIcon =
 </svg>`;
 
 // ------- UI helpers -------
-function setPaymentDetails(intent) {
+async function setPaymentDetails(intent) {
   let statusText = "Something went wrong, please try again.";
   let statusSubtext = "";
   let iconColor = "#DF1B41";
   let icon = ErrorIcon;
-
+  let sendEmail = false;
   
   if (!intent) {
     setErrorState();
@@ -46,6 +47,7 @@ function setPaymentDetails(intent) {
       statusSubtext = "Jonathan says, thank you!!! I'll send you an email confirmation."
       iconColor = "#30B130";
       icon = SuccessIcon;
+      sendEmail = true;
       break;
     case "processing":
       statusText = "Your payment is processing.";
@@ -63,6 +65,16 @@ function setPaymentDetails(intent) {
   document.querySelector("#status-icon").innerHTML = icon;
   document.querySelector("#status-text").textContent = statusText;
   document.querySelector("#status-subtext").innerHTML = statusSubtext;
+  if (sendEmail) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const payload = {
+      name: urlParams.get('name'),
+      email: urlParams.get('email'),
+      amount: urlParams.get('amount')
+    }
+    await sendPaymentConfirmationEmail(payload);
+  }
   //document.querySelector("#intent-id").textContent = intent.id;
   //document.querySelector("#intent-status").textContent = intent.status;
   //document.querySelector("#view-details").href = `https://dashboard.stripe.com/payments/${intent.id}`;

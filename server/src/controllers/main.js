@@ -2,8 +2,9 @@ const { UserModel, WikisModel, WikiHistoryModel, CommunityModel } = require('../
 const { parseServices } = require('../utils/index');
 const path = require('path');
 const fs = require('fs');
-const { STRIPE_KEY } = require('../constants/index');
+const { STRIPE_KEY, EMAIL_ADDRESS, APP_PASSWORD } = require('../constants/index');
 const stripe = require('stripe')(STRIPE_KEY);
+const nodemailer = require('nodemailer');
 
 exports.postWiki = async (req, res) => {
     const country = req.body.country;
@@ -330,4 +331,33 @@ exports.createPaymentIntent = async (req, res) => {
     // [DEV]: For demo purposes only, you should avoid exposing the PaymentIntent ID in the client-side code.
     dpmCheckerLink: `https://dashboard.stripe.com/settings/payment_methods/review?transaction_id=${paymentIntent.id}`,
   });
+};
+
+exports.sendPaymentConfirmationEmail = async (req, res) => {
+    toEmail = req.body.email;
+    toName = req.body.name;
+    amount = req.body.amount;
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: EMAIL_ADDRESS,
+          pass: APP_PASSWORD
+        }
+    });
+      
+    const mailOptions = {
+        from: EMAIL_ADDRESS,
+        to: toEmail,
+        subject: 'Thanks for the beer!!',
+        text: 'Hey, ' + toName + '!\n\nThank you for the $' + (amount / 100).toFixed(2).toString() + '. If you need to reach out to me for anything, you can just email me back. \n\nCheers, \n\nJonathan | Peace Chickens'
+    };
+      
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
 };

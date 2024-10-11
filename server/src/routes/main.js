@@ -22,7 +22,8 @@ const {
     getHistoricalWikiData,
     postAvatar,
     postCommunity,
-    createPaymentIntent
+    createPaymentIntent,
+    sendPaymentConfirmationEmail
 } = require('../controllers/main');
 const { userAuth } = require('../middlewares/auth-middleware');
 
@@ -39,5 +40,6 @@ router.get('/viewHistoricalWiki', getHistoricalWikiData);
 router.post('/postAvatar', userAuth, upload.single('avatar'), postAvatar);
 router.post('/postCommunity', userAuth, postCommunity);
 router.post('/createPaymentIntent', createPaymentIntent);
+router.post('/sendPaymentConfirmationEmail', sendPaymentConfirmationEmail);
 
 module.exports = router;
