@@ -35,11 +35,14 @@ setNav();
 /************************************************************
  * Configure the message text
 ************************************************************/
+const h1 = document.getElementById('h1');
 const messageParagraph = document.getElementById('message');
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
+const header = urlParams.get('header');
 const message = urlParams.get('message');
 
+h1.innerHTML = header;
 messageParagraph.innerHTML = message;
 
 /************************************************************

@@ -63,6 +63,14 @@ let isEmailError = false;
 let isPasswordError = false;
 let isCheckboxError = false;
 
+const goSuccess = () => {
+  const params = new URLSearchParams();
+  params.append('header', 'Almost there!')
+  params.append('message', 'I sent you an email. Please click the email confirmation link to finish signing up.');
+  const url = `./success.html?${params.toString()}`;
+  window.location.href = url;
+};
+
 const registerUser = async (event) => {
   event.preventDefault();
   if (nameInput.value && emailInput.value && passwordInput.value && checkboxInput.checked) {
@@ -75,7 +83,7 @@ const registerUser = async (event) => {
         password: passwordInput.value
       };
       await onRegister(credentials);
-      window.location.href = './edit-profile.html';
+      goSuccess();
     } catch(error) {
       let errorMessage = error.response.data.errors[0].msg;
       const axiosError = errorMessage.toLowerCase();

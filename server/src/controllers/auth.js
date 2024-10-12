@@ -24,6 +24,61 @@ exports.protected = (req, res) => {
     }*/
 };
 
+const sendRegistrationEmail = async (user) => {
+    try {
+        // Generate the necessary data for the registration confirmation link
+        const today = base64Encode(new Date().toISOString());
+        const ident = base64Encode(user._id);
+        const data = {
+            today: today,
+            userId: user._id,
+            lastUpdated: user.updatedAt.toISOString(),
+            password: user.password,
+            email: user.email
+        };
+        const hashedData = sha256(JSON.stringify(data), REGISTRATION_SECRET);
+        const params = new URLSearchParams();
+        params.append('ident', ident);
+        params.append('today', today);
+        params.append('data', hashedData);
+        const url = `${CLIENT_URL}/create-profile.html?${params.toString()}`;
+
+        //send email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: EMAIL_ADDRESS,
+              pass: APP_PASSWORD
+            }
+        });
+          
+        const mailOptions = {
+            from: EMAIL_ADDRESS,
+            to: user.email,
+            subject: 'Finish signing up - Peace Chickens',
+            text: `Hi, ${user.name}.\n\nClick the link to finish signing up to Peace Chickens. If you did not request to sign up, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
+        };
+          
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+        });
+
+        res.status(201).json({
+            success: true,
+            error: ''
+        })
+        
+    } catch(error) {
+        res.status(500).json({
+            success: false,
+            error: 'Email did not send'
+        });
+    }
+};
 
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -33,8 +88,10 @@ exports.register = async (req, res) => {
             name: name,
             email: email,
             password: hashedPassword,
+            isConfirmed: false
         });
         await newUser.save();
+        await sendRegistrationEmail(newUser);
         return res.status(201).json({
             success: true,
             message: 'The registration was successful'
@@ -259,7 +316,7 @@ exports.checkResetURL = async (req, res) => {
     
     // Hash again all the data to compare it with the link
     // The link in invalid when:
-    // 1. If the lastLoginDate is changed, user has already do a login 
+    // 1. If the lastLoginDate is changed, user has already done a login 
     // 2. If the salt is changed, the user has already changed the password
     const data = {
         today: req.query.today,
@@ -302,4 +359,101 @@ exports.resetPassword = async (req, res) => {
             error: error.message
         });
     }
+};
+
+exports.checkConfirmationURL = async (req, res) => {
+    // Check if the registration confirmation link in not out of date
+    const today = base64Decode(req.query.today); 
+    const timeSince = datefns.differenceInHours(
+        new Date(),
+        today
+    );
+    if (timeSince > 2) {
+        res.status(500).json({ 
+            success: false,
+            error: 'Link is outdated' 
+        });
+        return;
+    }
+    
+    const userID = base64Decode(req.query.ident);
+    const user = await UserModel.findOne({ _id: userID }).exec();
+    if (!user) {
+        res.status(500).json({ 
+            success: false,
+            error: 'Invalid user' 
+        });
+        return;
+    }
+
+    if (user.isConfirmed) {
+        res.status(500).json({
+            success: false,
+            error: 'User already confirmed'
+        });
+        return;
+    }
+    
+    // Hash again all the data to compare it with the link
+    // The link in invalid when:
+    // 1. If the lastLoginDate is changed, user has already do a login 
+    // 2. If the salt is changed, the user has already changed the password
+    const data = {
+        today: req.query.today,
+        userId: user._id,
+        lastUpdated: user.updatedAt.toISOString(),
+        password: user.password,
+        email: user.email
+    }
+    const hashedData = sha256(JSON.stringify(data), REGISTRATION_SECRET);
+    if(hashedData !== req.query.data) {
+        res.status(500).json({ 
+            success: false,
+            error: 'Unmatched hash' 
+        });
+        return;
+    }
+
+    //link is valid. mark the user as confirmed
+    try {
+        user.isConfirmed = true;
+        await user.save();
+        res.status(201).json({
+            success: true,
+            error: ''
+        });
+    } catch(error) {
+        res.status(500).json({
+            success: false,
+            error: error
+        });
+    }
+};
+
+exports.loginAfterRegistration = async (req, res) => {
+    try {
+        const userID = base64Decode(req.body.ident);
+        const user = await UserModel.findOne({ _id: userID }).exec();
+        const payload = {
+            id: user._id,
+            email: user.email
+        };
+    } catch(error) {
+        res.status(500).json({
+            success: false,
+            error: 'did not find user'
+        })
+    };
+    try {
+        const token = await sign(payload, SECRET); //create jwt token
+        return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
+            avatar: user.photo
+        })
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).json({
+            error: error.message 
+        });
+    }
+
 };

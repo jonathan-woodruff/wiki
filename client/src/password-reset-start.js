@@ -83,6 +83,7 @@ const handleEmailInput = (event) => {
 
 const goSuccess = () => {
   const params = new URLSearchParams();
+  params.append('header', 'Success!')
   params.append('message', 'Please check your email');
   const url = `./success.html?${params.toString()}`;
   window.location.href = url;

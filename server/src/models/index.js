@@ -20,6 +20,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  isConfirmed: {
+    type: Boolean,
+    required: true
+  },
   photo: String,
   services: [serviceSchema],
   description: String,

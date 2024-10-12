@@ -10,7 +10,9 @@ const {
     updateUserEmail,
     sendPasswordResetEmail,
     checkResetURL,
-    resetPassword
+    resetPassword,
+    checkConfirmationURL,
+    loginAfterRegistration
 } = require('../controllers/auth');
 const { validationMiddleware } = require('../middlewares/validation-middleware');
 const { 
@@ -34,6 +36,8 @@ router.put('/updateUserEmail', userAuth, changeEmailValidation, validationMiddle
 router.post('/sendPasswordResetEmail', resetEmailValidation, validationMiddleware, sendPasswordResetEmail);
 router.get('/checkResetURL', checkResetURL);
 router.post('/resetPassword', resetPasswordValidation, validationMiddleware, resetPassword);
+router.get('/checkConfirmationURL', checkConfirmationURL);
+router.post('/loginAfterRegistration', loginAfterRegistration);
 
 module.exports = router;
  

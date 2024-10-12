@@ -46,3 +46,11 @@ export async function resetPassword(payload) {
 export async function checkResetURL(ident, today, hash) {
     return await axios.get(`${SERVER_URL}/auth/checkResetURL?ident=${ident}&today=${today}&data=${hash}`);
 };
+
+export async function checkConfirmationURL(ident, today, hash) {
+    return await axios.get(`${SERVER_URL}/auth/checkConfirmationURL?ident=${ident}&today=${today}&data=${hash}`);
+};
+
+export async function loginAfterRegistration(payload) {
+    return await axios.post(`${SERVER_URL}/auth/loginAfterRegistration`, payload);
+};
