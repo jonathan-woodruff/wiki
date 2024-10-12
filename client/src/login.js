@@ -118,7 +118,7 @@ const clearError = () => {
 
 const goRegister = () => window.location.href = `./register.html${window.location.search}`;
 
-const goPasswordResetStart = () => window.lodcation.href = './password-reset-start.html';
+const goPasswordResetStart = () => window.location.href = './password-reset-start.html';
 
 form.addEventListener('submit', login);
 emailInput.addEventListener('input', clearError);

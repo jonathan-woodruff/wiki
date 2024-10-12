@@ -15,16 +15,20 @@ import * as bootstrap from 'bootstrap'; //js
 ************************************************************/
 import { checkResetURL } from './api/auth';
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const ident = urlParams.get('ident');
+const today = urlParams.get('today');
+const hash = urlParams.get('data');
+
 const showPage = async () => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const ident = urlParams.get('ident');
-    const today = urlParams.get('today');
-    const hash = urlParams.get('data');
     try {
         const { data } = await checkResetURL(ident, today, hash);
-        if (data.isSuccess) {
-            setNotLoading(spinnerDiv, mainContainer, navbar);
+        if (data.success) {
+            const spinnerDiv = document.getElementById('spinner');
+            const mainContainer = document.getElementById('main-container');
+            spinnerDiv.style.display = 'none';
+            mainContainer.style.display = '';
         } else {
             window.location.href = './index.html';
         }
@@ -73,7 +77,7 @@ const changePassword = async (event) => {
     try {
         const payload = {
             ident: ident,
-            changedPassword: newPasswordInput1.value
+            password: newPasswordInput1.value
         };
         await resetPassword(payload);
         window.location.href = './login.html';

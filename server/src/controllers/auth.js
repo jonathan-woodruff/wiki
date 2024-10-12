@@ -1,9 +1,10 @@
 const { UserModel } = require('../models/index');
 const { hash } = require('bcrypt');
 const { sign } = require('jsonwebtoken');
-const { SECRET, EMAIL_ADDRESS, APP_PASSWORD, CLIENT_URL } = require('../constants/index');
+const { SECRET, EMAIL_ADDRESS, APP_PASSWORD, CLIENT_URL, PASSWORD_RESET_SECRET } = require('../constants/index');
 const nodemailer = require('nodemailer');
-
+const datefns = require('date-fns');
+const { createHmac } = require('node:crypto');
 
 exports.protected = (req, res) => {
     res.status(200).json({
@@ -106,7 +107,7 @@ const sendPasswordChangeEmail = async (user) => {
 };
 
 exports.changePassword = async (req, res) => {    
-    const password = req.body.changedPassword;
+    const password = req.body.password;
     try {
         const user = req.user;
         const hashedPassword = await hash(password, 10);
@@ -160,12 +161,18 @@ exports.updateUserEmail = async (req, res) => {
 const base64Encode = (data) => {
     const buff = new Buffer.from(data);
     return buff.toString('base64');
-}
+};
 
 const base64Decode = (data) => {
     const buff = new Buffer.from(data, 'base64');
     return buff.toString('ascii');
-}
+};
+
+const sha256 = (salt, password) => {
+    return createHmac('sha256', password)
+    .update(salt)
+    .digest('hex');
+};
 
 exports.sendPasswordResetEmail = async (req, res) => {
     try {
@@ -173,7 +180,7 @@ exports.sendPasswordResetEmail = async (req, res) => {
         const user = await UserModel.findOne({ email: email }).exec();
         // Generate the necessary data for the password reset link
         const today = base64Encode(new Date().toISOString());
-        const ident = base64Encode(user._id.toString());
+        const ident = base64Encode(user._id);
         const data = {
             today: today,
             userId: user._id,
@@ -181,7 +188,7 @@ exports.sendPasswordResetEmail = async (req, res) => {
             password: user.password,
             email: user.email
         };
-        const hashedData = await hash(data, 10);
+        const hashedData = sha256(JSON.stringify(data), PASSWORD_RESET_SECRET);
         const params = new URLSearchParams();
         params.append('ident', ident);
         params.append('today', today);
@@ -201,7 +208,7 @@ exports.sendPasswordResetEmail = async (req, res) => {
             from: EMAIL_ADDRESS,
             to: email,
             subject: 'Your password reset link',
-            text: `Hi, ${user.name}.\n\nClick the link to reset your Peace Chickens password. If you did not request to reset your password, you can safely ignore this email\n\n${url}\n\nJonathan | Peace Chickens`
+            text: `Hi, ${user.name}.\n\nClick the link to reset your Peace Chickens password. If you did not request to reset your password, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
         };
           
         transporter.sendMail(mailOptions, function(error, info){
@@ -211,9 +218,15 @@ exports.sendPasswordResetEmail = async (req, res) => {
               console.log('Email sent: ' + info.response);
             }
         });
+
+        res.status(201).json({
+            success: true,
+            error: ''
+        })
         
     } catch(error) {
         res.status(500).json({
+            success: false,
             error: 'Email did not send'
         });
     }
@@ -222,9 +235,10 @@ exports.sendPasswordResetEmail = async (req, res) => {
 exports.checkResetURL = async (req, res) => {
     // Check if the reset password link in not out of date
     const today = base64Decode(req.query.today); 
-    const then = moment(today); 
-    const now = moment().utc(); 
-    const timeSince = now.diff(then, 'hours');
+    const timeSince = datefns.differenceInHours(
+        new Date(),
+        today
+    );
     if (timeSince > 2) {
         res.status(500).json({ 
             success: false,
@@ -232,7 +246,7 @@ exports.checkResetURL = async (req, res) => {
         });
         return;
     }
-
+    
     const userID = base64Decode(req.query.ident);
     const user = await UserModel.findOne({ _id: userID }).exec();
     if (!user) {
@@ -242,7 +256,7 @@ exports.checkResetURL = async (req, res) => {
         });
         return;
     }
-
+    
     // Hash again all the data to compare it with the link
     // The link in invalid when:
     // 1. If the lastLoginDate is changed, user has already do a login 
@@ -253,9 +267,8 @@ exports.checkResetURL = async (req, res) => {
         lastUpdated: user.updatedAt.toISOString(),
         password: user.password,
         email: user.email
-    };
-    const hashedData = await hash(data, 10);
-
+    }
+    const hashedData = sha256(JSON.stringify(data), PASSWORD_RESET_SECRET);
     if(hashedData !== req.query.data) {
         res.status(500).json({ 
             success: false,
@@ -272,7 +285,7 @@ exports.checkResetURL = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
     const userID = base64Decode(req.body.ident);
-    const pw = req.body.changedPassword;
+    const pw = req.body.password;
 
     try {
         const user = await UserModel.findOne({ _id: userID }).exec();

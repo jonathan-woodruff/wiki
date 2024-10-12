@@ -92,7 +92,7 @@ const changePassword = async (event) => {
     try {
         const payload = {
             currentPassword: currentPasswordInput.value,
-            changedPassword: newPasswordInput1.value
+            password: newPasswordInput1.value
         };
         await putPassword(payload);
         logout();

@@ -54,8 +54,10 @@ import { sendPasswordResetEmail } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
+const emailInput = document.getElementById('email');
 const submitButton = document.getElementById('submit');
 const errorElement = document.getElementById('error-message');
+const loginLink = document.getElementById('nav-register-button');
 
 let isEmailError = false;
 
@@ -76,11 +78,7 @@ const handleEmailInput = (event) => {
     clearError();
 
     //enable/disable save button
-    if (emailInput.value === '') {
-      submitButton.disabled = true;
-    } else {
-      submitButton.disabled = false;
-    }
+    submitButton.disabled = emailInput.value ? false : true;
 };
 
 const goSuccess = () => {
@@ -100,18 +98,20 @@ const handleSubmit = async (event) => {
       await sendPasswordResetEmail(payload);
       goSuccess();
     } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
-        window.location.reload();
-      }
-      isEmailError = true;
-      errorElement.innerHTML = error.response.data.errors[0].msg;
-      errorElement.classList.remove('d-none');
-      errorElement.classList.add('border-danger');
-      submitButton.disabled = true;
+        let errorMessage = error.response.data.errors[0].msg;
+        const axiosError = errorMessage.toLowerCase();
+        if (!axiosError.includes('email')) {
+          errorMessage = 'Could not send an email. Check your network connection.'
+        }
+        isEmailError = true;
+        errorElement.innerHTML = errorMessage;
+        errorElement.classList.remove('d-none')
+        submitButton.disabled = true;
+        emailInput.classList.add('border-danger');
     }
     setNotLoadingButton(submitButton, 'Email Me a Password Reset Link');
 };
 
 form.addEventListener('submit', handleSubmit);
 emailInput.addEventListener('input', handleEmailInput);
+loginLink.addEventListener('click', () => window.location.href = './login.html');

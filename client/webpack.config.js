@@ -26,7 +26,9 @@ module.exports = {
     'beer-complete': './src/beer-complete.js',
     'change-password': './src/change-password.js',
     'change-email': './src/change-email.js',
-    'password-reset-start': './src/password-reset-start.js'
+    'password-reset-start': './src/password-reset-start.js',
+    'password-reset': './src/password-reset.js',
+    'success': './src/success.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -122,6 +124,16 @@ module.exports = {
         template: './src/password-reset-start.html',
         filename: 'password-reset-start.html',
         chunks: ['password-reset-start']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/password-reset.html',
+        filename: 'password-reset.html',
+        chunks: ['password-reset']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/success.html',
+        filename: 'success.html',
+        chunks: ['success']
       })
   ],
   module: {

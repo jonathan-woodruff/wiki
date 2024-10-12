@@ -17,7 +17,9 @@ const {
     registerValidation, 
     loginValidation, 
     changePasswordValidation, 
-    changeEmailValidation
+    changeEmailValidation,
+    resetEmailValidation,
+    resetPasswordValidation
 } = require('../validators/auth');
 const { userAuth } = require('../middlewares/auth-middleware');
 const { userAuthNext } = require('../middlewares/is-auth-middleware');
@@ -29,9 +31,9 @@ router.get('/logout', logout);
 router.put('/changePassword', userAuth, changePasswordValidation, validationMiddleware, changePassword);
 router.put('/updateUserName', userAuth, updateUserName);
 router.put('/updateUserEmail', userAuth, changeEmailValidation, validationMiddleware, updateUserEmail);
-router.post('/sendPasswordResetEmail', sendPasswordResetEmail);
+router.post('/sendPasswordResetEmail', resetEmailValidation, validationMiddleware, sendPasswordResetEmail);
 router.get('/checkResetURL', checkResetURL);
-router.post('/resetPassword', resetPassword);
+router.post('/resetPassword', resetPasswordValidation, validationMiddleware, resetPassword);
 
 module.exports = router;
  
