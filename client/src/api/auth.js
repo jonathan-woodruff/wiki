@@ -34,3 +34,15 @@ export async function putUserName(payload) {
 export async function putEmail(payload) {
     return await axios.put(`${SERVER_URL}/auth/updateUserEmail`, payload);
 };
+
+export async function sendPasswordResetEmail(payload) {
+    return await axios.post(`${SERVER_URL}/auth/sendPasswordResetEmail`, payload);
+};
+
+export async function resetPassword(payload) {
+    return await axios.post(`${SERVER_URL}/auth/resetPassword`, payload);
+};
+
+export async function checkResetURL(ident, today, hash) {
+    return await axios.get(`${SERVER_URL}/auth/checkResetURL?ident=${ident}&today=${today}&data=${hash}`);
+};

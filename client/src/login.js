@@ -60,6 +60,7 @@ const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
 const logoutLink = document.getElementById('logout-link');
+const passwordResetButton = document.getElementById('password-reset');
 
 //helper function for goPlaces
 const getURL = (params, prevPageName) => {
@@ -117,9 +118,12 @@ const clearError = () => {
 
 const goRegister = () => window.location.href = `./register.html${window.location.search}`;
 
+const goPasswordResetStart = () => window.lodcation.href = './password-reset-start.html';
+
 form.addEventListener('submit', login);
 emailInput.addEventListener('input', clearError);
 passwordInput.addEventListener('input', clearError);
 registerLink.addEventListener('click', goRegister);
 logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goRegister);
+passwordResetButton.addEventListener('click', goPasswordResetStart);
