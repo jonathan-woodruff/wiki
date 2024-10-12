@@ -61,10 +61,8 @@ import { sectors, countries } from './constants/profile';
 import RemoveIcon from './images/remove.png';
 
 const serviceSection = document.getElementById('service-section');
-const errorMessage = document.getElementById('error-message');
 const descriptionInput = document.getElementById('description');
 const userName = document.getElementById('name');
-const userEmail = document.getElementById('email');
 const addServiceButton = document.getElementById('add-service');
 const holderElement = document.getElementById('avatar-holder');
 
@@ -266,15 +264,14 @@ const loadServices = (storedServices) => {
 
 const loadDescription = (description) => descriptionInput.innerHTML || '';
 
-const loadName = (nameOfUser) => userName.value = nameOfUser || '';
-
-const loadEmail = (emailOfUser) => userEmail.value = emailOfUser || '';
+const loadName = (nameOfUser) => {
+  userName.value = nameOfUser || '';
+};
 
 const loadFields = async () => {
   try {
     const { data } = await getProfileData();
     loadName(data.name);
-    loadEmail(data.email);
     refreshAvatar(data.photo, holderElement, 'avatar', '200px');
     loadServices(data.services);
     loadDescription(data.description);
@@ -303,22 +300,18 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
  * All other JavaScript
 ************************************************************/
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { checkForCookie, putUserName, putUserEmail } from './api/auth';
+import { checkForCookie, putUserName } from './api/auth';
 
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
 const logoutLink = document.getElementById('logout-link');
 const toastDiv = document.getElementById('toast');
 const avatarErrorMessage = document.getElementById('avatar-error');
-const nameRevealButton = document.getElementById('name-reveal-button');
-const emailRevealButton = document.getElementById('email-reveal-button');
-const saveNameButton = document.getElementById('save-name');
-const saveEmailButton = document.getElementById('save-email');
+const errorMessage = document.getElementById('error-message');
 
 let isAvatarError = false;
 let isAvatarUpdated = false;
 let isNameError = false;
-let isEmailError = false;
 
 const hideAvatarError = () => {
   avatarErrorMessage.classList.add('d-none');
@@ -417,9 +410,15 @@ const saveProfile = async (event) => {
     errorService.classList.add('border-danger');
     errorMessage.innerHTML = 'Please complete your services';
     errorMessage.classList.remove('d-none');
+  } else if (!userName.value) {
+    isNameError = true;
+    userName.classList.add('border-danger');
+    errorMessage.innerHTML = 'Please enter your name';
+    errorMessage.classList.remove('d-none');
   } else if (!isAvatarError) {
     setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
+      name: userName.value,
       avatarURL: isAvatarUpdated ? holderElement.children[0].src : 'not changed',
       services: services,
       description: descriptionInput.value
@@ -465,102 +464,16 @@ const handlePageshow = async () => {
   }
 };
 
-const handleNameReveal = (event) => {
-  event.preventDefault();
-  const nameRevealDiv = document.getElementById('name-reveal-div');
-  const nameDiv = document.getElementById('name-div');
-  nameRevealDiv.style.display = 'none';
-  nameDiv.style.display = 'block';
-};
-
-const handleEmailReveal = (event) => {
-  event.preventDefault();
-  const emailRevealDiv = document.getElementById('email-reveal-div');
-  const emailDiv = document.getElementById('email-div');
-  emailRevealDiv.style.display = 'none';
-  emailDiv.style.display = 'block';
-};
-
 const clearErrorMessage = () => {
   errorMessage.classList.add('d-none');
   errorMessage.innerHTML = '';
 };
 
-const resetErrorStates = () => {
-  isNameError = false;
-  isEmailError = false;
-};
-
-const handleInput = (event) => {
-  const inputField = event.currentTarget;
-  //clear any error
-  if ((inputField.id === 'name' && isNameError) || (inputField.id === 'email' && isEmailError)) {
-    inputField.classList.remove('border-danger');
+const clearNameError = () => {
+  if (isNameError) {
+    userName.classList.remove('border-danger');
     clearErrorMessage();
-    resetErrorStates();
-  }
-  if (inputField.id === 'name') {
-    saveNameButton.style.display = '';
-    nameSavedSpan.style.display = 'none';
-  } else if (inputField.id === 'email') {
-    saveEmailButton.style.display = '';
-    emailSavedSpan.style.display = 'none';
-  }
-};
-
-const saveName = async (event) => {
-  event.preventDefault();
-  if (!userName.value) {
-    isNameError = true;
-    userName.classList.add('border-danger');
-    errorMessage.innerHTML = 'Please enter your name';
-    errorMessage.classList.remove('d-none');
-  } else {
-    setLoadingButton(saveNameButton, 'Saving...');
-    try {
-      const payload = {
-        name: userName.value
-      }
-      await putUserName(payload);
-      const nameSavedSpan = document.getElementById('name-saved');
-      saveNameButton.style.display = 'none';
-      nameSavedSpan.style.display = '';
-    } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
-        window.location.reload();
-      }
-      console.log(error);
-    }
-    setNotLoadingButton(saveNameButton, 'Save Name');
-  }
-};
-
-const saveEmail = async (event) => {
-  event.preventDefault();
-  if (!userEmail.value) {
-    isEmailError = true;
-    userEmail.classList.add('border-danger');
-    errorMessage.innerHTML = 'Please enter your email';
-    errorMessage.classList.remove('d-none');
-  } else {
-    setLoadingButton(saveEmailButton, 'Saving...');
-    try {
-      const payload = {
-        email: userEmail.value
-      }
-      await putUserEmail(payload);
-      const emailSavedSpan = document.getElementById('email-saved');
-      saveEmailButton.style.display = 'none';
-      emailSavedSpan.style.display = '';
-    } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
-        window.location.reload();
-      }
-      console.log(error);
-    }
-    setNotLoadingButton(saveEmailButton, 'Save Email');
+    isNameError = false;
   }
 };
 
@@ -569,9 +482,4 @@ saveButton.addEventListener('click', saveProfile);
 logoutLink.addEventListener('click', logout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);
-nameRevealButton.addEventListener('click', handleNameReveal);
-emailRevealButton.addEventListener('click', handleEmailReveal);
-userName.addEventListener('input', handleInput);
-userEmail.addEventListener('input', handleInput);
-saveNameButton.addEventListener('click', saveName);
-saveEmailButton.addEventListener('click', saveEmail);
+userName.addEventListener('input', clearNameError);

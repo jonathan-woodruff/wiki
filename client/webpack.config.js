@@ -24,7 +24,8 @@ module.exports = {
     'buy-me-a-beer': './src/buy-me-a-beer.js',
     'beer-pay': './src/beer-pay.js',
     'beer-complete': './src/beer-complete.js',
-    'change-password': './src/change-password.js'
+    'change-password': './src/change-password.js',
+    'change-email': './src/change-email.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -110,6 +111,11 @@ module.exports = {
         template: './src/change-password.html',
         filename: 'change-password.html',
         chunks: ['change-password']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/change-email.html',
+        filename: 'change-email.html',
+        chunks: ['change-email']
       })
   ],
   module: {

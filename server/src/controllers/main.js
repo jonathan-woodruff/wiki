@@ -26,7 +26,7 @@ exports.postWiki = async (req, res) => {
         const savedWiki = await newWiki.save();
 
         /* post to the wiki history model */
-        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
         const newWikiHistory = new WikiHistoryModel({
             wikiId: savedWiki._id,
             authorUserId: user._id,
@@ -98,7 +98,7 @@ exports.getProfileData = (req, res) => {
 
 exports.postAvatar = async (req, res) => {
     try {
-        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
         user.photo = req.file.filename;
         await user.save();
         return res.status(200).json({
@@ -114,9 +114,10 @@ exports.postAvatar = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
         const avatarURL = req.body.avatarURL;
         if (avatarURL !== 'not changed') user.photo = req.body.avatarURL;
+        user.name = req.body.name;
         user.services = req.body.services;
         user.description = req.body.description;
         await user.save();
@@ -176,7 +177,7 @@ exports.publishWikiEdits = async (req, res) => {
         wiki.contentVersion = contentVersion;
         await wiki.save();
         /* add the wiki version to the wiki history model */
-        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
         const newWikiEdit = new WikiHistoryModel({
             wikiId: wikiId,
             authorUserId: user._id,
@@ -284,7 +285,8 @@ exports.getHistoricalWikiData = async (req, res) => {
 
 exports.postCommunity = async (req, res) => {
     try {
-        const user = await UserModel.findOne({ email: req.user.email }).exec();
+        //const user = await UserModel.findOne({ email: req.user.email }).exec();
+        const user = req.user;
         const newCommunityEntry = new CommunityModel({
             userId: user._id,
             userObjectId: user._id,

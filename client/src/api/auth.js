@@ -31,6 +31,6 @@ export async function putUserName(payload) {
     return await axios.put(`${SERVER_URL}/auth/updateUserName`, payload);
 };
 
-export async function putUserEmail(payload) {
+export async function putEmail(payload) {
     return await axios.put(`${SERVER_URL}/auth/updateUserEmail`, payload);
 };

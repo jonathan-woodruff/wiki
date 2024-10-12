@@ -4,22 +4,25 @@ const { sign } = require('jsonwebtoken');
 const { SECRET, EMAIL_ADDRESS, APP_PASSWORD } = require('../constants/index');
 const nodemailer = require('nodemailer');
 
-/*
+
 exports.protected = (req, res) => {
-    console.log(req.user);
+    res.status(200).json({
+        success: true
+    });
+    /*console.log(req.user);
     console.log('y01');
     if (req.user) {
         console.log('di');
         res.status(200).json({
             isAuth: true
         });
-    } else {
+    } /*else {
         res.status(200).json({
             isAuth: false
         });
-    }
+    }*/
 };
-*/
+
 
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;

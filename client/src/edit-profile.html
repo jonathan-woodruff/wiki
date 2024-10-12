@@ -35,6 +35,8 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="./edit-profile.html">Edit Profile</a></li>
+                <li><a class="dropdown-item" href="./change-email.html">Change Email</a></li>
+                <li><a class="dropdown-item" href="./change-password.html">Change Password</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a id="logout-link" href="#" class="dropdown-item">Log Out</a></li>
               </ul>
@@ -73,7 +75,12 @@
       <div class="row">
         <div class="col">
           <form id="form" enctype="multipart/form-data">
+            <div class="form-group col col-md-10 col-lg-9 mx-auto mb-3">
+              <label for="name">Your name</label>
+              <input type="text" class="form-control" id="name" placeholder="Enter your name">
+            </div>
             <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-5">
+
               <div class="mx-auto d-flex align-items-center position-relative mb-1 rounded-circle border border-dark" style="width: 205px; height: 205px">
                 <div id="avatar-holder" class="mx-auto"></div>
                 <input type="file" name="file" class="form-control position-absolute opacity-0 overflow-hidden bottom-0 left-50 z-1" style="width: 0.1px; height: 0.1px" id="profile-picture" accept=".png,.jpg,.jpeg,.svg">
@@ -124,39 +131,49 @@
                 <textarea id="description" class="form-control" placeholder="Describe yourself and your service..." style="height: 120px"></textarea>
               </div>
             </div>
-            <div class="row mx-auto mb-5">
+            <!--<div class="row mx-auto mb-5">
               <div class="form-group col col-md-10 col-lg-9 mx-auto">
-                <div id="name-reveal-div" class="form-group col-md-11 col-lg-10 col-xl-9 mb-5">
+                <div id="name-reveal-div" class="form-group col-md-11 col-lg-10 col-xl-9 mb-4">
                   <button id="name-reveal-button" class="btn btn-link text-decoration-none p-0">Change your name</button>
                 </div>
-                <div id="name-div" class="row mb-3" style="display: none;">
-                  <div class="col col-12 col-sm-9 col-md-8">
-                    <label for="name">Your name</label>
-                    <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter your name">
-                  </div>
-                  <div class="col col-xs-6 col-sm-3 col-md-4">
-                    <button id="save-name" class="btn btn-outline-primary">Save Name</button>
-                    <span id="name-saved" class="fst-italic" style="display: none;">Saved!</span>
+                <div id="name-div" class="row g-3 align-items-center mb-4" style="display: none;">
+                  <div class="row g-3 align-items-center">
+                    <div class="col-12 col-sm-8 col-lg-6">
+                      <input type="text" id="name" class="form-control" placeholder="Enter your name">
+                    </div>
+                    <div class="col-auto">
+                      <span class="form-text">
+                        <button id="save-name" class="btn btn-outline-primary" disabled>Save Name</button>
+                        <span id="name-saved" class="fst-italic" style="display: none;">Saved!</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div id="email-reveal-div" class="form-group col-md-11 col-lg-10 col-xl-9 mb-5">
-                  <button id="email-reveal-button" class="btn btn-link text-decoration-none p-0">Change your email</button>
+                <div id="email-reveal-div" class="form-group col-md-11 col-lg-10 col-xl-9 mb-4">
+                  <button id="email-reveal-button" class="btn btn-link text-decoration-none p-0">Change your email <span class="fst-italic">(changing your email will log you out)</span></button>
                 </div>
-                <div id="email-div" class="row mb-3" style="display: none;">
-                  <div class="col col-12 col-sm-9 col-md-8">
-                    <label for="email">Your email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                <div id="email-div" class="row g-3 align-items-center mb-4" style="display: none;">
+                  <div class="row g-3 align-items-center">
+                    <div class="col-12 col-sm-8 col-lg-6">
+                      <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    </div>
+                    <div class="col-auto">
+                      <span class="form-text">
+                        <button id="save-email" class="btn btn-outline-primary" disabled>Save Email</button>
+                      </span>
+                    </div>
                   </div>
-                  <div class="col col-xs-6 col-sm-3 col-md-4">
-                    <button id="save-email" class="btn btn-outline-primary">Save Email</button>
-                    <span id="email-saved" class="fst-italic" style="display: none;">Saved!</span>
+                  <div class="row mx-auto mt-1">
+                    <div class="col">
+                      <p id="email-error" class="text-danger d-none"></p>
+                    </div>
                   </div>
                 </div>
                 <div class="mb-5">
                   <a href="./change-password.html" alt="edit password" class="text-decoration-none">Change your password</a>
                 </div>
               </div>
-            </div>
+            </div>-->
             <div class="row mx-auto mb-2">
               <div class="d-grid col-sm-10 col-md-8 col-lg-6 mx-auto">
                 <p id="error-message" class="text-danger text-center d-none"></p>

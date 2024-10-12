@@ -17,8 +17,6 @@ import { configureNav, logout } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
-const navRegisterButton = document.getElementById('nav-register-button');
-
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
   logoImg.src = Logo;
@@ -27,6 +25,7 @@ const setSources = () => {
 };
 
 const setNav = () => {
+  const navRegisterButton = document.getElementById('nav-register-button');
   const navCreateLI = document.getElementById('nav-create-li');
   const navCreateA = document.getElementById('nav-create-a');
   const navCommunityLI = document.getElementById('nav-community-li');
@@ -141,6 +140,12 @@ const clearError = (event) => {
   }
 };
 
+const handlePasswordInput1 = (event) => {
+  const p2Div = document.getElementById('p2-div');
+  p2Div.classList.remove('d-none');
+  clearError(event);
+};
+
 const handlePageshow = async () => {
     try {
       await checkForCookie();
@@ -152,10 +157,9 @@ const handlePageshow = async () => {
     }
 };
 
-form.addEventListener('submit', registerUser);
+form.addEventListener('submit', changePassword);
 currentPasswordInput.addEventListener('input', clearError);
-newPasswordInput1.addEventListener('input', clearError);
+newPasswordInput1.addEventListener('input', handlePasswordInput1);
 newPasswordInput2.addEventListener('input', clearError);
 logoutLink.addEventListener('click', logout);
-navRegisterButton.addEventListener('click', goLogin);
 window.addEventListener('pageshow', handlePageshow);
