@@ -20,9 +20,9 @@ const handlePageLoad = async () => {
         const { data } = await checkConfirmationURL(ident, today, hash);
         if (data.success) {
             const payload = { ident: ident };
-            const loginResponse = await loginAfterRegistration(payload);
+            await loginAfterRegistration(payload);
             localStorage.setItem('isAuth', 'true');
-            localStorage.setItem('avatar', loginResponse.data.avatar);
+            localStorage.setItem('avatar', '');
             window.location.href = './edit-profile.html';
         } else {
             window.location.href = './index.html';

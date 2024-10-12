@@ -1,7 +1,14 @@
 const { UserModel } = require('../models/index');
 const { hash } = require('bcrypt');
 const { sign } = require('jsonwebtoken');
-const { SECRET, EMAIL_ADDRESS, APP_PASSWORD, CLIENT_URL, PASSWORD_RESET_SECRET } = require('../constants/index');
+const { 
+    SECRET, 
+    EMAIL_ADDRESS, 
+    APP_PASSWORD, 
+    CLIENT_URL, 
+    PASSWORD_RESET_SECRET,
+    REGISTRATION_SECRET 
+} = require('../constants/index');
 const nodemailer = require('nodemailer');
 const datefns = require('date-fns');
 const { createHmac } = require('node:crypto');
@@ -24,81 +31,105 @@ exports.protected = (req, res) => {
     }*/
 };
 
-const sendRegistrationEmail = async (user) => {
-    try {
-        // Generate the necessary data for the registration confirmation link
-        const today = base64Encode(new Date().toISOString());
-        const ident = base64Encode(user._id);
-        const data = {
-            today: today,
-            userId: user._id,
-            lastUpdated: user.updatedAt.toISOString(),
-            password: user.password,
-            email: user.email
-        };
-        const hashedData = sha256(JSON.stringify(data), REGISTRATION_SECRET);
-        const params = new URLSearchParams();
-        params.append('ident', ident);
-        params.append('today', today);
-        params.append('data', hashedData);
-        const url = `${CLIENT_URL}/create-profile.html?${params.toString()}`;
+const base64Encode = (data) => {
+    const buff = new Buffer.from(data);
+    return buff.toString('base64');
+};
 
-        //send email
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: EMAIL_ADDRESS,
-              pass: APP_PASSWORD
-            }
-        });
-          
-        const mailOptions = {
-            from: EMAIL_ADDRESS,
-            to: user.email,
-            subject: 'Finish signing up - Peace Chickens',
-            text: `Hi, ${user.name}.\n\nClick the link to finish signing up to Peace Chickens. If you did not request to sign up, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
-        };
-          
-        transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-        });
+const base64Decode = (data) => {
+    const buff = new Buffer.from(data, 'base64');
+    return buff.toString('ascii');
+};
 
-        res.status(201).json({
-            success: true,
-            error: ''
-        })
-        
-    } catch(error) {
-        res.status(500).json({
-            success: false,
-            error: 'Email did not send'
-        });
-    }
+const sha256 = (salt, password) => {
+    return createHmac('sha256', password)
+    .update(salt)
+    .digest('hex');
+};
+
+const sendConfEmail = async (user) => {
+    // Generate the necessary data for the registration confirmation link
+    const today = base64Encode(new Date().toISOString());
+    const ident = base64Encode(user._id);
+    const data = {
+        today: today,
+        userId: user._id,
+        lastUpdated: user.updatedAt.toISOString(),
+        password: user.password,
+        email: user.email
+    };
+    const hashedData = sha256(JSON.stringify(data), REGISTRATION_SECRET);
+    const params = new URLSearchParams();
+    params.append('ident', ident);
+    params.append('today', today);
+    params.append('data', hashedData);
+    const url = `${CLIENT_URL}/create-profile.html?${params.toString()}`;
+
+    //send email
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: EMAIL_ADDRESS,
+          pass: APP_PASSWORD
+        }
+    });
+      
+    const mailOptions = {
+        from: EMAIL_ADDRESS,
+        to: user.email,
+        subject: 'Finish signing up - Peace Chickens',
+        text: `Hi, ${user.name}.\n\nClick the link to finish signing up to Peace Chickens. If you did not request to sign up, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
+    };
+      
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
 };
 
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
+
     try {
+        /*** Create a new user ***/
         const hashedPassword = await hash(password, 10);
-        const newUser = new UserModel({
+        const user = new UserModel({
             name: name,
             email: email,
             password: hashedPassword,
             isConfirmed: false
         });
-        await newUser.save();
-        await sendRegistrationEmail(newUser);
-        return res.status(201).json({
+        await user.save();
+
+        /*** send an email for the user to finish registration ***/
+        await sendConfEmail(user);
+
+        res.status(201).json({
             success: true,
-            message: 'The registration was successful'
-        });
+            error: ''
+        })
     } catch(error) {
         console.log(error.message);
-        res.status(500).json({
+        return res.status(500).json({
+            error: error.message
+        });
+    };
+};
+
+exports.sendConfirmationEmail = async (req, res) => {
+    try {
+        const user = await UserModel.findOne({ email: req.body.email }).exec();
+        await sendConfEmail(user);
+        res.status(201).json({
+            success: true,
+            error: ''
+        })
+    } catch(error) {
+        console.log(error.message);
+        return res.status(500).json({
             error: error.message
         });
     }
@@ -213,22 +244,6 @@ exports.updateUserEmail = async (req, res) => {
             error: 'Did not update user email successfully'
         });
     }
-};
-
-const base64Encode = (data) => {
-    const buff = new Buffer.from(data);
-    return buff.toString('base64');
-};
-
-const base64Decode = (data) => {
-    const buff = new Buffer.from(data, 'base64');
-    return buff.toString('ascii');
-};
-
-const sha256 = (salt, password) => {
-    return createHmac('sha256', password)
-    .update(salt)
-    .digest('hex');
 };
 
 exports.sendPasswordResetEmail = async (req, res) => {
@@ -438,16 +453,10 @@ exports.loginAfterRegistration = async (req, res) => {
             id: user._id,
             email: user.email
         };
-    } catch(error) {
-        res.status(500).json({
-            success: false,
-            error: 'did not find user'
-        })
-    };
-    try {
         const token = await sign(payload, SECRET); //create jwt token
         return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
-            avatar: user.photo
+            success: true,
+            error: ''
         })
     } catch(error) {
         console.log(error.message);
@@ -455,5 +464,4 @@ exports.loginAfterRegistration = async (req, res) => {
             error: error.message 
         });
     }
-
 };

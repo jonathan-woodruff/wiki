@@ -12,7 +12,8 @@ const {
     checkResetURL,
     resetPassword,
     checkConfirmationURL,
-    loginAfterRegistration
+    loginAfterRegistration,
+    sendConfirmationEmail
 } = require('../controllers/auth');
 const { validationMiddleware } = require('../middlewares/validation-middleware');
 const { 
@@ -38,6 +39,7 @@ router.get('/checkResetURL', checkResetURL);
 router.post('/resetPassword', resetPasswordValidation, validationMiddleware, resetPassword);
 router.get('/checkConfirmationURL', checkConfirmationURL);
 router.post('/loginAfterRegistration', loginAfterRegistration);
+router.post('/sendConfirmationEmail', sendConfirmationEmail);
 
 module.exports = router;
  

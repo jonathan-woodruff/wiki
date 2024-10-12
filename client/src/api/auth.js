@@ -54,3 +54,7 @@ export async function checkConfirmationURL(ident, today, hash) {
 export async function loginAfterRegistration(payload) {
     return await axios.post(`${SERVER_URL}/auth/loginAfterRegistration`, payload);
 };
+
+export async function sendConfirmationEmail(payload) {
+    return await axios.post(`${SERVER_URL}/auth/sendConfirmationEmail`, payload);
+};

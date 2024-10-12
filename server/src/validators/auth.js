@@ -48,9 +48,16 @@ const loginFieldsCheck = check('email').custom(async (value, { req }) => {
     req.user = user;
 });
 
+const confirmed = check('email').custom(async (value) => {
+    const user = await UserModel.findOne({ email: value }).exec();
+    if (!user.isConfirmed) {
+        throw new Error('User is not confirmed');
+    }
+})
+
 module.exports = {
     registerValidation: [email, password, emailExists],
-    loginValidation: [email, loginFieldsCheck],
+    loginValidation: [email, loginFieldsCheck, confirmed],
     changePasswordValidation: [password, correctCurrentPassword],
     changeEmailValidation: [email, emailExists],
     resetEmailValidation: [email, notEmailExists],

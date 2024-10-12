@@ -51,7 +51,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onLogin } from './api/auth';
+import { onLogin, sendConfirmationEmail } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
@@ -84,24 +84,36 @@ export const goPlaces = () => {
   window.location.href = url;
 };
 
+const goSuccess = () => {
+  const params = new URLSearchParams();
+  params.append('header', 'Almost there!')
+  params.append('message', 'I sent you an email. Please click the email confirmation link to finish signing up.');
+  const url = `./success.html?${params.toString()}`;
+  window.location.href = url;
+};
+
 const login = async (event) => {
   event.preventDefault();
   const loginButton = document.getElementById('submit');
   setLoadingButton(loginButton, 'Logging In...');
+  const credentials = {
+    email: emailInput.value,
+    password: passwordInput.value
+  };
   try {
-    const credentials = {
-        email: emailInput.value,
-        password: passwordInput.value
-    };
     const { data } = await onLogin(credentials);
     localStorage.setItem('isAuth', 'true');
     localStorage.setItem('avatar', data.avatar);
     goPlaces();
   } catch(error) {
     const axiosError = error.response.data.errors[0].msg.toLowerCase();
+    console.log(axiosError);
     let errorMessage;
     if (axiosError.includes('email') || axiosError.includes('password')) {
       errorMessage = 'Incorrect email or password';
+    } else if (axiosError === 'user is not confirmed') {
+      await sendConfirmationEmail(credentials);
+      goSuccess();
     } else {
       errorMessage = 'Could not log in. Check your network connection.'
     }
