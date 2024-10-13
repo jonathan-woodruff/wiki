@@ -29,7 +29,8 @@ module.exports = {
     'password-reset-start': './src/password-reset-start.js',
     'password-reset': './src/password-reset.js',
     'success': './src/success.js',
-    'create-profile': './src/create-profile.js'
+    'create-profile': './src/create-profile.js',
+    'email-reset': './src/email-reset.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -140,6 +141,11 @@ module.exports = {
         template: './src/create-profile.html',
         filename: 'create-profile.html',
         chunks: ['create-profile']
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/email-reset.html',
+        filename: 'email-reset.html',
+        chunks: ['email-reset']
       })
   ],
   module: {

@@ -58,3 +58,11 @@ export async function loginAfterRegistration(payload) {
 export async function sendConfirmationEmail(payload) {
     return await axios.post(`${SERVER_URL}/auth/sendConfirmationEmail`, payload);
 };
+
+export async function sendChangeEmail(payload) {
+    return await axios.post(`${SERVER_URL}/auth/sendChangeEmail`, payload);
+};
+
+export async function tryEmailReset(ident, today, newEmail, hash) {
+    return await axios.get(`${SERVER_URL}/auth/tryEmailReset?ident=${ident}&today=${today}&newEmail=${newEmail}&data=${hash}`);
+};

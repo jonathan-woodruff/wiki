@@ -7,7 +7,8 @@ const {
     APP_PASSWORD, 
     CLIENT_URL, 
     PASSWORD_RESET_SECRET,
-    REGISTRATION_SECRET 
+    REGISTRATION_SECRET,
+    CHANGE_EMAIL_SECRET
 } = require('../constants/index');
 const nodemailer = require('nodemailer');
 const datefns = require('date-fns');
@@ -77,7 +78,7 @@ const sendConfEmail = async (user) => {
     const mailOptions = {
         from: EMAIL_ADDRESS,
         to: user.email,
-        subject: 'Finish signing up - Peace Chickens',
+        subject: 'Finish signing up | Peace Chickens',
         text: `Hi, ${user.name}.\n\nClick the link to finish signing up to Peace Chickens. If you did not request to sign up, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
     };
       
@@ -181,7 +182,7 @@ const sendPasswordChangeEmail = async (user) => {
     const mailOptions = {
         from: EMAIL_ADDRESS,
         to: user.email,
-        subject: 'Your password changed',
+        subject: 'Your password changed | Peace Chickens',
         text: 'Hi, ' + user.name + '.\n\nYour Peace Chickens password changed successfully. If you did not change your password, please reply to let me know.\n\nJonathan | Peace Chickens'
     };
       
@@ -230,22 +231,6 @@ exports.updateUserName = async (req, res) => {
     }
 };
 
-exports.updateUserEmail = async (req, res) => {
-    try {
-        const user = req.user;
-        user.email = req.body.email;
-        await user.save();
-        return res.status(200).json({
-            success: true,
-            message: 'updated user email'
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Did not update user email successfully'
-        });
-    }
-};
-
 exports.sendPasswordResetEmail = async (req, res) => {
     try {
         const email = req.body.email;
@@ -279,7 +264,7 @@ exports.sendPasswordResetEmail = async (req, res) => {
         const mailOptions = {
             from: EMAIL_ADDRESS,
             to: email,
-            subject: 'Your password reset link',
+            subject: 'Your password reset link | Peace Chickens',
             text: `Hi, ${user.name}.\n\nClick the link to reset your Peace Chickens password. If you did not request to reset your password, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
         };
           
@@ -305,7 +290,7 @@ exports.sendPasswordResetEmail = async (req, res) => {
 };
 
 exports.checkResetURL = async (req, res) => {
-    // Check if the reset password link in not out of date
+    // Check if the reset password link is out of date
     const today = base64Decode(req.query.today); 
     const timeSince = datefns.differenceInHours(
         new Date(),
@@ -462,6 +447,125 @@ exports.loginAfterRegistration = async (req, res) => {
         console.log(error.message);
         res.status(500).json({
             error: error.message 
+        });
+    }
+};
+
+exports.sendChangeEmail = async (req, res) => {
+    const user = req.user; 
+    const toEmail = req.body.email;
+
+    try {        
+        // Generate the necessary data for the change-email link
+        const today = base64Encode(new Date().toISOString());
+        const ident = base64Encode(user._id);
+        const newEmail = base64Encode(toEmail);
+        const data = {
+            today: today,
+            userId: user._id,
+            lastUpdated: user.updatedAt.toISOString(),
+            password: user.password,
+            email: user.email,
+            newEmail: newEmail
+        };
+        const hashedData = sha256(JSON.stringify(data), CHANGE_EMAIL_SECRET);
+        const params = new URLSearchParams();
+        params.append('ident', ident);
+        params.append('today', today);
+        params.append('new-email', newEmail);
+        params.append('data', hashedData);
+        const url = `${CLIENT_URL}/email-reset.html?${params.toString()}`;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+            user: EMAIL_ADDRESS,
+            pass: APP_PASSWORD
+            }
+        });
+        
+        const mailOptions = {
+            from: EMAIL_ADDRESS,
+            to: toEmail,
+            subject: 'Confirm new email | Peace Chickens',
+            text: `Hi, ${user.name}.\n\nClick the link below to change your Peace Chickens login email to this one (${toEmail}).\n\nThe link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+            console.log(error);
+            } else {
+            console.log('Email sent: ' + info.response);
+            }
+        });
+
+        return res.status(200).json({
+            success: true,
+            error: ''
+        });
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).json({
+            error: error
+        });
+    }
+};
+
+exports.tryEmailReset = async (req, res) => {
+    // Check if the change-email confirmation link is out of date
+    const today = base64Decode(req.query.today); 
+    const timeSince = datefns.differenceInHours(
+        new Date(),
+        today
+    );
+    if (timeSince > 2) {
+        res.status(500).json({ 
+            success: false,
+            error: 'Link is outdated' 
+        });
+        return;
+    }
+    
+    const userID = base64Decode(req.query.ident);
+    const user = await UserModel.findOne({ _id: userID }).exec();
+    if (!user) {
+        res.status(500).json({ 
+            success: false,
+            error: 'Invalid user' 
+        });
+        return;
+    }
+    
+    // Hash again all the data to compare it with the link
+    const data = {
+        today: req.query.today,
+        userId: user._id,
+        lastUpdated: user.updatedAt.toISOString(),
+        password: user.password,
+        email: user.email,
+        newEmail: req.query.newEmail
+    }
+    const hashedData = sha256(JSON.stringify(data), CHANGE_EMAIL_SECRET);
+    if(hashedData !== req.query.data) {
+        res.status(500).json({ 
+            success: false,
+            error: 'Unmatched hash' 
+        });
+        return;
+    }
+
+    //link is valid. change the user's email
+    try {
+        user.email = base64Decode(req.query.newEmail);
+        await user.save();
+        res.status(201).json({
+            success: true,
+            error: ''
+        });
+    } catch(error) {
+        res.status(500).json({
+            success: false,
+            error: error
         });
     }
 };

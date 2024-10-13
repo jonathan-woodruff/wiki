@@ -67,7 +67,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { putEmail, checkForCookie } from './api/auth';
+import { putEmail, checkForCookie, sendChangeEmail } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
@@ -112,6 +112,14 @@ const handlePageshow = async () => {
     }
 };
 
+const goSuccess = () => {
+  const params = new URLSearchParams();
+  params.append('header', 'Nice!')
+  params.append('message', 'Please check your email');
+  const url = `./success.html?${params.toString()}`;
+  window.location.href = url;
+};
+
 const saveEmail = async (event) => {
     event.preventDefault();
     setLoadingButton(submitButton, 'Saving...');
@@ -119,8 +127,8 @@ const saveEmail = async (event) => {
       const payload = {
         email: emailInput.value
       }
-      await putEmail(payload);
-      logout();
+      await sendChangeEmail(payload);
+      goSuccess();
     } catch(error) {
       if (error.response.status === 401) {
         localStorage.setItem('isAuth', false);

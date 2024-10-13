@@ -60,6 +60,6 @@ module.exports = {
     loginValidation: [email, loginFieldsCheck, confirmed],
     changePasswordValidation: [password, correctCurrentPassword],
     changeEmailValidation: [email, emailExists],
-    resetEmailValidation: [email, notEmailExists],
-    resetPasswordValidation: [password]
+    resetPasswordValidation1: [email, notEmailExists],
+    resetPasswordValidation2: [password]
 };

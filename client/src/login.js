@@ -107,7 +107,6 @@ const login = async (event) => {
     goPlaces();
   } catch(error) {
     const axiosError = error.response.data.errors[0].msg.toLowerCase();
-    console.log(axiosError);
     let errorMessage;
     if (axiosError.includes('email') || axiosError.includes('password')) {
       errorMessage = 'Incorrect email or password';
