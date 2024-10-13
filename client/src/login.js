@@ -13,7 +13,7 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -59,7 +59,6 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
-const logoutLink = document.getElementById('logout-link');
 const passwordResetButton = document.getElementById('password-reset');
 
 //helper function for goPlaces
@@ -135,6 +134,5 @@ form.addEventListener('submit', login);
 emailInput.addEventListener('input', clearError);
 passwordInput.addEventListener('input', clearError);
 registerLink.addEventListener('click', goRegister);
-logoutLink.addEventListener('click', logout);
 navRegisterButton.addEventListener('click', goRegister);
 passwordResetButton.addEventListener('click', goPasswordResetStart);

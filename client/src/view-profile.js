@@ -123,6 +123,15 @@ const goLogin = () => {
     window.location.href = url;
 };
 
-logoutLink.addEventListener('click', logout);
+const handleLogout = async () => {
+    try {
+        await logout();
+        window.location.reload();
+    } catch(error) {
+        console.log(error);
+    }
+  };
+
+logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 //window.addEventListener("pageshow", handlePageshow)

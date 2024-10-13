@@ -185,7 +185,16 @@ const handleContinue = () => {
     }
 };
 
-logoutLink.addEventListener('click', logout);
+const handleLogout = async () => {
+    try {
+        await logout();
+        window.location.reload();
+    } catch(error) {
+        console.log(error);
+    }
+};
+
+logoutLink.addEventListener('click', handleLogout);
 customButton.addEventListener('click', handleButtonClick);
 button5.addEventListener('click', handleButtonClick);
 button10.addEventListener('click', handleButtonClick);

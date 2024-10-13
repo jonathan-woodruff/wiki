@@ -269,13 +269,22 @@ const showMoreCards = () => {
   showCards(matchingWikis);
 };
 
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
 searchEngine.addEventListener('input', hideError);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 showMoreButton.addEventListener('click', showMoreCards);
 //window.addEventListener("pageshow", handlePageshow)

@@ -64,6 +64,15 @@ let isCurrentPasswordError = false;
 let isNewPasswordError1 = false;
 let isNewPasswordError2 = false;
 
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
 const changePassword = async (event) => {
   event.preventDefault();
   if (!currentPasswordInput.value) {
@@ -95,7 +104,7 @@ const changePassword = async (event) => {
             password: newPasswordInput1.value
         };
         await putPassword(payload);
-        logout();
+        handleLogout();
     } catch(error) {
         let errorMessage = error.response.data.errors[0].msg;
         const axiosError = errorMessage.toLowerCase();
@@ -161,5 +170,5 @@ form.addEventListener('submit', changePassword);
 currentPasswordInput.addEventListener('input', clearError);
 newPasswordInput1.addEventListener('input', handlePasswordInput1);
 newPasswordInput2.addEventListener('input', clearError);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);

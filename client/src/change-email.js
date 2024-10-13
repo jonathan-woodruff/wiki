@@ -143,7 +143,16 @@ const saveEmail = async (event) => {
     setNotLoadingButton(submitButton, 'Change Email');
 };
 
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
 form.addEventListener('submit', saveEmail);
 emailInput.addEventListener('input', handleEmailInput);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);

@@ -370,6 +370,15 @@ const goLogin = () => {
   window.location.href = url;
 };
 
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
 editButton.addEventListener('click', goEditMode);
 confirmCancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
@@ -379,5 +388,5 @@ publishButton.addEventListener('click', checkPublish);
 confirmPublishButton.addEventListener('click', publishEdits);
 changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);

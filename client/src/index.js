@@ -89,7 +89,16 @@ const searchEngine = document.getElementById('search-engine');
 const searchDiv = document.getElementById('search-div');
 const beerButton = document.getElementById('beer');
 
-logoutLink.addEventListener('click', logout);
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
+logoutLink.addEventListener('click', handleLogout);
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);

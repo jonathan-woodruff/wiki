@@ -477,9 +477,18 @@ const clearNameError = () => {
   }
 };
 
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
 pictureInput.addEventListener('input', handlePictureInput);
 saveButton.addEventListener('click', saveProfile);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);
 userName.addEventListener('input', clearNameError);

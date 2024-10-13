@@ -127,19 +127,28 @@ const clearError = (event) => {
 };
 
 const handlePageshow = async () => {
-    try {
-      await checkForCookie();
-    } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', 'false');
-        window.location.href = './login.html';
-      }
+  try {
+    await checkForCookie();
+  } catch(error) {
+    if (error.response.status === 401) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.href = './login.html';
     }
-  };
+  }
+};
+
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
 
 submitButton.addEventListener('click', handleSubmit);
 reasonInput.addEventListener('input', clearError);
 amountInput.addEventListener('input', clearError);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);

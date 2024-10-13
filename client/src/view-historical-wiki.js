@@ -171,7 +171,16 @@ const goLogin = () => {
     window.location.href = url;
 };
 
+const handleLogout = async () => {
+    try {
+        await logout();
+        window.location.reload();
+    } catch(error) {
+        console.log(error);
+    }
+  };
+
 viewCurrentButton.addEventListener('click', goCurrent);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 //window.addEventListener("pageshow", handlePageshow)

@@ -7,9 +7,11 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
+import { configureNav, logout } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
+
+const logoutLink = document.getElementById('logout-link');
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -31,6 +33,17 @@ const setNav = () => {
 
 setSources();
 setNav();
+
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
+logoutLink.addEventListener('click', handleLogout);
 
 /************************************************************
  * Configure the message text

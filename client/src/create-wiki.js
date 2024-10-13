@@ -195,6 +195,15 @@ const handlePageshow = async () => {
   }
 };
 
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
 button.addEventListener('click', submitContent);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);

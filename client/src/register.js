@@ -151,12 +151,21 @@ const clearError = (event) => {
 
 const goLogin = () => window.location.href = `./login.html${window.location.search}`;
 
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
+};
+
 form.addEventListener('submit', registerUser);
 nameInput.addEventListener('input', clearError);
 emailInput.addEventListener('input', clearError);
 passwordInput.addEventListener('input', clearError);
 checkboxInput.addEventListener('input', clearError);
 loginLink.addEventListener('click', goLogin);
-logoutLink.addEventListener('click', logout);
+logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 //window.addEventListener("pageshow", handlePageshow)

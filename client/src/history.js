@@ -192,7 +192,16 @@ const showMoreCards = () => {
     showCards(allEditions);
 };
 
-logoutLink.addEventListener('click', logout);
+const handleLogout = async () => {
+    try {
+        await logout();
+        window.location.reload();
+    } catch(error) {
+        console.log(error);
+    }
+};
+
+logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 showMoreButton.addEventListener('click', showMoreCards);
 //window.addEventListener("pageshow", handlePageshow)
