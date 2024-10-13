@@ -10,6 +10,8 @@ if (isAuth) window.location.href = './index.html';
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -60,6 +62,7 @@ const passwordInput = document.getElementById('password');
 const errorElement = document.getElementById('error-message');
 const registerLink = document.getElementById('register-link');
 const passwordResetButton = document.getElementById('password-reset');
+const beerButton = document.getElementById('beer');
 
 //helper function for goPlaces
 const getURL = (params, prevPageName) => {
@@ -136,3 +139,4 @@ passwordInput.addEventListener('input', clearError);
 registerLink.addEventListener('click', goRegister);
 navRegisterButton.addEventListener('click', goRegister);
 passwordResetButton.addEventListener('click', goPasswordResetStart);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

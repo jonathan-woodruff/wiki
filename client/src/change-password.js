@@ -10,6 +10,8 @@ if (!isAuth) window.location.href = './login.html';
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -59,6 +61,7 @@ const newPasswordInput1 = document.getElementById('new-password-1');
 const newPasswordInput2 = document.getElementById('new-password-2');
 const errorElement = document.getElementById('error-message');
 const logoutLink = document.getElementById('logout-link');
+const beerButton = document.getElementById('beer');
 
 let isCurrentPasswordError = false;
 let isNewPasswordError1 = false;
@@ -172,3 +175,4 @@ newPasswordInput1.addEventListener('input', handlePasswordInput1);
 newPasswordInput2.addEventListener('input', clearError);
 logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

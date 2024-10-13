@@ -4,6 +4,8 @@
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -57,6 +59,7 @@ const checkboxInput = document.getElementById('checkbox');
 const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
 const logoutLink = document.getElementById('logout-link');
+const beerButton = document.getElementById('beer');
 
 let isNameError = false;
 let isEmailError = false;
@@ -169,3 +172,4 @@ loginLink.addEventListener('click', goLogin);
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 //window.addEventListener("pageshow", handlePageshow)
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

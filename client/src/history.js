@@ -4,6 +4,8 @@
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -178,6 +180,7 @@ showPage();
  * All other JavaScript
 ************************************************************/
 const logoutLink = document.getElementById('logout-link');
+const beerButton = document.getElementById('beer');
 
 const goLogin = () => {
     const params = new URLSearchParams();
@@ -205,3 +208,4 @@ logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 showMoreButton.addEventListener('click', showMoreCards);
 //window.addEventListener("pageshow", handlePageshow)
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

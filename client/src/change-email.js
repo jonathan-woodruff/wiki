@@ -10,6 +10,8 @@ if (!isAuth) window.location.href = './login.html';
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -74,6 +76,7 @@ const form = document.getElementById('form');
 const submitButton = document.getElementById('submit');
 const errorElement = document.getElementById('error-message');
 const logoutLink = document.getElementById('logout-link');
+const beerButton = document.getElementById('beer');
 
 let isEmailError = false;
 
@@ -156,3 +159,4 @@ form.addEventListener('submit', saveEmail);
 emailInput.addEventListener('input', handleEmailInput);
 logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

@@ -4,6 +4,8 @@
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -12,6 +14,7 @@ import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
 const logoutLink = document.getElementById('logout-link');
+const beerButton = document.getElementById('beer');
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -44,6 +47,7 @@ const handleLogout = async () => {
 };
 
 logoutLink.addEventListener('click', handleLogout);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 
 /************************************************************
  * Configure the message text

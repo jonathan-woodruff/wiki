@@ -4,6 +4,8 @@
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -73,6 +75,7 @@ const continueDiv = document.getElementById('continue-div');
 const continueButton = document.getElementById('continue');
 const customAmountInput = document.getElementById('custom-amount');
 const errorRow = document.getElementById('error-row');
+const beerButton = document.getElementById('beer');
 
 let selectedButton;
 
@@ -200,3 +203,4 @@ button5.addEventListener('click', handleButtonClick);
 button10.addEventListener('click', handleButtonClick);
 customAmountInput.addEventListener('input', handleInput);
 continueButton.addEventListener('click', handleContinue);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

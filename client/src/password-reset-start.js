@@ -10,6 +10,8 @@ if (isAuth) window.location.href = './change-password.html';
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -58,6 +60,7 @@ const emailInput = document.getElementById('email');
 const submitButton = document.getElementById('submit');
 const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('nav-register-button');
+const beerButton = document.getElementById('beer');
 
 let isEmailError = false;
 
@@ -116,3 +119,4 @@ const handleSubmit = async (event) => {
 form.addEventListener('submit', handleSubmit);
 emailInput.addEventListener('input', handleEmailInput);
 loginLink.addEventListener('click', () => window.location.href = './login.html');
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

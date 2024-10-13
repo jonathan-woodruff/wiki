@@ -10,6 +10,8 @@ if (!isAuth) window.location.href = './login.html';
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar 
 ************************************************************/
@@ -147,6 +149,7 @@ import { checkForCookie } from './api/auth';
 
 const button = document.getElementById('submit');
 const logoutLink = document.getElementById('logout-link');
+const beerButton = document.getElementById('beer');
 
 const submitContent = (event) => {
   event.preventDefault();
@@ -207,3 +210,4 @@ const handleLogout = async () => {
 button.addEventListener('click', submitContent);
 logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

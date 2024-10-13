@@ -4,6 +4,8 @@
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -181,6 +183,7 @@ const closeButton = document.getElementById('close-button');
 const editorDiv = document.getElementById('editorjs');
 const logoutLink = document.getElementById('logout-link');
 const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
+const beerButton = document.getElementById('beer');
 
 const maxLengthStr = changeDescription.getAttribute('maxlength');
 charactersRemaining.innerHTML = maxLengthStr;
@@ -390,3 +393,4 @@ changeDescription.addEventListener('input', handleDescriptionInput);
 historyButton.addEventListener('click', handleHistoryClick);
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

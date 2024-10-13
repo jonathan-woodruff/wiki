@@ -10,6 +10,8 @@ if (!isAuth) window.location.href = './login.html';
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -308,6 +310,7 @@ const logoutLink = document.getElementById('logout-link');
 const toastDiv = document.getElementById('toast');
 const avatarErrorMessage = document.getElementById('avatar-error');
 const errorMessage = document.getElementById('error-message');
+const beerButton = document.getElementById('beer');
 
 let isAvatarError = false;
 let isAvatarUpdated = false;
@@ -492,3 +495,4 @@ logoutLink.addEventListener('click', handleLogout);
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 window.addEventListener('pageshow', handlePageshow);
 userName.addEventListener('input', clearNameError);
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

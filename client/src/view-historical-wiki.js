@@ -4,6 +4,8 @@
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -156,6 +158,7 @@ import { goToWiki } from './utils/wiki';
 
 const logoutLink = document.getElementById('logout-link');
 const viewCurrentButton = document.getElementById('current');
+const beerButton = document.getElementById('beer');
 
 const goCurrent = () => {
     const wikiID = data.wikiID;
@@ -184,3 +187,4 @@ viewCurrentButton.addEventListener('click', goCurrent);
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 //window.addEventListener("pageshow", handlePageshow)
+beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
