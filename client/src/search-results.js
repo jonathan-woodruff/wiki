@@ -54,13 +54,14 @@ const urlParams = new URLSearchParams(queryString);
 const searchPattern = urlParams.get('search');
 const selectedCountry = urlParams.get('country');
 const selectedSector = urlParams.get('sector');
+const searchedMostRecent = urlParams.get('most-recent') === 'true' ? true : false;
 const searchEngine = document.getElementById('search-engine');
 const showMoreDiv = document.getElementById('show-more-div');
 const showMoreButton = document.getElementById('show-more-button');
 
-const numCardsToShow = 10;
+const numCardsToShow = 3;
 let numShowMoreClicked = 0;
-let matchingWikis = [];
+let wikiResults = [];
 
 const loadWikis = async () => {
   try {
@@ -110,14 +111,14 @@ const showPreview = (contentBlocks) => {
 };
 
 const showCards = (wikis) => {
+  const cardDiv = document.getElementById('card-div');
   if (wikis.length) {
     const baseSlice = numShowMoreClicked * numCardsToShow;
     const endSlice = numCardsToShow;
     const wikisToShow = wikis.slice(baseSlice, baseSlice + endSlice);
     wikisToShow.forEach(wiki => {
-      const cardDiv = document.getElementById('card-div');
       const card = document.createElement('div');
-      card.id = wiki.item._id; //useful so when the user clicks the card, you can pass the id to the wiki page via urlParams query string
+      card.id = wiki._id; //useful so when the user clicks the card, you can pass the id to the wiki page via urlParams query string
       card.role = 'button';
       card.classList.add('card');
       card.classList.add('mb-3');
@@ -134,17 +135,17 @@ const showCards = (wikis) => {
       const h2 = document.createElement('h2');
       h2.classList.add('card-title');
       h2.classList.add('h4');
-      h2.innerHTML = wiki.item.title;
+      h2.innerHTML = wiki.title;
       cardBody.appendChild(h2);
 
       const p1 = document.createElement('p');
       p1.classList.add('card-text');
-      p1.innerHTML = showPreview(wiki.item.contentBlocks); 
+      p1.innerHTML = showPreview(wiki.contentBlocks); 
       cardBody.appendChild(p1);
 
       const p2 = document.createElement('p2');
       p2.style.fontSize = '0.9em';
-      p2.innerHTML = 'Country: ' + wiki.item.country + '\xa0\xa0\xa0\xa0' + 'Sector: ' + wiki.item.sector;
+      p2.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
       cardBody.appendChild(p2);
     });
     if (wikis.length > baseSlice + endSlice) {
@@ -165,6 +166,31 @@ const showCards = (wikis) => {
     p2.innerHTML = 'No wikis found. Try a different search.';
     cardDiv.appendChild(p2);
   }
+};
+
+const getMostRecentWikis = (wikis) => {
+  wikis.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); //sort descending
+  return wikis;
+};
+
+const searchMostRecent = () => {
+  allWikis
+  .then((wikis) => {
+    wikiResults = getMostRecentWikis(wikis);
+    console.log(wikiResults);
+    showCards(wikiResults);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+};
+
+const formatFuseList = (wikis) => {
+  const formattedList = [];
+  wikis.forEach(wiki => {
+    formattedList.push(wiki.item);
+  });
+  return formattedList;
 };
 
 const searchWikis = async () => {
@@ -192,8 +218,9 @@ const searchWikis = async () => {
       ]
     };
     const fuse = new Fuse(wikis, fuseOptions);
-    matchingWikis = fuse.search(searchPattern);
-    showCards(matchingWikis);
+    const matchingWikis = fuse.search(searchPattern);
+    wikiResults = formatFuseList(matchingWikis);
+    showCards(wikiResults);
   })
   .catch((error) => {
     console.log(error);
@@ -226,10 +253,14 @@ const populateSearchEngine = () => {
   searchEngine.value = searchPattern;
 };
 
-searchWikis();
-loadCountries();
-loadSectors();
-populateSearchEngine();
+if (searchedMostRecent) {
+  searchMostRecent();
+} else {
+  searchWikis();
+  loadCountries();
+  loadSectors();
+  populateSearchEngine();
+}
 
 /************************************************************
  * Show the page to the user
@@ -266,7 +297,7 @@ const goLogin = () => {
 
 const showMoreCards = () => {
   numShowMoreClicked++;
-  showCards(matchingWikis);
+  showCards(wikiResults);
 };
 
 const handleLogout = async () => {

@@ -4,6 +4,8 @@
 import './scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
+import './css/buttons.css';
+
 /************************************************************
  * Configure the navbar
 ************************************************************/
@@ -81,9 +83,18 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
+import { 
+  handleMostRecent, 
+  submitSearch, 
+  enterSubmit, 
+  focusOnInput, 
+  showFocus, 
+  showFocusOut, 
+  hideError 
+} from './utils/search';
 
 const logoutLink = document.getElementById('logout-link');
+const mostRecentButton = document.getElementById('most-recent');
 const submitButton = document.getElementById('submit');
 const searchEngine = document.getElementById('search-engine');
 const searchDiv = document.getElementById('search-div');
@@ -99,6 +110,7 @@ const handleLogout = async () => {
 };
 
 logoutLink.addEventListener('click', handleLogout);
+mostRecentButton.addEventListener('click', handleMostRecent);
 submitButton.addEventListener('click', submitSearch);
 searchDiv.addEventListener('click', focusOnInput);
 searchEngine.addEventListener('focus', showFocus);

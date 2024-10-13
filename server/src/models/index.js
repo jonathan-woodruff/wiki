@@ -62,7 +62,7 @@ const wikisSchema = new Schema({
     type: String,
     required: true
   }
-});
+}, { timestamps: true });
 
 const wikiHistorySchema = new Schema({
   wikiId: { 

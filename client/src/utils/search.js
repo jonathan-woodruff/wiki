@@ -4,6 +4,17 @@ const searchEngine = document.getElementById('search-engine');
 const searchDiv = document.getElementById('search-div');
 const errorDiv = document.getElementById('error-div');
 
+export const handleMostRecent = () => {
+  const params = new URLSearchParams();
+  params.append('search', '');
+  params.append('country', 'All');
+  params.append('sector', 'All');
+  params.append('most-recent', true);
+  const queryString = params.toString();
+  const url = `./search-results.html?${queryString}`;
+  window.location.href = url;
+};
+
 export const submitSearch = () => {
   if (searchEngine.value) {
     const params = new URLSearchParams();
@@ -13,6 +24,7 @@ export const submitSearch = () => {
     params.append('search', searchPattern);
     params.append('country', selectedCountry);
     params.append('sector', selectedSector);
+    params.append('most-recent', false);
     const queryString = params.toString();
     const url = `./search-results.html?${queryString}`;
     window.location.href = url;
