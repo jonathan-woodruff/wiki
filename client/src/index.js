@@ -76,7 +76,8 @@ const showPage = () => {
   const spinnerDiv = document.getElementById('spinner');
   const mainContainer = document.getElementById('main-container');
   const navbar = document.getElementById('navbar');
-  setNotLoading(spinnerDiv, mainContainer, navbar);
+  const footer = document.getElementById('footer');
+  setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 };
 
 showPage();

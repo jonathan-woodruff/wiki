@@ -134,6 +134,8 @@ function setLoading(isLoading) {
 const showPage = () => {
   const spinnerDiv = document.getElementById('spinner');
   const mainContainer = document.getElementById('main-container');
+  const footer = document.getElementById('footer');
+  footer.style.display = 'block';
   mainContainer.style.display = 'block';
   spinnerDiv.style.display = 'none';
 };

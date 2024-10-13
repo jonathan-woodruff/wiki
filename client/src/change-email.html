@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Change Email | Peace Chickens</title>
   </head>
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     <!-- Spinner -->
     <div id="spinner" class="spinner-border position-fixed top-50 start-50" role="status">
       <span style="visibility: hidden">Loading...</span>
@@ -55,7 +55,7 @@
     </nav>
 
     <!-- Main content -->
-    <div id="main-container" class="container py-4 px-3 mx-auto" style="display: none;">
+    <div id="main-container" class="container py-4 px-3 mx-auto mb-5" style="display: none;">
       <div class="row">
         <div class="col">
           <h1 class="text-center mt-5 mb-3">Change Email</h1>
@@ -71,12 +71,20 @@
             <div class="d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-2">
               <p id="error-message" class="text-danger text-center d-none"></p>
             </div>
-            <div class="d-grid col-4 col-sm-3 col-lg-2 mx-auto mb-2">
+            <div class="d-grid col-4 col-sm-3 col-lg-2 mx-auto">
               <button type="submit" id="submit" class="btn btn-primary rounded" disabled>Change Email</button>
             </div>
           </form>
         </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="row footer py-3 bg-light mt-auto w-100" style="display: none;">
+      <div class="col col-10 col-md-9 col-lg-8 mx-auto">
+        <p class="text-center" style="font-size: 0.9em">Copyright Jonathan Woodruff | Peace Chickens | 2024</p>
+        <p class="fst-italic text-center" style="font-size: 0.9em">Our views do not necessarily reflect the opinions of the Peace Corps or the U.S. government.</p>
+      </div>
+    </footer>
   </body>
 </html>

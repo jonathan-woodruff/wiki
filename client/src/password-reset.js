@@ -27,8 +27,10 @@ const showPage = async () => {
         if (data.success) {
             const spinnerDiv = document.getElementById('spinner');
             const mainContainer = document.getElementById('main-container');
+            const footer = document.getElementById('footer');
             spinnerDiv.style.display = 'none';
             mainContainer.style.display = '';
+            footer.style.display = '';
         } else {
             window.location.href = './index.html';
         }

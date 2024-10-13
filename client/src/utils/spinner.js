@@ -1,13 +1,15 @@
-export const setNotLoading = (spinnerElement, mainContainer, navbar) => {
+export const setNotLoading = (spinnerElement, mainContainer, navbar, footer) => {
     mainContainer.style.display = 'block';
     spinnerElement.style.display = 'none';
     navbar.style.display = 'block';
+    footer.style.display = 'block';
 };
 
-export const setLoading = (spinnerElement, mainContainer, navbar) => {
+export const setLoading = (spinnerElement, mainContainer, navbar, footer) => {
     mainContainer.style.display = 'none';
     spinnerElement.style.display = 'block';
     navbar.style.display = 'none';
+    footer.style.display = 'none';
 };
 
 export const setLoadingButton = (buttonElement, buttonText) => {
