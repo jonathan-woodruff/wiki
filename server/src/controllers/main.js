@@ -59,13 +59,13 @@ exports.getWikis = async (req, res) => {
         const sector = req.query.sector;
         let wikis;
         if (country === 'All' && sector === 'All') {
-            wikis = await WikisModel.find().exec();
+            wikis = await WikisModel.find().sort({ 'updatedAt': -1 }).exec();
         } else if (country === 'All') {
-            wikis = await WikisModel.find({ sector: sector }).exec();
+            wikis = await WikisModel.find({ sector: sector }).sort({ 'updatedAt': -1 }).exec();
         } else if (sector === 'All') {
-            wikis = await WikisModel.find({ country: country }).exec();
+            wikis = await WikisModel.find({ country: country }).sort({ 'updatedAt': -1 }).exec();
         } else { //both country and sector are selected to be filtered
-            wikis = await WikisModel.find({ country: country, sector: sector }).exec();
+            wikis = await WikisModel.find({ country: country, sector: sector }).sort({ 'updatedAt': -1 }).exec();
         }
         return res.status(200).json({
             wikis: wikis

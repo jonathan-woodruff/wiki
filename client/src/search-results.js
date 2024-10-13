@@ -54,12 +54,13 @@ const urlParams = new URLSearchParams(queryString);
 const searchPattern = urlParams.get('search');
 const selectedCountry = urlParams.get('country');
 const selectedSector = urlParams.get('sector');
-const searchedMostRecent = urlParams.get('most-recent') === 'true' ? true : false;
 const searchEngine = document.getElementById('search-engine');
+const countryInput = document.getElementById('country');
+const sectorInput = document.getElementById('sector');
 const showMoreDiv = document.getElementById('show-more-div');
 const showMoreButton = document.getElementById('show-more-button');
 
-const numCardsToShow = 3;
+const numCardsToShow = 10;
 let numShowMoreClicked = 0;
 let wikiResults = [];
 
@@ -168,23 +169,6 @@ const showCards = (wikis) => {
   }
 };
 
-const getMostRecentWikis = (wikis) => {
-  wikis.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); //sort descending
-  return wikis;
-};
-
-const searchMostRecent = () => {
-  allWikis
-  .then((wikis) => {
-    wikiResults = getMostRecentWikis(wikis);
-    console.log(wikiResults);
-    showCards(wikiResults);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-};
-
 const formatFuseList = (wikis) => {
   const formattedList = [];
   wikis.forEach(wiki => {
@@ -193,38 +177,47 @@ const formatFuseList = (wikis) => {
   return formattedList;
 };
 
-const searchWikis = async () => {
+const searchWikis = (searchPattern) => {
   allWikis
   .then((wikis) => {
-    const fuseOptions = {
-      // isCaseSensitive: false,
-      // includeScore: false,
-      // shouldSort: true,
-      // includeMatches: false,
-      findAllMatches: true,
-      // minMatchCharLength: 1,
-      // location: 0,
-      // threshold: 0.6,
-      // distance: 100,
-      // useExtendedSearch: false,
-      // ignoreLocation: false,
-      // ignoreFieldNorm: false,
-      // fieldNormWeight: 1,
-      keys: [
-        "title",
-        "country",
-        "sector",
-        "contentBlocks.data.text"
-      ]
-    };
-    const fuse = new Fuse(wikis, fuseOptions);
-    const matchingWikis = fuse.search(searchPattern);
-    wikiResults = formatFuseList(matchingWikis);
-    showCards(wikiResults);
+    if (searchPattern) {
+      const fuseOptions = {
+        // isCaseSensitive: false,
+        // includeScore: false,
+        // shouldSort: true,
+        // includeMatches: false,
+        findAllMatches: true,
+        // minMatchCharLength: 1,
+        // location: 0,
+        // threshold: 0.6,
+        // distance: 100,
+        // useExtendedSearch: false,
+        // ignoreLocation: false,
+        // ignoreFieldNorm: false,
+        // fieldNormWeight: 1,
+        keys: [
+          "title",
+          "country",
+          "sector",
+          "contentBlocks.data.text"
+        ]
+      };
+      const fuse = new Fuse(wikis, fuseOptions);
+      const matchingWikis = fuse.search(searchPattern);
+      wikiResults = formatFuseList(matchingWikis);
+      showCards(wikiResults);
+    } else {
+      wikiResults = wikis; //useful when you show more cards
+      showCards(wikiResults);
+    }
   })
   .catch((error) => {
     console.log(error);
-  });
+  })
+};
+
+const populateSearchEngine = () => {
+  searchEngine.value = searchPattern;
 };
 
 const loadCountries = () => {
@@ -233,7 +226,6 @@ const loadCountries = () => {
     option.value = country;
     option.innerHTML = country;
     if (country === selectedCountry) option.selected = true;
-    const countryInput = document.getElementById('country');
     countryInput.appendChild(option);
   })
 };
@@ -244,28 +236,23 @@ const loadSectors = () => {
     option.value = sector;
     option.innerHTML = sector;
     if (sector === selectedSector) option.selected = true;
-    const sectorInput = document.getElementById('sector');
     sectorInput.appendChild(option);
   });
 };
 
-const populateSearchEngine = () => {
-  searchEngine.value = searchPattern;
-};
-
-if (searchedMostRecent) {
-  searchMostRecent();
-} else {
-  searchWikis();
-  loadCountries();
-  loadSectors();
-  populateSearchEngine();
-}
+populateSearchEngine();
+loadCountries();
+loadSectors();
+searchWikis(searchPattern);
 
 /************************************************************
  * Show the page to the user
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
+
+const focusOnEngine = () => {
+  searchEngine.focus();
+};
 
 const showPage = () => {
   const spinnerDiv = document.getElementById('spinner');
@@ -275,11 +262,12 @@ const showPage = () => {
 };
 
 showPage();
+focusOnEngine();
 
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { submitSearch, enterSubmit, focusOnInput, showFocus, showFocusOut, hideError } from './utils/search';
+import { submitSearch } from './utils/search';
 
 const submitButton = document.getElementById('submit');
 const searchDiv = document.getElementById('search-div');
@@ -309,13 +297,27 @@ const handleLogout = async () => {
   }
 };
 
-submitButton.addEventListener('click', submitSearch);
-searchDiv.addEventListener('click', focusOnInput);
+const handleSubmit = () => {
+  submitSearch(searchEngine.value, countryInput.value, sectorInput.value);
+};
+
+const enterSubmit = (event) => {
+  if (event.key === 'Enter') handleSubmit();
+};
+
+const showFocus = () => {
+  searchDiv.classList.replace('border-1', 'border-2');
+};
+
+const showFocusOut = () => {
+  searchDiv.classList.replace('border-2', 'border-1');
+};
+
+submitButton.addEventListener('click', handleSubmit);
+searchDiv.addEventListener('click', focusOnEngine);
 searchEngine.addEventListener('focus', showFocus);
 searchEngine.addEventListener('focusout', showFocusOut);
 searchEngine.addEventListener('keypress', enterSubmit);
-searchEngine.addEventListener('input', hideError);
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 showMoreButton.addEventListener('click', showMoreCards);
-//window.addEventListener("pageshow", handlePageshow)

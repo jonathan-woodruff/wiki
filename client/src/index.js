@@ -18,9 +18,9 @@ const navRegisterButton = document.getElementById('nav-register-button');
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
-  const searchImg = document.getElementById('search-icon');
+  //const searchImg = document.getElementById('search-icon');
   logoImg.src = Logo;
-  searchImg.src = SearchIcon;
+  //searchImg.src = SearchIcon;
   const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
   refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
@@ -43,8 +43,10 @@ setNav();
 ************************************************************/
 import { countries, sectors } from './constants/profile';
 
+const countryInput = document.getElementById('country');
+const sectorInput = document.getElementById('sector');
+
 const loadCountries = () => {
-  const countryInput = document.getElementById('country');
   countries.forEach((country) => {
     let option = document.createElement('option');
     option.value = country;
@@ -54,7 +56,6 @@ const loadCountries = () => {
 };
 
 const loadSectors = () => {
-  const sectorInput = document.getElementById('sector');
   sectors.forEach((sector) => {
     let option = document.createElement('option');
     option.value = sector;
@@ -83,22 +84,15 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { 
-  handleMostRecent, 
-  submitSearch, 
-  enterSubmit, 
-  focusOnInput, 
-  showFocus, 
-  showFocusOut, 
-  hideError 
-} from './utils/search';
+import { submitSearch } from './utils/search';
 
 const logoutLink = document.getElementById('logout-link');
-const mostRecentButton = document.getElementById('most-recent');
 const submitButton = document.getElementById('submit');
-const searchEngine = document.getElementById('search-engine');
-const searchDiv = document.getElementById('search-div');
 const beerButton = document.getElementById('beer');
+
+const handleSubmit = () => {
+  submitSearch('', countryInput.value, sectorInput.value);
+};
 
 const handleLogout = async () => {
   try {
@@ -110,12 +104,6 @@ const handleLogout = async () => {
 };
 
 logoutLink.addEventListener('click', handleLogout);
-mostRecentButton.addEventListener('click', handleMostRecent);
-submitButton.addEventListener('click', submitSearch);
-searchDiv.addEventListener('click', focusOnInput);
-searchEngine.addEventListener('focus', showFocus);
-searchEngine.addEventListener('focusout', showFocusOut);
-searchEngine.addEventListener('keypress', enterSubmit);
-searchEngine.addEventListener('input', hideError);
+submitButton.addEventListener('click', handleSubmit);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
