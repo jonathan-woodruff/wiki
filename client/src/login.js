@@ -102,7 +102,7 @@ const login = async (event) => {
   try {
     const { data } = await onLogin(credentials);
     localStorage.setItem('isAuth', 'true');
-    localStorage.setItem('avatar', data.avatar);
+    localStorage.setItem('avatar', data.avatar || '');
     goPlaces();
   } catch(error) {
     const axiosError = error.response.data.errors[0].msg.toLowerCase();

@@ -51,8 +51,8 @@ export async function checkConfirmationURL(ident, today, hash) {
     return await axios.get(`${SERVER_URL}/auth/checkConfirmationURL?ident=${ident}&today=${today}&data=${hash}`);
 };
 
-export async function loginAfterRegistration(payload) {
-    return await axios.post(`${SERVER_URL}/auth/loginAfterRegistration`, payload);
+export async function magicLogin(payload) {
+    return await axios.post(`${SERVER_URL}/auth/magicLogin`, payload);
 };
 
 export async function sendConfirmationEmail(payload) {

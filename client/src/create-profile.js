@@ -7,7 +7,7 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Ensure the query params are valid. If so, log in
 ************************************************************/
-import { checkConfirmationURL, loginAfterRegistration } from './api/auth';
+import { checkConfirmationURL, magicLogin } from './api/auth';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -20,7 +20,7 @@ const handlePageLoad = async () => {
         const { data } = await checkConfirmationURL(ident, today, hash);
         if (data.success) {
             const payload = { ident: ident };
-            await loginAfterRegistration(payload);
+            await magicLogin(payload);
             localStorage.setItem('isAuth', 'true');
             localStorage.setItem('avatar', '');
             window.location.href = './edit-profile.html';

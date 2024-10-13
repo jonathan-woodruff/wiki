@@ -430,7 +430,7 @@ exports.checkConfirmationURL = async (req, res) => {
     }
 };
 
-exports.loginAfterRegistration = async (req, res) => {
+exports.magicLogin = async (req, res) => {
     try {
         const userID = base64Decode(req.body.ident);
         const user = await UserModel.findOne({ _id: userID }).exec();
@@ -441,7 +441,8 @@ exports.loginAfterRegistration = async (req, res) => {
         const token = await sign(payload, SECRET); //create jwt token
         return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
             success: true,
-            error: ''
+            error: '',
+            avatar: user.avatar
         })
     } catch(error) {
         console.log(error.message);

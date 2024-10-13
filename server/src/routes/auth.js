@@ -12,7 +12,7 @@ const {
     checkResetURL,
     resetPassword,
     checkConfirmationURL,
-    loginAfterRegistration,
+    magicLogin,
     sendConfirmationEmail,
     sendChangeEmail,
     tryEmailReset
@@ -40,7 +40,7 @@ router.post('/sendPasswordResetEmail', resetPasswordValidation1, validationMiddl
 router.get('/checkResetURL', checkResetURL);
 router.post('/resetPassword', resetPasswordValidation2, validationMiddleware, resetPassword);
 router.get('/checkConfirmationURL', checkConfirmationURL);
-router.post('/loginAfterRegistration', loginAfterRegistration);
+router.post('/magicLogin', magicLogin);
 router.post('/sendConfirmationEmail', sendConfirmationEmail);
 router.post('/sendChangeEmail', userAuth, changeEmailValidation, validationMiddleware, sendChangeEmail);
 router.get('/tryEmailReset', tryEmailReset);
