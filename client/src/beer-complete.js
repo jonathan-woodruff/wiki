@@ -34,7 +34,7 @@ async function setPaymentDetails(intent) {
   let statusSubtext = "";
   let iconColor = "#DF1B41";
   let icon = ErrorIcon;
-  let sendEmail = false;
+  let shouldSendEmail = false;
   
   if (!intent) {
     setErrorState();
@@ -47,7 +47,7 @@ async function setPaymentDetails(intent) {
       statusSubtext = "Jonathan says, thank you!!! I'll send you an email confirmation."
       iconColor = "#30B130";
       icon = SuccessIcon;
-      sendEmail = true;
+      shouldSendEmail = true;
       break;
     case "processing":
       statusText = "Your payment is processing.";
@@ -65,7 +65,7 @@ async function setPaymentDetails(intent) {
   document.querySelector("#status-icon").innerHTML = icon;
   document.querySelector("#status-text").textContent = statusText;
   document.querySelector("#status-subtext").innerHTML = statusSubtext;
-  if (sendEmail) {
+  if (shouldSendEmail) {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const amount = urlParams.get('amount');
