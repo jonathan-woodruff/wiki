@@ -109,7 +109,7 @@ const changePassword = async (event) => {
         await logout()
         goLogin();
     } catch(error) {
-        let errorMessage = error.response.data.errors[0].msg;
+        let errorMessage = error.response.data.error;
         const axiosError = errorMessage.toLowerCase();
         if (!axiosError.includes('password')) {
             errorMessage = 'Could not change your password. Check your network connection.'

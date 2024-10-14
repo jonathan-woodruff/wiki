@@ -128,7 +128,7 @@ const login = async (event) => {
     localStorage.setItem('avatar', data.avatar || '');
     goPlaces();
   } catch(error) {
-    const axiosError = error.response.data.errors[0].msg.toLowerCase();
+    const axiosError = error.response.data.error.toLowerCase();
     let errorMessage;
     if (axiosError.includes('email') || axiosError.includes('password')) {
       errorMessage = 'Incorrect email or password';

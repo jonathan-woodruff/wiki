@@ -147,7 +147,7 @@ const saveEmail = async (event) => {
         window.location.reload();
       }
       isEmailError = true;
-      errorElement.innerHTML = error.response.data.errors[0].msg;
+      errorElement.innerHTML = error.response.data.error;
       errorElement.classList.remove('d-none');
       errorElement.classList.add('border-danger');
       submitButton.disabled = true;

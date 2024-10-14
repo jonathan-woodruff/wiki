@@ -48,7 +48,7 @@ exports.postWiki = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: error.message
+            error: 'Things did not update properly'
         });
     }
 };
@@ -72,7 +72,7 @@ exports.getWikis = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: error.message
+            error: 'Did not successfully fetch the wikis'
         });
     }
 };
@@ -300,7 +300,7 @@ exports.postCommunity = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: error.message
+            error: 'Could not add the community post to the database'
         });
     }
 };

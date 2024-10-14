@@ -89,7 +89,7 @@ const registerUser = async (event) => {
       await onRegister(credentials);
       goSuccess();
     } catch(error) {
-      let errorMessage = error.response.data.errors[0].msg;
+      let errorMessage = error.response.data.error;
       const axiosError = errorMessage.toLowerCase();
       if (!(axiosError.includes('email') || axiosError.includes('password'))) {
         errorMessage = 'Could not sign you up. Check your network connection.'

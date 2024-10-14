@@ -93,7 +93,6 @@ const sendConfEmail = async (user) => {
 
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
-
     try {
         /*** Create a new user ***/
         const hashedPassword = await hash(password, 10);
@@ -113,9 +112,8 @@ exports.register = async (req, res) => {
             error: ''
         })
     } catch(error) {
-        console.log(error.message);
         return res.status(500).json({
-            error: error.message
+            error: 'failed either at saving the user information or sending the confirmation email'
         });
     };
 };
@@ -129,9 +127,8 @@ exports.sendConfirmationEmail = async (req, res) => {
             error: ''
         })
     } catch(error) {
-        console.log(error.message);
         return res.status(500).json({
-            error: error.message
+            error: 'could not send confirmation email'
         });
     }
 };
@@ -148,9 +145,8 @@ exports.login = async (req, res) => {
             avatar: user.photo
         })
     } catch(error) {
-        console.log(error.message);
         res.status(500).json({
-            error: error.message 
+            error: 'could not log the user in'
         });
     }
 };
@@ -163,9 +159,8 @@ exports.logout = async (req, res) => {
             message: 'Logged out successfully'
         });
     } catch(error) {
-        console.log(error.message);
         res.status(500).json({
-            error: error.message
+            error: 'could not log the user out'
         });
     }
 };
@@ -208,9 +203,8 @@ exports.changePassword = async (req, res) => {
             message: 'The password change was successful'
         });
     } catch(error) {
-        console.log(error.message);
         res.status(500).json({
-            error: error.message
+            error: 'failed at either saving the user information or sending the password change email'
         });
     }
 };
@@ -354,9 +348,8 @@ exports.resetPassword = async (req, res) => {
             message: 'The password reset was successful'
         });
     } catch(error) {
-        console.log(error.message);
         res.status(500).json({
-            error: error.message
+            error: 'could not reset the password'
         });
     }
 };
@@ -425,7 +418,7 @@ exports.checkConfirmationURL = async (req, res) => {
     } catch(error) {
         res.status(500).json({
             success: false,
-            error: error
+            error: 'could not mark the user as confirmed'
         });
     }
 };
@@ -445,9 +438,8 @@ exports.magicLogin = async (req, res) => {
             avatar: user.avatar
         })
     } catch(error) {
-        console.log(error.message);
         res.status(500).json({
-            error: error.message 
+            error: 'could not log the user in'
         });
     }
 };
@@ -505,9 +497,8 @@ exports.sendChangeEmail = async (req, res) => {
             error: ''
         });
     } catch(error) {
-        console.log(error.message);
         res.status(500).json({
-            error: error
+            error: 'could not send the email'
         });
     }
 };

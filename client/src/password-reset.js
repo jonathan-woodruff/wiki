@@ -95,7 +95,7 @@ const changePassword = async (event) => {
         await resetPassword(payload);
         loginWithSuccess();
     } catch(error) {
-        let errorMessage = error.response.data.errors[0].msg;
+        let errorMessage = error.response.data.error;
         const axiosError = errorMessage.toLowerCase();
         if (!axiosError.includes('password')) {
             errorMessage = 'Could not reset your password. Check your network connection.'
@@ -122,15 +122,10 @@ const resetErrorStates = () => {
 };
 
 const clearError = (event) => {
-  const inputField = event.currentTarget;
-  if (
-    (inputField.id === 'new-password-1' && isNewPasswordError1)
-    || (inputField.id === 'new-password-2' && isNewPasswordError2)
-  ) {
-    inputField.classList.remove('border-danger');
-    clearErrorMessage();
-    resetErrorStates();
-  }
+  newPasswordInput1.classList.remove('border-danger');
+  newPasswordInput2.classList.remove('border-danger');
+  clearErrorMessage();
+  resetErrorStates();
 };
 
 const handlePasswordInput1 = (event) => {
