@@ -52,6 +52,7 @@ import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
 const editor = new EditorJS({
   holder: 'editorjs',
+  placeholder: 'Starting writing. Wanna add an image? Just paste it in...',
   tools: {
     underline: Underline,
     image: SimpleImage,
