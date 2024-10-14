@@ -44,12 +44,20 @@ setNav();
  * Show the page to the user
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
+import { showToast } from './utils/toast';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
 setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const passwordFail = urlParams.get('password-reset-fail') === 'true' ? true : false;
+const toastDiv = document.getElementById('toast');
+
+if (passwordFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try resetting your password again.', false);
 
 /************************************************************
  * All other JavaScript
@@ -125,8 +133,11 @@ const goLogin = () => {
   window.location.href = url;
 };
 
+const hideToast = () => toastDiv.style.display = 'none';
+
 form.addEventListener('submit', handleSubmit);
 emailInput.addEventListener('input', handleEmailInput);
 loginLink.addEventListener('click', () => window.location.href = './login.html');
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 navRegisterButton.addEventListener('click', goLogin);
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

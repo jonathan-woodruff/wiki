@@ -22,22 +22,25 @@ const today = urlParams.get('today');
 const hash = urlParams.get('data');
 
 const showPage = async () => {
-    try {
-        const { data } = await checkResetURL(ident, today, hash);
-        if (data.success) {
-            const spinnerDiv = document.getElementById('spinner');
-            const mainContainer = document.getElementById('main-container');
-            const footer = document.getElementById('footer');
-            spinnerDiv.style.display = 'none';
-            mainContainer.style.display = '';
-            footer.style.display = '';
-        } else {
-            window.location.href = './index.html';
-        }
-    } catch(error) {
-        console.log(error);
-        window.location.href = './index.html';
+  try {
+    await checkResetURL(ident, today, hash);
+    const spinnerDiv = document.getElementById('spinner');
+    const mainContainer = document.getElementById('main-container');
+    const footer = document.getElementById('footer');
+    spinnerDiv.style.display = 'none';
+    mainContainer.style.display = '';
+    footer.style.display = '';
+  } catch(error) {
+    if (error.response.data.error === 'Link is outdated') {
+      const params = new URLSearchParams();
+      params.append('password-reset-fail', 'true');
+      const queryString = params.toString();
+      const url = `./password-reset-start.html?${queryString}`;
+      window.location.href = url;
+    } else {
+      window.location.href = './fail.html';
     }
+  }
 };
 
 showPage();
@@ -55,6 +58,14 @@ const errorElement = document.getElementById('error-message');
 
 let isNewPasswordError1 = false;
 let isNewPasswordError2 = false;
+
+const loginWithSuccess = () => {
+  const params = new URLSearchParams();
+  params.append('password-success', 'true');
+  const queryString = params.toString();
+  const url = `./login.html?${queryString}`;
+  window.location.href = url;
+};
 
 const changePassword = async (event) => {
   event.preventDefault();
@@ -82,7 +93,7 @@ const changePassword = async (event) => {
             password: newPasswordInput1.value
         };
         await resetPassword(payload);
-        window.location.href = './login.html';
+        loginWithSuccess();
     } catch(error) {
         let errorMessage = error.response.data.errors[0].msg;
         const axiosError = errorMessage.toLowerCase();

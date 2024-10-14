@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home | Peace Chickens</title>
+    <title>Error | Peace Chickens</title>
   </head>
   <body class="d-flex flex-column min-vh-100">
     <!-- Spinner -->
@@ -54,55 +54,21 @@
       </div>
     </nav>
 
-    <!-- Toast -->
-    <div id="toast" class="toast bg-dark text-white position-sticky top-0 start-50 translate-middle-x p-3 z-3" role="alert" style="display: none;" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <strong id="toast-title" class="me-auto"></strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div id="toast-body" class="toast-body"></div>
-    </div>
-
     <!-- Main content -->
     <div id="main-container" class="container py-4 px-3 mx-auto mb-5" style="display: none;">
       <div class="row">
         <div class="col">
-          <hgroup class="text-center mt-5 mb-5">
-            <h1 class="mb-3">Peace Chickens</h1>
-            <p class="h6">A wiki for Peace Corps volunteers</p>
-          </hgroup>
+          <h1 id="h1" class="text-center mt-5 mb-4">Ruh roh</h1>
         </div>
       </div>
       <div class="row">
-        <div class="col col-11 col-sm-10 col-md-9 col-lg-6 mx-auto mb-3">
-          <div class="row">
-            <div class="col col-12 col-sm-6 mb-2">
-              <label for="country">Filter by country</label>
-              <select id="country" class="form-select" aria-label="Country filter">
-                <option value="All" selected>All</option>
-              </select>
-            </div>
-            <div class="col col-12 col-sm-6 mb-2">
-              <label for="sector">Filter by sector</label>
-              <select id="sector" class="form-select" aria-label="Sector filter">
-                <option value="All" selected>All</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="error-div" class="row mx-auto mb-2 d-none">
-        <div class="d-grid col-11 col-sm-10 col-md-9 col-lg-8 col-xl-7 mx-auto">
-          <p class="text-danger text-center">Please enter something into the search engine.</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col d-grid col-6 col-sm-4 col-lg-2 mx-auto mb-2">
-          <button type="submit" id="submit" class="btn btn-primary rounded">Search Wikis</button>
+        <div class="col col-10 col-sm-9 col-md-8 col-lg-6 mx-auto">
+          <p id="message" class="text-center mb-3 h5">Something didn't work correctly.</p>
+          <p class="text-center">If you think there's a problem with the website that should be fixed, please <a href="mailto:jonathanMwoodruff@gmail.com" alt="link to email creator of Peace Chickens" class="text-decoration-none">report the issue to Jonathan (me), the creator of Peace Chickens.</a> I'm a one-man operation, but I do my best to make this site fantastic.</p>
         </div>
       </div>
     </div>
-    
+
     <!-- Footer -->
     <footer id="footer" class="row footer py-3 bg-light mt-auto w-100" style="display: none;">
       <div class="col col-10 col-md-9 col-lg-8 mx-auto">

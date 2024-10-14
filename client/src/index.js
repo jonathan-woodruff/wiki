@@ -71,6 +71,9 @@ loadSectors();
  * Show the page to the user
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
+import { showToast } from './utils/toast';
+
+const toastDiv = document.getElementById('toast');
 
 const showPage = () => {
   const spinnerDiv = document.getElementById('spinner');
@@ -81,6 +84,12 @@ const showPage = () => {
 };
 
 showPage();
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const emailResetFail = urlParams.get('email-reset-fail') === 'true' ? true : false;
+
+if (emailResetFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try changing your email again.', false);
 
 /************************************************************
  * All other JavaScript
@@ -104,7 +113,10 @@ const handleLogout = async () => {
   }
 };
 
+const hideToast = () => toastDiv.style.display = 'none';
+
 logoutLink.addEventListener('click', handleLogout);
 submitButton.addEventListener('click', handleSubmit);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

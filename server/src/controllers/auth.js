@@ -324,9 +324,9 @@ exports.checkResetURL = async (req, res) => {
         lastUpdated: user.updatedAt.toISOString(),
         password: user.password,
         email: user.email
-    }
+    };
     const hashedData = sha256(JSON.stringify(data), PASSWORD_RESET_SECRET);
-    if(hashedData !== req.query.data) {
+    if (hashedData !== req.query.data) {
         res.status(500).json({ 
             success: false,
             error: 'Unmatched hash' 
@@ -396,7 +396,7 @@ exports.checkConfirmationURL = async (req, res) => {
     
     // Hash again all the data to compare it with the link
     // The link in invalid when:
-    // 1. If the lastLoginDate is changed, user has already do a login 
+    // 1. If the lastLoginDate is changed, user has already done a login 
     // 2. If the salt is changed, the user has already changed the password
     const data = {
         today: req.query.today,
@@ -404,9 +404,9 @@ exports.checkConfirmationURL = async (req, res) => {
         lastUpdated: user.updatedAt.toISOString(),
         password: user.password,
         email: user.email
-    }
+    };
     const hashedData = sha256(JSON.stringify(data), REGISTRATION_SECRET);
-    if(hashedData !== req.query.data) {
+    if (hashedData !== req.query.data) {
         res.status(500).json({ 
             success: false,
             error: 'Unmatched hash' 
@@ -566,7 +566,7 @@ exports.tryEmailReset = async (req, res) => {
     } catch(error) {
         res.status(500).json({
             success: false,
-            error: error
+            error: 'Unknown error'
         });
     }
 };

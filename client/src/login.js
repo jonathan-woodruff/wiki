@@ -44,12 +44,29 @@ setNav();
  * Show the page to the user
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
+import { showToast } from './utils/toast';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
 setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const passwordSuccess = urlParams.get('password-success') === 'true' ? true : false;
+const emailSuccess = urlParams.get('email-reset-success') === 'true' ? true : false;
+const registrationFail = urlParams.get('registration-confirm-fail') === 'true' ? true : false;
+const registrationSuccess = urlParams.get('registration-confirm-success') === 'true' ? true : false;
+const toastDiv = document.getElementById('toast');
+
+if (passwordSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Password successfully changed!', 'Log in using your new password.');
+
+if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'Log in using your new email.');
+
+if (registrationFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try logging in and confirming again', false);
+
+if (registrationSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Account successfully created!', 'You can log in.');
 
 /************************************************************
  * All other JavaScript
@@ -136,6 +153,8 @@ const goRegister = () => window.location.href = `./register.html${window.locatio
 
 const goPasswordResetStart = () => window.location.href = './password-reset-start.html';
 
+const hideToast = () => toastDiv.style.display = 'none';
+
 form.addEventListener('submit', login);
 emailInput.addEventListener('input', clearError);
 passwordInput.addEventListener('input', clearError);
@@ -143,3 +162,4 @@ registerLink.addEventListener('click', goRegister);
 navRegisterButton.addEventListener('click', goRegister);
 passwordResetButton.addEventListener('click', goPasswordResetStart);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

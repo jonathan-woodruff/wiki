@@ -60,12 +60,20 @@ loadEmail();
  * Show the page to the user
 ************************************************************/
 import { setNotLoading } from './utils/spinner';
+import { showToast } from './utils/toast';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
 setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const emailSuccess = urlParams.get('email-reset-success') === 'true' ? true : false;
+const toastDiv = document.getElementById('toast');
+
+if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'You\'re all set.');;
 
 /************************************************************
  * All other JavaScript
@@ -156,8 +164,11 @@ const handleLogout = async () => {
   }
 };
 
+const hideToast = () => toastDiv.style.display = 'none';
+
 form.addEventListener('submit', saveEmail);
 emailInput.addEventListener('input', handleEmailInput);
 logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

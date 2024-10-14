@@ -191,6 +191,7 @@ charactersRemaining.innerHTML = maxLengthStr;
 const maxDescriptionLength = parseInt(maxLengthStr);
 
 const goEditMode = async () => {
+  setLoadingButton(editButton, 'Working...');
   try {
     await checkForCookie();
     editor.readOnly.toggle();
@@ -206,6 +207,7 @@ const goEditMode = async () => {
       window.location.reload();
     }
   }
+  setLoadingButton(editButton, 'Edit');
 };
 
 const refresh = () => {

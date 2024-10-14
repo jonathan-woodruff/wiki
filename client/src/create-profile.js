@@ -17,19 +17,30 @@ const hash = urlParams.get('data');
 
 const handlePageLoad = async () => {
     try {
-        const { data } = await checkConfirmationURL(ident, today, hash);
-        if (data.success) {
-            const payload = { ident: ident };
-            await magicLogin(payload);
-            localStorage.setItem('isAuth', 'true');
-            localStorage.setItem('avatar', '');
-            window.location.href = './edit-profile.html';
-        } else {
-            window.location.href = './index.html';
-        }
+        await checkConfirmationURL(ident, today, hash);
     } catch(error) {
-        console.log(error);
-        window.location.href = './index.html';
+        if (error.response.data.error === 'Link is outdated') {
+            const params = new URLSearchParams();
+            params.append('registration-confirm-fail', 'true');
+            const queryString = params.toString();
+            const url = `./login.html?${queryString}`;
+            window.location.href = url;
+        } else {
+            window.location.href = './fail.html';
+        }
+    }
+    try {
+        const payload = { ident: ident };
+        await magicLogin(payload);
+        localStorage.setItem('isAuth', 'true');
+        localStorage.setItem('avatar', '');
+        window.location.href = './edit-profile.html';
+    } catch(error) {
+        const params = new URLSearchParams();
+        params.append('registration-confirm-success', 'true');
+        const queryString = params.toString();
+        const url = `./login.html?${queryString}`;
+        window.location.href = url;
     }
 };
 

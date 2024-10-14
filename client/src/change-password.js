@@ -68,13 +68,11 @@ let isCurrentPasswordError = false;
 let isNewPasswordError1 = false;
 let isNewPasswordError2 = false;
 
-const handleLogout = async () => {
-  try {
-      await logout();
-      window.location.reload();
-  } catch(error) {
-      console.log(error);
-  }
+const goLogin = () => {
+  const params = new URLSearchParams();
+  params.append('password-success', 'true');
+  const url = `./login.html?${params.toString()}`;
+  window.location.href = url;
 };
 
 const changePassword = async (event) => {
@@ -108,7 +106,8 @@ const changePassword = async (event) => {
             password: newPasswordInput1.value
         };
         await putPassword(payload);
-        handleLogout();
+        await logout()
+        goLogin();
     } catch(error) {
         let errorMessage = error.response.data.errors[0].msg;
         const axiosError = errorMessage.toLowerCase();
@@ -168,6 +167,15 @@ const handlePageshow = async () => {
         window.location.href = './login.html';
       }
     }
+};
+
+const handleLogout = async () => {
+  try {
+      await logout();
+      window.location.reload();
+  } catch(error) {
+      console.log(error);
+  }
 };
 
 form.addEventListener('submit', changePassword);

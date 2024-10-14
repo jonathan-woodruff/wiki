@@ -20,22 +20,32 @@ const hash = urlParams.get('data');
 const handlePageLoad = async () => {
     try {
         await tryEmailReset(ident, today, newEmail, hash);
-    } catch(error) {
-        window.location.href = './change-email.html';
-    }
-    try {
         await logout();
     } catch(error) {
-        console.log(error);
+        if (error.response.data.error === 'Link is outdated') {
+            const params = new URLSearchParams();
+            params.append('email-reset-fail', 'true');
+            const queryString = params.toString();
+            const url = `./index.html?${queryString}`;
+            window.location.href = url;
+        } else {
+            window.location.href = './fail.html';
+        }
     }
+    const params = new URLSearchParams();
+    params.append('email-reset-success', 'true');
+    const queryString = params.toString();
     try {
         const payload = { ident: ident };
         const { data } = await magicLogin(payload);
         localStorage.setItem('isAuth', 'true');
         localStorage.setItem('avatar', data.avatar || '');
-        window.location.href = './change-email.html';
+        const url = `./change-email.html?${queryString}`;
+        window.location.href = url;
     } catch(error) {
-        window.location.href = './change-email.html';
+        //couldn't log the user in, so bring them to the log in page, and notify them that the email reset was successful
+        const url = `./login.html?${queryString}`;
+        window.location.href = url;
     }
 };
 
