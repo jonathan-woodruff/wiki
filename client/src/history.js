@@ -40,6 +40,7 @@ setNav();
 ************************************************************/
 import { onViewHistory } from './api/main';
 import { convertTimestamp } from './utils/time';
+import PeaceChicken from './images/peace_chicken.jpg';
 
 const currentQueryString = window.location.search;
 const currentUrlParams = new URLSearchParams(currentQueryString);
@@ -124,18 +125,25 @@ const showCards = (wikiHistory) => {
         const queryString = params.toString();
         authorLink.href = `./view-profile.html?${queryString}`;
         authorLink.alt = 'Link to user profile';
+        authorLink.classList.add('text-decoration-none');
         
         const userAvatar = document.createElement('img');
         userAvatar.alt = 'User profile picture';
-        userAvatar.src = edition.user[0].photo;
+        userAvatar.src = edition.user[0].photo || PeaceChicken;
         userAvatar.classList.add('img-fluid');
         userAvatar.classList.add('rounded-circle');
         userAvatar.classList.add('d-inline-block');
         userAvatar.classList.add('align-text-center');
+        userAvatar.classList.add('p-1')
         userAvatar.width = '40';
         userAvatar.height = '40';
         authorLink.appendChild(userAvatar);
-        authorLink.innerHTML += edition.user[0].name;
+
+        const authorSpan = document.createElement('span');
+        authorSpan.classList.add('ms-1');
+        authorSpan.innerHTML = edition.user[0].name;
+        authorLink.appendChild(authorSpan);
+
         dateAndAuthor.appendChild(authorLink);
 
         editionNum--;

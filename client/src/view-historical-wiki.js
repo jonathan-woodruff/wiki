@@ -71,8 +71,9 @@ const loadHeader = () => {
     params.append('user', data.userID);
     const authorLink = document.getElementById('author-link');
     authorLink.href = `./view-profile.html?${params.toString()}`;
+    authorLink.classList.add('text-decoration-none');
     refreshAvatar(data.photo, holderElement, 'avatar', '40px');
-    authorLink.innerHTML += data.authorName;
+    authorLink.innerHTML += '\xa0' + data.authorName;
     //change description
     const descriptionSpan = document.getElementById('change-description');
     descriptionSpan.innerHTML = data.changeDescription;
