@@ -7,8 +7,7 @@ import * as bootstrap from 'bootstrap'; //js
 /************************************************************
  * Ensure the query params are valid. If so, log in
 ************************************************************/
-import { tryEmailReset, magicLogin } from './api/auth';
-import { logout } from './utils/navbar';
+import { tryEmailReset, magicLogin, onLogout } from './api/auth';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -20,7 +19,8 @@ const hash = urlParams.get('data');
 const handlePageLoad = async () => {
     try {
         await tryEmailReset(ident, today, newEmail, hash);
-        await logout();
+        await onLogout();
+        localStorage.setItem('isAuth', 'false');
     } catch(error) {
         if (error.response.data.error === 'Link is outdated') {
             const params = new URLSearchParams();

@@ -9,7 +9,7 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -50,6 +50,7 @@ import { getWikis } from './api/main';
 import { goToWiki } from './utils/wiki';
 import { countries, sectors } from './constants/profile';
 import Fuse from 'fuse.js';
+import { showToast } from './utils/toast';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -61,6 +62,7 @@ const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
 const showMoreDiv = document.getElementById('show-more-div');
 const showMoreButton = document.getElementById('show-more-button');
+const toastDiv = document.getElementById('toast');
 
 const numCardsToShow = 10;
 let numShowMoreClicked = 0;
@@ -71,7 +73,14 @@ const loadWikis = async () => {
     const wikis = await getWikis(selectedCountry, selectedSector);
     return wikis.data.wikis;
   } catch(error) {
-    console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
 
@@ -271,6 +280,7 @@ focusOnEngine();
  * All other JavaScript
 ************************************************************/
 import { submitSearch } from './utils/search';
+import { onLogout } from './api/auth';
 
 const submitButton = document.getElementById('submit');
 const searchDiv = document.getElementById('search-div');
@@ -294,10 +304,18 @@ const showMoreCards = () => {
 
 const handleLogout = async () => {
   try {
-      await logout();
+      await onLogout();
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
 
@@ -317,6 +335,8 @@ const showFocusOut = () => {
   searchDiv.classList.replace('border-2', 'border-1');
 };
 
+const hideToast = () => toastDiv.style.display = 'none';
+
 submitButton.addEventListener('click', handleSubmit);
 searchDiv.addEventListener('click', focusOnEngine);
 searchEngine.addEventListener('focus', showFocus);
@@ -326,3 +346,4 @@ logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 showMoreButton.addEventListener('click', showMoreCards);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

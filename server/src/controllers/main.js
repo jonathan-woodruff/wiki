@@ -72,7 +72,7 @@ exports.getWikis = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Did not successfully fetch the wikis'
+            error: 'Could not load wikis'
         });
     }
 };
@@ -158,7 +158,7 @@ exports.getWikiByID = async (req, res) => {
         }
     } catch(error) {
         res.status(500).json({
-            error: 'did not find wiki'
+            error: 'Could not load wiki'
         })
     }
 };
@@ -198,7 +198,7 @@ exports.publishWikiEdits = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Did not update wiki successfully'
+            error: 'Things didn\'t save properly.'
         });
     }
 };
@@ -252,7 +252,7 @@ exports.getViewProfileData = async (req, res) => {
         });
     } else {
         res.status(500).json({
-            error: 'user is falsy'
+            error: 'Could not get profile data'
         });
     }
 };
@@ -278,7 +278,7 @@ exports.getHistoricalWikiData = async (req, res) => {
         });
     } else {
         res.status(500).json({
-            error: 'wiki history is falsy'
+            error: 'Could not load historical wiki data'
         });
     }
 };

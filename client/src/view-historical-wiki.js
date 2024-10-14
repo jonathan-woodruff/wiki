@@ -9,7 +9,7 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -39,6 +39,8 @@ setNav();
  * Load data from backend 
 ************************************************************/
 import { onViewHistoricalWiki } from './api/main';
+import { showToast } from './utils/toast';
+const toastDiv = document.getElementById('toast');
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -50,8 +52,14 @@ const getData = async () => {
         const { data } = await onViewHistoricalWiki(wikiHistoryID);
         return data;
     } catch(error) {
-        const errorMessage = error.response.data.errors[0].msg; //error from axios
-        console.log(errorMessage);
+        showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Something went wrong', 
+            'response' in error ? error.response.data.error : 'network error', 
+            false
+        );
         return {};
     }
 };
@@ -157,6 +165,7 @@ showPage();
  * All other JavaScript
 ************************************************************/
 import { goToWiki } from './utils/wiki';
+import { onLogout } from './api/auth';
 
 const logoutLink = document.getElementById('logout-link');
 const viewCurrentButton = document.getElementById('current');
@@ -178,15 +187,25 @@ const goLogin = () => {
 
 const handleLogout = async () => {
     try {
-        await logout();
+        await onLogout();
+        localStorage.setItem('isAuth', 'false');
         window.location.reload();
     } catch(error) {
-        console.log(error);
+        showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Something went wrong', 
+            'response' in error ? error.response.data.error : 'network error', 
+            false
+        );
     }
-  };
+};
+
+const hideToast = () => toastDiv.style.display = 'none';
 
 viewCurrentButton.addEventListener('click', goCurrent);
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
-//window.addEventListener("pageshow", handlePageshow)
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

@@ -15,7 +15,7 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -303,7 +303,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
  * All other JavaScript
 ************************************************************/
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { checkForCookie, putUserName } from './api/auth';
+import { checkForCookie, onLogout } from './api/auth';
 
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
@@ -483,7 +483,8 @@ const clearNameError = () => {
 
 const handleLogout = async () => {
   try {
-      await logout();
+      await onLogout();
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
   } catch(error) {
       console.log(error);

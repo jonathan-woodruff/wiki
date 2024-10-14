@@ -1,4 +1,3 @@
-import { onLogout } from '../api/auth';
 import PeaceChicken from '../images/peace_chicken.jpg';
 
 export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, createWikiAnchor, communityLI, communityAnchor) => {
@@ -25,16 +24,6 @@ export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, cre
         communityAnchor.setAttribute('tabindex', '-1');
         communityAnchor.setAttribute('aria-disabled', 'true');
     }
-};
-
-export const logout = async () => {
-    try {
-      await onLogout();
-      localStorage.setItem('isAuth', 'false');
-    } catch(error) {
-      const errorMessage = error.response.data.error; //error from axios
-      console.log(errorMessage);
-    };
 };
 
 //clear avatar from the DOM

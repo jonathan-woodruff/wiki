@@ -15,7 +15,7 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -53,7 +53,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { putPassword, checkForCookie } from './api/auth';
+import { putPassword, checkForCookie, onLogout } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
@@ -106,7 +106,8 @@ const changePassword = async (event) => {
             password: newPasswordInput1.value
         };
         await putPassword(payload);
-        await logout()
+        await onLogout();
+        localStorage.setItem('isAuth', 'false');
         goLogin();
     } catch(error) {
         let errorMessage = error.response.data.error;

@@ -9,7 +9,7 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -50,6 +50,7 @@ cancelImg.src = CancelIconGrey;
  * Configure the editor
 ************************************************************/
 import { onViewWiki, onPutWiki } from './api/main';
+import { showToast } from './utils/toast';
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -61,10 +62,22 @@ import Underline from '@editorjs/underline';
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const wikiID = urlParams.get('wiki');
+const toastDiv = document.getElementById('toast');
 
 const getWiki = async () => {
-  const { data } = await onViewWiki(wikiID);
-  return data.wiki;
+  try {
+    const { data } = await onViewWiki(wikiID);
+    return data.wiki;
+  } catch(error) {
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
+  }
 };
 
 const wiki = await getWiki();
@@ -168,7 +181,7 @@ showPage();
 import { arraysAreEqual } from './utils/index';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 import CancelIconWhite from './images/cancel_white.png';
-import { checkForCookie } from './api/auth';
+import { checkForCookie, onLogout } from './api/auth';
 
 const cancelButton = document.getElementById('cancel');
 const confirmCancelButton = document.getElementById('confirm-cancel');
@@ -256,6 +269,14 @@ const publishEdits = async () => {
     };
     publishModal.hide();
     dontShowLoadingButton();
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
   /*
   onPutWiki(putData)
@@ -378,12 +399,22 @@ const goLogin = () => {
 
 const handleLogout = async () => {
   try {
-      await logout();
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
+
+const hideToast = () => toastDiv.style.display = 'none';
 
 editButton.addEventListener('click', goEditMode);
 confirmCancelButton.addEventListener('click', refresh);
@@ -397,3 +428,4 @@ historyButton.addEventListener('click', handleHistoryClick);
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

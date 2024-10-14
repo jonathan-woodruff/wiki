@@ -16,7 +16,7 @@ import './css/buttons.css';
  * Configure the navbar 
 ************************************************************/
 import Logo from './images/logo.png';
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import { refreshAvatar } from './utils/navbar';
 
 const setSources = () => {
@@ -54,7 +54,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
  * All other JavaScript
 ************************************************************/
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { checkForCookie } from './api/auth';
+import { checkForCookie, onLogout } from './api/auth';
 import { postCommunity } from './api/main';
 
 const submitButton = document.getElementById('submit');
@@ -143,7 +143,8 @@ const handlePageshow = async () => {
 
 const handleLogout = async () => {
   try {
-      await logout();
+      await onLogout();
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
   } catch(error) {
       console.log(error);

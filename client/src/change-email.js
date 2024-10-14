@@ -15,7 +15,7 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -78,7 +78,7 @@ if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), do
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { putEmail, checkForCookie, sendChangeEmail } from './api/auth';
+import { onLogout, checkForCookie, sendChangeEmail } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
@@ -157,7 +157,8 @@ const saveEmail = async (event) => {
 
 const handleLogout = async () => {
   try {
-      await logout();
+      await onLogout();
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
   } catch(error) {
       console.log(error);

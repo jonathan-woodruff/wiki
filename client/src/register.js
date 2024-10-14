@@ -10,7 +10,7 @@ import './css/buttons.css';
  * Configure the navbar
 ************************************************************/
 const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
@@ -49,7 +49,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onRegister } from './api/auth';
+import { onRegister, onLogout } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 
 const form = document.getElementById('form');
@@ -157,7 +157,8 @@ const goLogin = () => window.location.href = `./login.html${window.location.sear
 
 const handleLogout = async () => {
   try {
-      await logout();
+      await onLogout();
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
   } catch(error) {
       console.log(error);

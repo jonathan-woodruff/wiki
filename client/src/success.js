@@ -22,9 +22,9 @@ messageParagraph.innerHTML = message;
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav, refreshAvatar } from './utils/navbar';
 import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { onLogout } from './api/auth';
 
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
@@ -52,7 +52,8 @@ setNav();
 
 const handleLogout = async () => {
   try {
-      await logout();
+      await onLogout();
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
   } catch(error) {
       console.log(error);

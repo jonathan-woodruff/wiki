@@ -9,7 +9,7 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, logout } from './utils/navbar';
+import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import SearchIcon from './images/search_icon.svg';
 import { refreshAvatar } from './utils/navbar';
@@ -95,6 +95,7 @@ if (emailResetFail) showToast(toastDiv, document.getElementById('toast-title'), 
  * All other JavaScript
 ************************************************************/
 import { submitSearch } from './utils/search';
+import { onLogout } from './api/auth';
 
 const logoutLink = document.getElementById('logout-link');
 const submitButton = document.getElementById('submit');
@@ -106,7 +107,8 @@ const handleSubmit = () => {
 
 const handleLogout = async () => {
   try {
-      await logout();
+      await onLogout();
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
   } catch(error) {
       console.log(error);
