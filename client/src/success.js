@@ -7,6 +7,19 @@ import * as bootstrap from 'bootstrap'; //js
 import './css/buttons.css';
 
 /************************************************************
+ * Configure the message text
+************************************************************/
+const h1 = document.getElementById('h1');
+const messageParagraph = document.getElementById('message');
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const header = urlParams.get('header');
+const message = urlParams.get('message');
+
+h1.innerHTML = header;
+messageParagraph.innerHTML = message;
+
+/************************************************************
  * Configure the navbar
 ************************************************************/
 import { configureNav, logout } from './utils/navbar';
@@ -15,6 +28,7 @@ import { refreshAvatar } from './utils/navbar';
 
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
+const navRegisterButton = document.getElementById('nav-register-button');
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -25,7 +39,6 @@ const setSources = () => {
 
 const setNav = () => {
   const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
-  const navRegisterButton = document.getElementById('nav-register-button');
   const navCreateLI = document.getElementById('nav-create-li');
   const navCreateA = document.getElementById('nav-create-a');
   const navCommunityLI = document.getElementById('nav-community-li');
@@ -46,21 +59,18 @@ const handleLogout = async () => {
   }
 };
 
+const goLogin = () => {
+  const params = new URLSearchParams();
+  params.append('prev', 'success');
+  params.append('header', header);
+  params.append('message', message);
+  const url = `./login.html?${params.toString()}`;
+  window.location.href = url;
+};
+
 logoutLink.addEventListener('click', handleLogout);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
-
-/************************************************************
- * Configure the message text
-************************************************************/
-const h1 = document.getElementById('h1');
-const messageParagraph = document.getElementById('message');
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const header = urlParams.get('header');
-const message = urlParams.get('message');
-
-h1.innerHTML = header;
-messageParagraph.innerHTML = message;
+navRegisterButton.addEventListener('click', goLogin);
 
 /************************************************************
  * Show the page to the user

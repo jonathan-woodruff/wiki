@@ -13,6 +13,8 @@ import { configureNav, logout } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
+const navRegisterButton = document.getElementById('nav-register-button');
+
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
   logoImg.src = Logo;
@@ -21,13 +23,12 @@ const setSources = () => {
 };
 
 const setNav = () => {
-const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
+  const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
   const navCreateLI = document.getElementById('nav-create-li');
   const navCreateA = document.getElementById('nav-create-a');
   const navCommunityLI = document.getElementById('nav-community-li');
   const navCommunityA = document.getElementById('nav-community-a');
   const navDropdown = document.getElementById('nav-dropdown');
-  const navRegisterButton = document.getElementById('nav-register-button');
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
@@ -198,6 +199,13 @@ const handleLogout = async () => {
     }
 };
 
+const goLogin = () => {
+    const params = new URLSearchParams();
+    params.append('prev', 'buy-me-a-beer');
+    const url = `./login.html?${params.toString()}`;
+    window.location.href = url;
+};
+
 logoutLink.addEventListener('click', handleLogout);
 customButton.addEventListener('click', handleButtonClick);
 button5.addEventListener('click', handleButtonClick);
@@ -205,3 +213,4 @@ button10.addEventListener('click', handleButtonClick);
 customAmountInput.addEventListener('input', handleInput);
 continueButton.addEventListener('click', handleContinue);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+navRegisterButton.addEventListener('click', goLogin);

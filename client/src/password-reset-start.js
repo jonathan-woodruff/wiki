@@ -19,6 +19,8 @@ import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
+const navRegisterButton = document.getElementById('nav-register-button');
+
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
   logoImg.src = Logo;
@@ -27,7 +29,6 @@ const setSources = () => {
 };
 
 const setNav = () => {
-  const navRegisterButton = document.getElementById('nav-register-button');
   const navCreateLI = document.getElementById('nav-create-li');
   const navCreateA = document.getElementById('nav-create-a');
   const navCommunityLI = document.getElementById('nav-community-li');
@@ -117,7 +118,15 @@ const handleSubmit = async (event) => {
     setNotLoadingButton(submitButton, 'Email Me a Password Reset Link');
 };
 
+const goLogin = () => {
+  const params = new URLSearchParams();
+  params.append('prev', 'password-reset-start');
+  const url = `./login.html?${params.toString()}`;
+  window.location.href = url;
+};
+
 form.addEventListener('submit', handleSubmit);
 emailInput.addEventListener('input', handleEmailInput);
 loginLink.addEventListener('click', () => window.location.href = './login.html');
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+navRegisterButton.addEventListener('click', goLogin);

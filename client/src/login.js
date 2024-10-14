@@ -71,7 +71,7 @@ const getURL = (params, prevPageName) => {
   return `./${prevPageName}.html?${params.toString()}`;
 };
 
-export const goPlaces = () => {
+const goPlaces = () => {
   const currentQueryString = window.location.search;
   const params = new URLSearchParams(currentQueryString);
   const prevPageName = params.get('prev');
@@ -80,10 +80,12 @@ export const goPlaces = () => {
     'search-results', 
     'view-historical-wiki', 
     'view-profile', 
-    'wiki'
+    'wiki',
+    'buy-me-a-beer',
+    'password-reset-start',
+    'success'
   ];
   const url = pages.includes(prevPageName) ? getURL(params, prevPageName) : './index.html';
-  console.log(url);
   window.location.href = url;
 };
 
