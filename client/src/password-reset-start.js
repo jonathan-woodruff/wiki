@@ -112,11 +112,7 @@ const handleSubmit = async (event) => {
       await sendPasswordResetEmail(payload);
       goSuccess();
     } catch(error) {
-        let errorMessage = error.response.data.error;
-        const axiosError = errorMessage.toLowerCase();
-        if (!axiosError.includes('email')) {
-          errorMessage = 'Could not send an email. Check your network connection.'
-        }
+        const errorMessage = 'response' in error ? error.response.data.error : 'Error: Could not send an email.';
         isEmailError = true;
         errorElement.innerHTML = errorMessage;
         errorElement.classList.remove('d-none')

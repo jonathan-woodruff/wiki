@@ -278,11 +278,14 @@ const loadFields = async () => {
     loadServices(data.services);
     loadDescription(data.description);
   } catch(error) {
-    console.log(error);
-    /*if (error.response.status === 401) {
-      localStorage.setItem('isAuth', false);
-      window.location.reload();
-    }*/
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
 
@@ -304,6 +307,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 ************************************************************/
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 import { checkForCookie, onLogout } from './api/auth';
+import { showToast } from './utils/toast';
 
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');
@@ -433,11 +437,19 @@ const saveProfile = async (event) => {
       const toast = new bootstrap.Toast(toastDiv);
       toast.show();
     } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
+      if ('response' in error && error.response.status === 401) {
+        localStorage.setItem('isAuth', 'false');
         window.location.reload();
+      } else {
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Something went wrong', 
+          'response' in error ? error.response.data.error : 'network error', 
+          false
+        );
       }
-      console.log(error);
     }
     /*try {
       const formData = new FormData();
@@ -445,7 +457,7 @@ const saveProfile = async (event) => {
       await postAvatar(formData);
     } catch(error) {
       if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
+        localStorage.setItem('isAuth', 'false');
         window.location.reload();
       }
     }*/
@@ -461,9 +473,11 @@ const handlePageshow = async () => {
   try {
     await checkForCookie();
   } catch(error) {
-    if (error.response.status === 401) {
+    if ('response' in error && error.response.status === 401) {
       localStorage.setItem('isAuth', 'false');
       window.location.href = './login.html';
+    } else {
+      window.location.href = './fail.html';
     }
   }
 };
@@ -483,11 +497,18 @@ const clearNameError = () => {
 
 const handleLogout = async () => {
   try {
-      await onLogout();
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
 

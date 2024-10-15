@@ -95,9 +95,11 @@ const editor = new EditorJS({
  * Load data from backend
 ************************************************************/
 import { onPostWiki, getCreateWikiData } from './api/main';
+import { showToast } from './utils/toast';
 
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
+const toastDiv = document.getElementById('toast');
 
 const loadCountries = (countries) => {
   countries.forEach(country => {
@@ -123,9 +125,18 @@ const loadData = async () => {
     loadCountries(data.countries);
     loadSectors(data.sectors);
   } catch(error) {
-    if (error.response.status === 401) {
-      localStorage.setItem('isAuth', false);
+    if ('response' in error && error.response.status === 401) {
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
+    } else {
+      showToast(
+        toastDiv, 
+        document.getElementById('toast-title'), 
+        document.getElementById('toast-body'), 
+        'Something went wrong', 
+        'response' in error ? error.response.data.error : 'network error', 
+        false
+      );
     }
   }
 };
@@ -167,7 +178,6 @@ const submitContent = (event) => {
     };
     onPostWiki(postData)
     .then((response) => {
-      console.log(response);
       const wikiID = response.data.wikiID;
       const params = new URLSearchParams();
       params.append('wiki', wikiID);
@@ -175,16 +185,31 @@ const submitContent = (event) => {
       window.location.href = url;
     })
     .catch((error => {
-      console.log('Submit failed: ', error)
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
+      if ('response' in error && error.response.status === 401) {
+        localStorage.setItem('isAuth', 'false');
         window.location.reload();
+      } else {
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Something went wrong', 
+          'response' in error ? error.response.data.error : 'network error', 
+          false
+        );
       }
       setNotLoadingButton(button, 'Create');
     }))
   })
   .catch((error) => {
-    console.log('Saving failed: ', error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'Editor error: Could not save changes.', 
+      false
+    );
     setNotLoadingButton(button, 'Create');
   });
 };
@@ -193,24 +218,36 @@ const handlePageshow = async () => {
   try {
     await checkForCookie();
   } catch(error) {
-    if (error.response.status === 401) {
+    if ('response' in error && error.response.status === 401) {
       localStorage.setItem('isAuth', 'false');
       window.location.href = './login.html';
+    } else {
+      window.location.href = './fail.html';
     }
   }
 };
 
 const handleLogout = async () => {
   try {
-      await onLogout();
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
+
+const hideToast = () => toastDiv.style.display = 'none';
 
 button.addEventListener('click', submitContent);
 logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

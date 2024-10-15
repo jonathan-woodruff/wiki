@@ -56,6 +56,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 import { checkForCookie, onLogout } from './api/auth';
 import { postCommunity } from './api/main';
+import { showToast } from './utils/toast';
 
 const submitButton = document.getElementById('submit');
 const reasonInput = document.getElementById('reason');
@@ -97,12 +98,23 @@ const handleSubmit = async (event) => {
           amountInput.value = null;
           otherInput.value = null;
           setNotLoadingButton(submitButton, 'Submit');
-          toastDiv.style.display = 'block';
-          const toast = new bootstrap.Toast(toastDiv);
-          toast.show();
+          showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Success!', 
+            'Your responses were saved.'
+          );
         } catch(error) {
           setNotLoadingButton(submitButton, 'Submit');
-          console.log(error);
+          showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Something went wrong', 
+            'response' in error ? error.response.data.error : 'network error', 
+            false
+          );
         }
     }
 };
@@ -134,20 +146,29 @@ const handlePageshow = async () => {
   try {
     await checkForCookie();
   } catch(error) {
-    if (error.response.status === 401) {
+    if ('response' in error && error.response.status === 401) {
       localStorage.setItem('isAuth', 'false');
       window.location.href = './login.html';
+    } else {
+      window.location.href = './fail.html';
     }
   }
 };
 
 const handleLogout = async () => {
   try {
-      await onLogout();
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
 

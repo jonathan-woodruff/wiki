@@ -19,7 +19,7 @@ const handlePageLoad = async () => {
     try {
         await checkConfirmationURL(ident, today, hash);
     } catch(error) {
-        if (error.response.data.error === 'Link is outdated') {
+        if ('response' in error && error.response.data.error === 'Link is outdated') {
             const params = new URLSearchParams();
             params.append('registration-confirm-fail', 'true');
             const queryString = params.toString();

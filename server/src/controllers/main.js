@@ -48,7 +48,7 @@ exports.postWiki = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Things did not update properly'
+            error: 'Server error: Could not save wiki properly.'
         });
     }
 };
@@ -72,7 +72,7 @@ exports.getWikis = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Could not load wikis'
+            error: 'Server error: Could not load wikis.'
         });
     }
 };
@@ -91,7 +91,7 @@ exports.getProfileData = (req, res) => {
         });
     } else {
         res.status(500).json({
-            error: 'user is falsy'
+            error: 'Server error: Could not load profile data.'
         });
     }
 };
@@ -127,7 +127,7 @@ exports.updateProfile = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Did not update profile successfully'
+            error: 'Server error: Could not save profile.'
         });
     }
 };
@@ -142,7 +142,7 @@ exports.getCreateWikiData = (req, res) => {
         });
     } else {
         res.status(500).json({
-            error: 'user is falsy'
+            error: 'Server error: Could not load data.'
         });
     }
 };
@@ -158,7 +158,7 @@ exports.getWikiByID = async (req, res) => {
         }
     } catch(error) {
         res.status(500).json({
-            error: 'Could not load wiki'
+            error: 'Server error: Could not load wiki.'
         })
     }
 };
@@ -198,7 +198,7 @@ exports.publishWikiEdits = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Things didn\'t save properly.'
+            error: 'Server error: Could not save your edits.'
         });
     }
 };
@@ -233,7 +233,7 @@ exports.getHistory = async (req, res) => {
         }
     } catch(error) {
         res.status(500).json({
-            error: 'did not find wiki or wiki history'
+            error: 'Server error: Could not load wiki history.'
         })
     }
 };
@@ -252,7 +252,7 @@ exports.getViewProfileData = async (req, res) => {
         });
     } else {
         res.status(500).json({
-            error: 'Could not get profile data'
+            error: 'Server error: Could not get profile data.'
         });
     }
 };
@@ -278,7 +278,7 @@ exports.getHistoricalWikiData = async (req, res) => {
         });
     } else {
         res.status(500).json({
-            error: 'Could not load historical wiki data'
+            error: 'Server error: Could not load historical wiki data.'
         });
     }
 };
@@ -300,7 +300,7 @@ exports.postCommunity = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Could not add the community post to the database'
+            error: 'Server error: Could not save submission.'
         });
     }
 };

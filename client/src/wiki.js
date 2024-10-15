@@ -215,9 +215,11 @@ const goEditMode = async () => {
     const cancelPublish = document.getElementById('cancel-publish');
     cancelPublish.classList.remove('d-none');
   } catch(error) {
-    if (error.response.status === 401) {
+    if ('response' in error && error.response.status === 401) {
       localStorage.setItem('isAuth', 'false');
       window.location.reload();
+    } else {
+      window.location.href = './fail.html';
     }
   }
   setLoadingButton(editButton, 'Edit');
@@ -263,20 +265,21 @@ const publishEdits = async () => {
     await onPutWiki(putData);
     refresh();
   } catch(error) {
-    if (error.response.status === 401) {
-      localStorage.setItem('isAuth', false);
+    if ('response' in error && error.response.status === 401) {
+      localStorage.setItem('isAuth', 'false');
       window.location.reload();
-    };
-    publishModal.hide();
-    dontShowLoadingButton();
-    showToast(
-      toastDiv, 
-      document.getElementById('toast-title'), 
-      document.getElementById('toast-body'), 
-      'Something went wrong', 
-      'response' in error ? error.response.data.error : 'network error', 
-      false
-    );
+    } else {
+      publishModal.hide();
+      dontShowLoadingButton();
+      showToast(
+        toastDiv, 
+        document.getElementById('toast-title'), 
+        document.getElementById('toast-body'), 
+        'Something went wrong', 
+        'response' in error ? error.response.data.error : 'network error', 
+        false
+      );
+    }
   }
   /*
   onPutWiki(putData)
@@ -372,7 +375,14 @@ const checkPublish = () => {
     .catch((error) => {
       publishModal.hide();
       dontShowLoadingButton();
-      alert('Saving failed: ', error);
+      showToast(
+        toastDiv, 
+        document.getElementById('toast-title'), 
+        document.getElementById('toast-body'), 
+        'Something went wrong', 
+        'Editor error: Could not save your edits.', 
+        false
+      );
     });
   }
 };

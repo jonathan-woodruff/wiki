@@ -117,9 +117,11 @@ const handlePageshow = async () => {
     try {
       await checkForCookie();
     } catch(error) {
-      if (error.response.status === 401) {
+      if ('response' in error && error.response.status === 401) {
         localStorage.setItem('isAuth', 'false');
         window.location.href = './login.html';
+      } else {
+        window.location.href = './fail.html';
       }
     }
 };
@@ -142,26 +144,34 @@ const saveEmail = async (event) => {
       await sendChangeEmail(payload);
       goSuccess();
     } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', false);
+      if ('response' in error && error.response.status === 401) {
+        localStorage.setItem('isAuth', 'false');
         window.location.reload();
+      } else {
+        isEmailError = true;
+        errorElement.innerHTML = 'response' in error ? error.response.data.error : 'network error';
+        errorElement.classList.remove('d-none');
+        errorElement.classList.add('border-danger');
+        submitButton.disabled = true;
       }
-      isEmailError = true;
-      errorElement.innerHTML = error.response.data.error;
-      errorElement.classList.remove('d-none');
-      errorElement.classList.add('border-danger');
-      submitButton.disabled = true;
     }
     setNotLoadingButton(submitButton, 'Change Email');
 };
 
 const handleLogout = async () => {
   try {
-      await onLogout();
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
 

@@ -12,10 +12,12 @@ import './css/buttons.css';
 import { configureNav, refreshAvatar } from './utils/navbar';
 import Logo from './images/logo.png';
 import { onLogout } from './api/auth';
+import { showToast } from './utils/toast';
 
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
 const navRegisterButton = document.getElementById('nav-register-button');
+const toastDiv = document.getElementById('toast');
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -39,17 +41,27 @@ setNav();
 
 const handleLogout = async () => {
   try {
-      await onLogout();
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
+
+const hideToast = () => toastDiv.style.display = 'none';
 
 logoutLink.addEventListener('click', handleLogout);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 navRegisterButton.addEventListener('click', () => window.location.href = './login');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 
 /************************************************************
  * Show the page to the user

@@ -113,7 +113,7 @@ exports.register = async (req, res) => {
         })
     } catch(error) {
         return res.status(500).json({
-            error: 'failed either at saving the user information or sending the confirmation email'
+            error: 'Server error: Could not complete sign up.'
         });
     };
 };
@@ -146,7 +146,7 @@ exports.login = async (req, res) => {
         })
     } catch(error) {
         res.status(500).json({
-            error: 'could not log the user in'
+            error: 'Server error: Could not log you in.'
         });
     }
 };
@@ -160,7 +160,7 @@ exports.logout = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Could not log out'
+            error: 'Server error: Could not log you out.'
         });
     }
 };
@@ -204,7 +204,7 @@ exports.changePassword = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'failed at either saving the user information or sending the password change email'
+            error: 'Server error: Could not complete password change.'
         });
     }
 };
@@ -278,7 +278,7 @@ exports.sendPasswordResetEmail = async (req, res) => {
     } catch(error) {
         res.status(500).json({
             success: false,
-            error: 'Email did not send'
+            error: 'Server error: Could not send email.'
         });
     }
 };
@@ -349,7 +349,7 @@ exports.resetPassword = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'could not reset the password'
+            error: 'Server error: Could not reset password.'
         });
     }
 };
@@ -498,7 +498,7 @@ exports.sendChangeEmail = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'could not send the email'
+            error: 'Server error: Could not send confirmation email.'
         });
     }
 };

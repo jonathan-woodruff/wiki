@@ -223,7 +223,14 @@ const searchWikis = (searchPattern) => {
     }
   })
   .catch((error) => {
-    console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'Could not load wikis.', 
+      false
+    );
   })
 };
 

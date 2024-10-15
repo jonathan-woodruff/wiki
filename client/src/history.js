@@ -41,12 +41,14 @@ setNav();
 import { onViewHistory } from './api/main';
 import { convertTimestamp } from './utils/time';
 import PeaceChicken from './images/peace_chicken.jpg';
+import { showToast } from './utils/toast';
 
 const currentQueryString = window.location.search;
 const currentUrlParams = new URLSearchParams(currentQueryString);
 const wikiID = currentUrlParams.get('wiki');
 const showMoreDiv = document.getElementById('show-more-div');
 const showMoreButton = document.getElementById('show-more-button');
+const toastDiv = document.getElementById('toast');
 
 const numCardsToShow = 5;
 let numShowMoreClicked = 0;
@@ -163,8 +165,14 @@ const loadPage = async () => {
         editionNum = allEditions.length;
         showCards(allEditions);
     } catch(error) {
-        const errorMessage = error.response.data.errors[0].msg; //error from axios
-        console.log(errorMessage);
+        showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Something went wrong', 
+            'response' in error ? error.response.data.error : 'network error', 
+            false
+        );
     }
 };
 
@@ -212,11 +220,21 @@ const handleLogout = async () => {
         localStorage.setItem('isAuth', 'false');
         window.location.reload();
     } catch(error) {
-        console.log(error);
+        showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Something went wrong', 
+            'response' in error ? error.response.data.error : 'network error', 
+            false
+        );
     }
 };
+
+const hideToast = () => toastDiv.style.display = 'none';
 
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 showMoreButton.addEventListener('click', showMoreCards);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

@@ -31,7 +31,7 @@ const showPage = async () => {
     mainContainer.style.display = '';
     footer.style.display = '';
   } catch(error) {
-    if (error.response.data.error === 'Link is outdated') {
+    if ('response' in error && error.response.data.error === 'Link is outdated') {
       const params = new URLSearchParams();
       params.append('password-reset-fail', 'true');
       const queryString = params.toString();
@@ -59,7 +59,7 @@ const errorElement = document.getElementById('error-message');
 let isNewPasswordError1 = false;
 let isNewPasswordError2 = false;
 
-const loginWithSuccess = () => {
+const goLoginWithSuccess = () => {
   const params = new URLSearchParams();
   params.append('password-success', 'true');
   const queryString = params.toString();
@@ -93,13 +93,9 @@ const changePassword = async (event) => {
             password: newPasswordInput1.value
         };
         await resetPassword(payload);
-        loginWithSuccess();
+        goLoginWithSuccess();
     } catch(error) {
-        let errorMessage = error.response.data.error;
-        const axiosError = errorMessage.toLowerCase();
-        if (!axiosError.includes('password')) {
-            errorMessage = 'Could not reset your password. Check your network connection.'
-        };
+        const errorMessage = 'response' in error ? error.response.data.error : 'Error: Could not reset your password.';
         errorElement.innerHTML = errorMessage;
         errorElement.classList.remove('d-none')
         if (errorMessage === 'Password must be between 6 and 15 characters') {

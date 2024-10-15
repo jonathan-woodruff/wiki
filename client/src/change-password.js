@@ -55,6 +55,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 ************************************************************/
 import { putPassword, checkForCookie, onLogout } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { showToast } from './utils/toast';
 
 const form = document.getElementById('form');
 const currentPasswordInput = document.getElementById('current-password');
@@ -63,6 +64,7 @@ const newPasswordInput2 = document.getElementById('new-password-2');
 const errorElement = document.getElementById('error-message');
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
+const toastDiv = document.getElementById('toast');
 
 let isCurrentPasswordError = false;
 let isNewPasswordError1 = false;
@@ -110,11 +112,7 @@ const changePassword = async (event) => {
         localStorage.setItem('isAuth', 'false');
         goLogin();
     } catch(error) {
-        let errorMessage = error.response.data.error;
-        const axiosError = errorMessage.toLowerCase();
-        if (!axiosError.includes('password')) {
-            errorMessage = 'Could not change your password. Check your network connection.'
-        };
+        const errorMessage = 'response' in error ? error.response.data.error : 'Could not change password.';
         errorElement.innerHTML = errorMessage;
         errorElement.classList.remove('d-none')
         if (errorMessage === 'Password must be between 6 and 15 characters') {
@@ -163,21 +161,33 @@ const handlePageshow = async () => {
     try {
       await checkForCookie();
     } catch(error) {
-      if (error.response.status === 401) {
+      if ('response' in error && error.response.status === 401) {
         localStorage.setItem('isAuth', 'false');
         window.location.href = './login.html';
+      } else {
+        window.location.href = './fail.html';
       }
     }
 };
 
 const handleLogout = async () => {
   try {
-      await logout();
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
+
+const hideToast = () => toastDiv.style.display = 'none';
 
 form.addEventListener('submit', changePassword);
 currentPasswordInput.addEventListener('input', clearError);
@@ -186,3 +196,4 @@ newPasswordInput2.addEventListener('input', clearError);
 logoutLink.addEventListener('click', handleLogout);
 window.addEventListener('pageshow', handlePageshow);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

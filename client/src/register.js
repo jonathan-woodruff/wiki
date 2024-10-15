@@ -51,6 +51,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 ************************************************************/
 import { onRegister, onLogout } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { showToast } from './utils/toast';
 
 const form = document.getElementById('form');
 const nameInput = document.getElementById('name');
@@ -61,6 +62,7 @@ const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
+const toastDiv = document.getElementById('toast');
 
 let isNameError = false;
 let isEmailError = false;
@@ -89,11 +91,7 @@ const registerUser = async (event) => {
       await onRegister(credentials);
       goSuccess();
     } catch(error) {
-      let errorMessage = error.response.data.error;
-      const axiosError = errorMessage.toLowerCase();
-      if (!(axiosError.includes('email') || axiosError.includes('password'))) {
-        errorMessage = 'Could not sign you up. Check your network connection.'
-      };
+      const errorMessage = 'response' in error ? error.response.data.error : 'Error: Could not sign you up.';
       errorElement.innerHTML = errorMessage;
       errorElement.classList.remove('d-none')
       if (errorMessage === 'Email already exists' || errorMessage === 'Please enter a valid email address') {
@@ -157,13 +155,22 @@ const goLogin = () => window.location.href = `./login.html${window.location.sear
 
 const handleLogout = async () => {
   try {
-      await onLogout();
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
+    await onLogout();
+    localStorage.setItem('isAuth', 'false');
+    window.location.reload();
   } catch(error) {
-      console.log(error);
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'response' in error ? error.response.data.error : 'network error', 
+      false
+    );
   }
 };
+
+const hideToast = () => toastDiv.style.display = 'none';
 
 form.addEventListener('submit', registerUser);
 nameInput.addEventListener('input', clearError);
@@ -173,5 +180,5 @@ checkboxInput.addEventListener('input', clearError);
 loginLink.addEventListener('click', goLogin);
 logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
-//window.addEventListener("pageshow", handlePageshow)
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

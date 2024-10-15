@@ -128,16 +128,24 @@ const login = async (event) => {
     localStorage.setItem('avatar', data.avatar || '');
     goPlaces();
   } catch(error) {
-    const axiosError = error.response.data.error.toLowerCase();
-    let errorMessage;
-    if (axiosError.includes('email') || axiosError.includes('password')) {
+    let shouldGoSuccess = false;
+    let errorMessage = '';
+    if ('response' in error) errorMessage = error.response.data.error.toLowerCase();
+    if (errorMessage.includes('email') || errorMessage.includes('password')) {
       errorMessage = 'Incorrect email or password';
-    } else if (axiosError === 'user is not confirmed') {
-      await sendConfirmationEmail(credentials);
-      goSuccess();
+    } else if (errorMessage === 'user is not confirmed') {
+      shouldGoSuccess = true;
     } else {
-      errorMessage = 'Could not log in. Check your network connection.'
+      errorMessage = 'Error: Could not log you in.';
     }
+    if (shouldGoSuccess) {
+      try {
+        await sendConfirmationEmail(credentials);
+        goSuccess();
+      } catch(error) {
+        errorMessage = 'Error: Could not send your account confirmation email.'
+      }
+    };
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none');
     setNotLoadingButton(loginButton, 'Log In');

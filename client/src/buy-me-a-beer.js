@@ -69,6 +69,7 @@ showPage();
  * All other JavaScript
 ************************************************************/
 import { onLogout } from './api/auth';
+import { showToast } from './utils/toast';
 
 const logoutLink = document.getElementById('logout-link');
 const customButton = document.getElementById('button-custom');
@@ -79,6 +80,7 @@ const continueButton = document.getElementById('continue');
 const customAmountInput = document.getElementById('custom-amount');
 const errorRow = document.getElementById('error-row');
 const beerButton = document.getElementById('beer');
+const toastDiv = document.getElementById('toast');
 
 let selectedButton;
 
@@ -197,7 +199,14 @@ const handleLogout = async () => {
         localStorage.setItem('isAuth', 'false');
         window.location.reload();
     } catch(error) {
-        console.log(error);
+        showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Something went wrong', 
+            'response' in error ? error.response.data.error : 'network error', 
+            false
+        );
     }
 };
 
@@ -208,6 +217,8 @@ const goLogin = () => {
     window.location.href = url;
 };
 
+const hideToast = () => toastDiv.style.display = 'none';
+
 logoutLink.addEventListener('click', handleLogout);
 customButton.addEventListener('click', handleButtonClick);
 button5.addEventListener('click', handleButtonClick);
@@ -216,3 +227,4 @@ customAmountInput.addEventListener('input', handleInput);
 continueButton.addEventListener('click', handleContinue);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 navRegisterButton.addEventListener('click', goLogin);
+toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
