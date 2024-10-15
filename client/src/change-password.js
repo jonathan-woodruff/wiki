@@ -77,7 +77,7 @@ const goLogin = () => {
   window.location.href = url;
 };
 
-const changePassword = async (event) => {
+const changePassword = (event) => {
   event.preventDefault();
   if (!currentPasswordInput.value) {
     isCurrentPasswordError = true;
@@ -102,7 +102,42 @@ const changePassword = async (event) => {
   } else {
     const submitButton = document.getElementById('submit');
     setLoadingButton(submitButton, 'Submitting...');
-    try {
+    const payload = {
+      currentPassword: currentPasswordInput.value,
+      password: newPasswordInput1.value
+    };
+    putPassword(payload)
+    .then(() => {
+      onLogout()
+      .then(() => {
+        localStorage.setItem('isAuth', 'false');
+        goLogin();
+      })
+      .catch((logoutError) => {
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Something went wrong', 
+          'response' in logoutError ? logoutError.response.data.error : 'network error', 
+          false
+        );
+      })
+    })
+    .catch((pwError) => {
+      const errorMessage = 'response' in pwError ? pwError.response.data.error : 'Could not change password.';
+      errorElement.innerHTML = errorMessage;
+      errorElement.classList.remove('d-none')
+      if (errorMessage === 'Password must be between 6 and 15 characters') {
+          isNewPasswordError1 = true;
+          newPasswordInput1.classList.add('border-danger');
+      } else if (errorMessage === 'Incorrect current password') {
+          isCurrentPasswordError = true;
+          currentPasswordInput.classList.add('border-danger');
+      }
+    })
+    setNotLoadingButton(submitButton, 'Change Password');
+    /*try {
         const payload = {
             currentPassword: currentPasswordInput.value,
             password: newPasswordInput1.value
@@ -123,7 +158,7 @@ const changePassword = async (event) => {
             currentPasswordInput.classList.add('border-danger');
         }
         setNotLoadingButton(submitButton, 'Change Password');
-    }
+    }*/
   }
 };
 

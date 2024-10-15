@@ -114,7 +114,7 @@ const goSuccess = () => {
   window.location.href = url;
 };
 
-const login = async (event) => {
+const login = (event) => {
   event.preventDefault();
   const loginButton = document.getElementById('submit');
   setLoadingButton(loginButton, 'Logging In...');
@@ -122,7 +122,41 @@ const login = async (event) => {
     email: emailInput.value,
     password: passwordInput.value
   };
-  try {
+  onLogin(credentials)
+  .then((response) => {
+    localStorage.setItem('isAuth', 'true');
+    localStorage.setItem('avatar', data.avatar || '');
+    goPlaces();
+  })
+  .catch((error) => {
+    let errorMessage = '';
+    if ('response' in error) errorMessage = error.response.data.error.toLowerCase();
+    if (errorMessage.includes('email') || errorMessage.includes('password')) {
+      errorMessage = 'Incorrect email or password';
+    } else if (errorMessage === 'user is not confirmed') {
+      sendConfirmationEmail(credentials)
+      .then(() => {
+        goSuccess();
+      })
+      .catch(() => {
+        errorMessage = 'Error: Could not send your account confirmation email.'
+      })
+    } else {
+      errorMessage = 'Error: Could not log you in.';
+    }
+    /*if (shouldGoSuccess) {
+      try {
+        await sendConfirmationEmail(credentials);
+        goSuccess();
+      } catch(error) {
+        errorMessage = 'Error: Could not send your account confirmation email.'
+      }
+    };*/
+    errorElement.innerHTML = errorMessage;
+    errorElement.classList.remove('d-none');
+    setNotLoadingButton(loginButton, 'Log In');
+  })
+  /*try {
     const { data } = await onLogin(credentials);
     localStorage.setItem('isAuth', 'true');
     localStorage.setItem('avatar', data.avatar || '');
@@ -149,7 +183,7 @@ const login = async (event) => {
     errorElement.innerHTML = errorMessage;
     errorElement.classList.remove('d-none');
     setNotLoadingButton(loginButton, 'Log In');
-  };
+  };*/
 };
 
 const clearError = () => {

@@ -433,9 +433,13 @@ const saveProfile = async (event) => {
     };
     try {
       await putProfile(dataToSave);
-      toastDiv.style.display = 'block';
-      const toast = new bootstrap.Toast(toastDiv);
-      toast.show();
+      showToast(
+        toastDiv, 
+        document.getElementById('toast-title'), 
+        document.getElementById('toast-body'), 
+        'Success!', 
+        'Your profile has been saved.'
+      );
     } catch(error) {
       if ('response' in error && error.response.status === 401) {
         localStorage.setItem('isAuth', 'false');

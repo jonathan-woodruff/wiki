@@ -91,31 +91,30 @@ const handleSubmit = async (event) => {
       amountInput.classList.add('border');
       amountInput.classList.add('border-danger');
     } else {
-        try {
-          setLoadingButton(submitButton, 'Submitting...');
-          await postCommunity(payload);
-          reasonInput.value = null;
-          amountInput.value = null;
-          otherInput.value = null;
-          setNotLoadingButton(submitButton, 'Submit');
-          showToast(
-            toastDiv, 
-            document.getElementById('toast-title'), 
-            document.getElementById('toast-body'), 
-            'Success!', 
-            'Your responses were saved.'
-          );
-        } catch(error) {
-          setNotLoadingButton(submitButton, 'Submit');
-          showToast(
-            toastDiv, 
-            document.getElementById('toast-title'), 
-            document.getElementById('toast-body'), 
-            'Something went wrong', 
-            'response' in error ? error.response.data.error : 'network error', 
-            false
-          );
-        }
+      setLoadingButton(submitButton, 'Submitting...');
+      try {
+        await postCommunity(payload);
+        reasonInput.value = null;
+        amountInput.value = null;
+        otherInput.value = null;
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Success!', 
+          'Your responses were saved.'
+        );
+      } catch(error) {
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Something went wrong', 
+          'response' in error ? error.response.data.error : 'network error', 
+          false
+        );
+      }
+      setNotLoadingButton(submitButton, 'Submit');
     }
 };
 

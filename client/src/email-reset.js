@@ -16,8 +16,45 @@ const today = urlParams.get('today');
 const newEmail = urlParams.get('new-email');
 const hash = urlParams.get('data');
 
-const handlePageLoad = async () => {
-    try {
+const handlePageLoad = () => {
+    tryEmailReset(ident, today, newEmail, hash)
+    .then(() => {
+        onLogout()
+        .then(() => {
+            localStorage.setItem('isAuth', 'false');
+            const params = new URLSearchParams();
+            params.append('email-reset-success', 'true');
+            const queryString = params.toString();
+            const payload = { ident: ident };
+            magicLogin(payload)
+            .then((response) => {
+                localStorage.setItem('isAuth', 'true');
+                localStorage.setItem('avatar', response.data.avatar || '');
+                const url = `./change-email.html?${queryString}`;
+                window.location.href = url;
+            })
+            .catch(() => {
+                //couldn't log the user in, so bring them to the log in page, and notify them that the email reset was successful
+                const url = `./login.html?${queryString}`;
+                window.location.href = url;
+            })
+        })
+        .catch(() => {
+            window.location.href = './fail.html';
+        })
+    })
+    .catch((error) => {
+        if ('response' in error && error.response.data.error === 'Link is outdated') {
+            const params = new URLSearchParams();
+            params.append('email-reset-fail', 'true');
+            const queryString = params.toString();
+            const url = `./index.html?${queryString}`;
+            window.location.href = url;
+        } else {
+            window.location.href = './fail.html';
+        }
+    })
+    /*try {
         await tryEmailReset(ident, today, newEmail, hash);
         await onLogout();
         localStorage.setItem('isAuth', 'false');
@@ -46,7 +83,7 @@ const handlePageLoad = async () => {
         //couldn't log the user in, so bring them to the log in page, and notify them that the email reset was successful
         const url = `./login.html?${queryString}`;
         window.location.href = url;
-    }
+    }*/
 };
 
 handlePageLoad();

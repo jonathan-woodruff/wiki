@@ -81,6 +81,7 @@ const loadWikis = async () => {
       'response' in error ? error.response.data.error : 'network error', 
       false
     );
+    return [];
   }
 };
 
