@@ -123,26 +123,28 @@ const login = (event) => {
     password: passwordInput.value
   };
   onLogin(credentials)
-  .then((response) => {
+  .then(() => {
     localStorage.setItem('isAuth', 'true');
     localStorage.setItem('avatar', data.avatar || '');
     goPlaces();
   })
   .catch((error) => {
     let errorMessage = '';
-    if ('response' in error) errorMessage = error.response.data.error.toLowerCase();
-    if (errorMessage.includes('email') || errorMessage.includes('password')) {
+    if ('response' in error) errorMessage = error.response.data.error;
+    if (
+      errorMessage === 'Please enter a valid email address' 
+      || errorMessage === 'Email does not exist'
+      || errorMessage === 'Wrong password'
+    ) {
       errorMessage = 'Incorrect email or password';
-    } else if (errorMessage === 'user is not confirmed') {
+    } else if (errorMessage === 'User is not confirmed') {
       sendConfirmationEmail(credentials)
       .then(() => {
         goSuccess();
       })
-      .catch(() => {
-        errorMessage = 'Error: Could not send your account confirmation email.'
+      .catch((confError) => {
+        errorMessage = 'response' in confError ? confError.response.data.error : 'network error'
       })
-    } else {
-      errorMessage = 'Error: Could not log you in.';
     }
     /*if (shouldGoSuccess) {
       try {
