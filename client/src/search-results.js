@@ -46,7 +46,6 @@ searchImg.src = SearchIcon;
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
 import { getWikis } from './api/main';
 import { goToWiki } from './utils/wiki';
 import { countries, sectors } from './constants/profile';
@@ -64,22 +63,11 @@ const sectorInput = document.getElementById('sector');
 const showMoreDiv = document.getElementById('show-more-div');
 const showMoreButton = document.getElementById('show-more-button');
 const toastDiv = document.getElementById('toast');
+const spinner2Div = document.getElementById('spinner2');
 
 const numCardsToShow = 10;
 let numShowMoreClicked = 0;
 let wikiResults = [];
-
-const focusOnEngine = () => {
-  searchEngine.focus();
-};
-
-const showPage = () => {
-  const spinnerDiv = document.getElementById('spinner');
-  const mainContainer = document.getElementById('main-container');
-  const navbar = document.getElementById('navbar');
-  const footer = document.getElementById('footer');
-  setNotLoading(spinnerDiv, mainContainer, navbar, footer);
-};
 
 const loadWikis = async () => {
   try {
@@ -192,8 +180,7 @@ const showCards = (wikis) => {
     p2.innerHTML = 'No wikis found. Try a different search.';
     cardDiv.appendChild(p2);
   }
-  showPage();
-  focusOnEngine();
+  spinner2Div.style.display = 'none';
 };
 
 const formatFuseList = (wikis) => {
@@ -278,6 +265,27 @@ populateSearchEngine();
 loadCountries();
 loadSectors();
 searchWikis(searchPattern);
+
+/************************************************************
+ * Show the page to the user
+************************************************************/
+import { setNotLoading } from './utils/spinner';
+
+const focusOnEngine = () => {
+  searchEngine.focus();
+};
+
+const showPage = () => {
+  const spinnerDiv = document.getElementById('spinner');
+  const mainContainer = document.getElementById('main-container');
+  const navbar = document.getElementById('navbar');
+  const footer = document.getElementById('footer');
+  setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+};
+
+showPage();
+focusOnEngine();
+spinner2Div.style.display = 'block';
 
 /************************************************************
  * All other JavaScript
