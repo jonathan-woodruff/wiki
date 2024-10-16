@@ -91,10 +91,47 @@ const sendConfEmail = async (user) => {
     });
 };
 
-exports.register = async (req, res) => {
+exports.register = (req, res) => {
     const { name, email, password } = req.body;
+    hash(password, 10)
+    .then((hashedPassword) => {
+        const user = new UserModel({
+            name: name,
+            email: email,
+            password: hashedPassword,
+            isConfirmed: false
+        });
+        // Create a new user
+        user.save()
+        .then(() => {
+            // send an email for the user to finish registration
+            sendConfEmail(user)
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    error: ''
+                })
+            })
+            .catch(() => {
+                return res.status(500).json({
+                    error: 'Server error: Could not send confirmation email.'
+                });
+            })
+        })
+        .catch(() => {
+            return res.status(500).json({
+                error: 'Server error: Could not sign you up.'
+            });
+        })
+    })
+    .catch(() => {
+        return res.status(500).json({
+            error: 'Server error: Could not complete API call.'
+        });
+    })
+    /*
     try {
-        /*** Create a new user ***/
+        // Create a new user
         const hashedPassword = await hash(password, 10);
         const user = new UserModel({
             name: name,
@@ -104,7 +141,7 @@ exports.register = async (req, res) => {
         });
         await user.save();
 
-        /*** send an email for the user to finish registration ***/
+        // send an email for the user to finish registration
         await sendConfEmail(user);
 
         res.status(201).json({
@@ -115,11 +152,31 @@ exports.register = async (req, res) => {
         return res.status(500).json({
             error: 'Server error: Could not complete sign up.'
         });
-    };
+    };*/
 };
 
-exports.sendConfirmationEmail = async (req, res) => {
-    try {
+exports.sendConfirmationEmail = (req, res) => {
+    UserModel.findOne({ email: req.body.email }).exec()
+    .then((user) => {
+        sendConfEmail(user)
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                error: ''
+            })
+        })
+        .catch(() => {
+            return res.status(500).json({
+                error: 'Server error: Could not send confirmation email.'
+            });
+        })
+    })
+    .catch(() => {
+        return res.status(500).json({
+            error: 'Server error: Could not find your account.'
+        });
+    })
+    /*try {
         const user = await UserModel.findOne({ email: req.body.email }).exec();
         await sendConfEmail(user);
         res.status(201).json({
@@ -130,7 +187,7 @@ exports.sendConfirmationEmail = async (req, res) => {
         return res.status(500).json({
             error: 'could not send confirmation email'
         });
-    }
+    }*/
 };
 
 exports.login = async (req, res) => {
@@ -190,9 +247,39 @@ const sendPasswordChangeEmail = async (user) => {
     });
 };
 
-exports.changePassword = async (req, res) => {    
+exports.changePassword = (req, res) => {    
     const password = req.body.password;
-    try {
+    const user = req.user;
+    hash(password, 10)
+    .then((hashedPassword) => {
+        user.password = hashedPassword;
+        user.save()
+        .then(() => {
+            sendPasswordChangeEmail(user)
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    message: 'The password change was successful'
+                });
+            })
+            .catch(() => {
+                return res.status(500).json({
+                    error: 'Server error: Could not send email.'
+                });
+            })
+        })
+        .catch(() => {
+            return res.status(500).json({
+                error: 'Server error: Could not complete password change.'
+            });
+        })
+    })
+    .catch(() => {
+        return res.status(500).json({
+            error: 'Server error: Could not complete API call.'
+        });
+    })
+    /*try {
         const user = req.user;
         const hashedPassword = await hash(password, 10);
         user.password = hashedPassword;
@@ -206,7 +293,7 @@ exports.changePassword = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not complete password change.'
         });
-    }
+    }*/
 };
 
 exports.updateUserName = async (req, res) => {
@@ -220,7 +307,7 @@ exports.updateUserName = async (req, res) => {
         });
     } catch(error) {
         res.status(500).json({
-            error: 'Did not update user name successfully'
+            error: 'Server error. Could not update your name.'
         });
     }
 };
@@ -334,11 +421,39 @@ exports.checkResetURL = async (req, res) => {
     });
 };
 
-exports.resetPassword = async (req, res) => {
+exports.resetPassword = (req, res) => {
     const userID = base64Decode(req.body.ident);
     const pw = req.body.password;
-
-    try {
+    UserModel.findOne({ _id: userID }).exec()
+    .then((user) => {
+        hash(pw, 10)
+        .then((hashedPassword) => {
+            user.password = hashedPassword;
+            user.save()
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    message: 'The password reset was successful'
+                });
+            })
+            .catch(() => {
+                return res.status(500).json({
+                    error: 'Server error: Could not reset password.'
+                });
+            })
+        })
+        .catch(() => {
+            return res.status(500).json({
+                error: 'Server error: Could not complete API call.'
+            });
+        })
+    })
+    .catch(() => {
+        res.status(500).json({
+            error: 'Server error: Could not find your account.'
+        });
+    })
+    /*try {
         const user = await UserModel.findOne({ _id: userID }).exec();
         const hashedPassword = await hash(pw, 10);
         user.password = hashedPassword;
@@ -351,7 +466,7 @@ exports.resetPassword = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not reset password.'
         });
-    }
+    }*/
 };
 
 exports.checkConfirmationURL = async (req, res) => {
@@ -423,8 +538,35 @@ exports.checkConfirmationURL = async (req, res) => {
     }
 };
 
-exports.magicLogin = async (req, res) => {
-    try {
+exports.magicLogin = (req, res) => {
+    const userID = base64Decode(req.body.ident);
+    UserModel.findOne({ _id: userID }).exec()
+    .then((user) => {
+        const payload = {
+            id: user._id,
+            email: user.email
+        };
+        //create jwt token
+        sign(payload, SECRET)
+        .then((token) => {
+            return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
+                success: true,
+                error: '',
+                avatar: user.avatar
+            })
+        })
+        .catch(() => {
+            return res.status(500).json({
+                error: 'Server error: Could not log you in.'
+            });
+        })
+    })
+    .catch(() => {
+        return res.status(500).json({
+            error: 'Server error: Could not find your account.'
+        });
+    })
+    /*try {
         const userID = base64Decode(req.body.ident);
         const user = await UserModel.findOne({ _id: userID }).exec();
         const payload = {
@@ -441,7 +583,7 @@ exports.magicLogin = async (req, res) => {
         res.status(500).json({
             error: 'could not log the user in'
         });
-    }
+    }*/
 };
 
 exports.sendChangeEmail = async (req, res) => {
