@@ -164,9 +164,52 @@ const button = document.getElementById('submit');
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
 
-const submitContent = (event) => {
+const submitContent = async (event) => {
   event.preventDefault();
-  setLoadingButton(button, 'Creating...');
+  try {
+    setLoadingButton(button, 'Creating...');
+    const outputData = await editor.save();
+    try {
+      const titleInput = document.getElementById('title');
+      const postData = {
+        country: countryInput.value,
+        sector: sectorInput.value,
+        title: titleInput.value,
+        article: outputData
+      };
+      const response = await onPostWiki(postData);
+      const wikiID = response.data.wikiID;
+      const params = new URLSearchParams();
+      params.append('wiki', wikiID);
+      const url = `./wiki.html?${params.toString()}`;
+      window.location.href = url;
+    } catch(error) {
+      if ('response' in error && error.response.status === 401) {
+        localStorage.setItem('isAuth', 'false');
+        window.location.reload();
+      } else {
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Something went wrong', 
+          'response' in error ? error.response.data.error : 'Check your internet connection.', 
+          false
+        );
+      }
+    }
+  } catch(error) {
+    showToast(
+      toastDiv, 
+      document.getElementById('toast-title'), 
+      document.getElementById('toast-body'), 
+      'Something went wrong', 
+      'Editor error: Could not save changes.', 
+      false
+    );
+  }
+  setNotLoadingButton(button, 'Create');
+  /*setLoadingButton(button, 'Creating...');
   editor.save()
   .then((outputData) => {
     const titleInput = document.getElementById('title');
@@ -211,7 +254,7 @@ const submitContent = (event) => {
       false
     );
     setNotLoadingButton(button, 'Create');
-  });
+  });*/
 };
 
 const handlePageshow = async () => {

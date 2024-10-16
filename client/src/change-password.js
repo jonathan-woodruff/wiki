@@ -77,7 +77,7 @@ const goLogin = () => {
   window.location.href = url;
 };
 
-const changePassword = (event) => {
+const changePassword = async (event) => {
   event.preventDefault();
   if (!currentPasswordInput.value) {
     isCurrentPasswordError = true;
@@ -106,7 +106,36 @@ const changePassword = (event) => {
       currentPassword: currentPasswordInput.value,
       password: newPasswordInput1.value
     };
-    putPassword(payload)
+    try {
+      await putPassword(payload);
+      try {
+        await onLogout();
+        localStorage.setItem('isAuth', 'false');
+        goLogin();
+      } catch(error) {
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Something went wrong', 
+          'response' in error ? error.response.data.error : 'Check your internet connection.', 
+          false
+        );
+      }
+    } catch(error) {
+      const errorMessage = 'response' in error ? error.response.data.error : 'Could not change password.';
+      errorElement.innerHTML = errorMessage;
+      errorElement.classList.remove('d-none')
+      if (errorMessage === 'Password must be between 6 and 15 characters') {
+          isNewPasswordError1 = true;
+          newPasswordInput1.classList.add('border-danger');
+      } else if (errorMessage === 'Incorrect current password') {
+          isCurrentPasswordError = true;
+          currentPasswordInput.classList.add('border-danger');
+      }
+    }
+    setNotLoadingButton(submitButton, 'Change Password');
+    /*putPassword(payload)
     .then(() => {
       onLogout()
       .then(() => {
@@ -137,6 +166,7 @@ const changePassword = (event) => {
       }
     })
     setNotLoadingButton(submitButton, 'Change Password');
+    */
     /*try {
         const payload = {
             currentPassword: currentPasswordInput.value,

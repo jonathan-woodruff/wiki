@@ -349,7 +349,7 @@ const handleDescriptionInput = () => {
   showCharactersRemaining();
 };
 
-const checkPublish = () => {
+const checkPublish = async () => {
   if (!changeDescription.value) {
     errorParagraph.innerHTML = 'Please describe the changes you made';
     errorRow.classList.remove('d-none');
@@ -357,7 +357,33 @@ const checkPublish = () => {
     changeDescription.classList.add('border-danger');
   } else {
     showLoadingButton();
-    editor.save()
+    try {
+      const outputData = await editor.save();
+      const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
+      if (wikiChanged) {
+        editorData = outputData;
+        const publishModalDiv = document.getElementById('publish-modal');
+        publishModalDiv.style.display = 'block';
+        publishModal.show();
+        dontShowLoadingButton();
+      } else { //no edits were made to the wiki, so there is nothing to save
+        publishModal.hide();
+        dontShowLoadingButton();
+        showNoEditsError();
+      }
+    } catch(error) {
+      publishModal.hide();
+      dontShowLoadingButton();
+      showToast(
+        toastDiv, 
+        document.getElementById('toast-title'), 
+        document.getElementById('toast-body'), 
+        'Something went wrong', 
+        'Editor error: Could not save your edits.', 
+        false
+      );
+    }
+    /*editor.save()
     .then((outputData) => {
       const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
       if (wikiChanged) {
@@ -383,7 +409,7 @@ const checkPublish = () => {
         'Editor error: Could not save your edits.', 
         false
       );
-    });
+    });*/
   }
 };
 
