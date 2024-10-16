@@ -149,7 +149,7 @@ const saveEmail = async (event) => {
         window.location.reload();
       } else {
         isEmailError = true;
-        errorElement.innerHTML = 'response' in error ? error.response.data.error : 'network error';
+        errorElement.innerHTML = 'response' in error ? error.response.data.error : 'Error: Check your internet connection.';
         errorElement.classList.remove('d-none');
         errorElement.classList.add('border-danger');
         submitButton.disabled = true;
@@ -169,7 +169,7 @@ const handleLogout = async () => {
       document.getElementById('toast-title'), 
       document.getElementById('toast-body'), 
       'Something went wrong', 
-      'response' in error ? error.response.data.error : 'network error', 
+      'response' in error ? error.response.data.error : 'Check your internet connection.', 
       false
     );
   }

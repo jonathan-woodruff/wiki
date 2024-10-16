@@ -143,7 +143,7 @@ const login = (event) => {
         goSuccess();
       })
       .catch((confError) => {
-        errorMessage = 'response' in confError ? confError.response.data.error : 'network error'
+        errorMessage = 'response' in confError ? confError.response.data.error : 'Error: Check your internet connection.'
       })
     }
     /*if (shouldGoSuccess) {

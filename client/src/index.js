@@ -116,7 +116,7 @@ const handleLogout = async () => {
       document.getElementById('toast-title'), 
       document.getElementById('toast-body'), 
       'Something went wrong', 
-      'response' in error ? error.response.data.error : 'network error', 
+      'response' in error ? error.response.data.error : 'Check your internet connection.', 
       false
     );
   }
