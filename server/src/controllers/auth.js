@@ -48,7 +48,8 @@ const sha256 = (salt, password) => {
     .digest('hex');
 };
 
-const sendConfEmail = async (user) => {
+//returns true if email sends succesfully, false otherwise
+const sendConfEmail = (user) => {
     // Generate the necessary data for the registration confirmation link
     const today = base64Encode(new Date().toISOString());
     const ident = base64Encode(user._id);
@@ -84,16 +85,43 @@ const sendConfEmail = async (user) => {
       
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-          console.log(error);
+            console.log(error);
         } else {
-          console.log('Email sent: ' + info.response);
+            console.log('Email sent: ' + info.response);
         }
     });
 };
 
-exports.register = (req, res) => {
-    const { name, email, password } = req.body;
-    hash(password, 10)
+exports.register = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const hashedPassword = await hash(password, 10);
+        try {
+            const user = new UserModel({
+                name: name,
+                email: email,
+                password: hashedPassword,
+                isConfirmed: false
+            });
+            // Create a new user
+            await user.save()
+            // send an email for the user to finish registration
+            sendConfEmail(user);
+            return res.status(201).json({
+                success: true,
+                error: ''
+            })
+        } catch(error) {
+            return res.status(500).json({
+                error: 'Server error: Could not sign you up.'
+            });
+        }
+    } catch(error) {
+        return res.status(500).json({
+            error: 'Server error: Could not complete API call.'
+        });
+    }
+    /*hash(password, 10)
     .then((hashedPassword) => {
         const user = new UserModel({
             name: name,
@@ -128,7 +156,7 @@ exports.register = (req, res) => {
         return res.status(500).json({
             error: 'Server error: Could not complete API call.'
         });
-    })
+    })*/
     /*
     try {
         // Create a new user
@@ -155,8 +183,20 @@ exports.register = (req, res) => {
     };*/
 };
 
-exports.sendConfirmationEmail = (req, res) => {
-    UserModel.findOne({ email: req.body.email }).exec()
+exports.sendConfirmationEmail = async (req, res) => {
+    try {
+        const user = await UserModel.findOne({ email: req.body.email }).exec();
+        sendConfEmail(user)
+        return res.status(201).json({
+            success: true,
+            error: ''
+        })
+    } catch(error) {
+        return res.status(500).json({
+            error: 'Server error: Could not send confirmation email.'
+        });
+    }
+    /*UserModel.findOne({ email: req.body.email }).exec()
     .then((user) => {
         sendConfEmail(user)
         .then(() => {
@@ -175,7 +215,7 @@ exports.sendConfirmationEmail = (req, res) => {
         return res.status(500).json({
             error: 'Server error: Could not find your account.'
         });
-    })
+    })*/
     /*try {
         const user = await UserModel.findOne({ email: req.body.email }).exec();
         await sendConfEmail(user);
@@ -191,12 +231,12 @@ exports.sendConfirmationEmail = (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const user = req.user;
-    const payload = {
-        id: user._id,
-        email: user.email
-    };
     try {
+        const user = req.user;
+        const payload = {
+            id: user._id,
+            email: user.email
+        };
         const token = await sign(payload, SECRET); //create jwt token
         return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
             avatar: user.photo
@@ -222,7 +262,7 @@ exports.logout = async (req, res) => {
     }
 };
 
-const sendPasswordChangeEmail = async (user) => {
+const sendPasswordChangeEmail = (user) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -247,10 +287,30 @@ const sendPasswordChangeEmail = async (user) => {
     });
 };
 
-exports.changePassword = (req, res) => {    
-    const password = req.body.password;
-    const user = req.user;
-    hash(password, 10)
+exports.changePassword = async (req, res) => {    
+    try {
+        const password = req.body.password;
+        const user = req.user;
+        const hashedPassword = await hash(password, 10);
+        user.password = hashedPassword;
+        try {
+            await user.save();
+            sendPasswordChangeEmail(user);
+            return res.status(201).json({
+                success: true,
+                message: 'The password change was successful'
+            });
+        } catch(error) {
+            return res.status(500).json({
+                error: 'Server error: Could not complete password change.'
+            });
+        }
+    } catch(error) {
+        return res.status(500).json({
+            error: 'Server error: Could not complete API call.'
+        });
+    }
+    /*hash(password, 10)
     .then((hashedPassword) => {
         user.password = hashedPassword;
         user.save()
@@ -278,7 +338,7 @@ exports.changePassword = (req, res) => {
         return res.status(500).json({
             error: 'Server error: Could not complete API call.'
         });
-    })
+    })*/
     /*try {
         const user = req.user;
         const hashedPassword = await hash(password, 10);
@@ -421,10 +481,36 @@ exports.checkResetURL = async (req, res) => {
     });
 };
 
-exports.resetPassword = (req, res) => {
-    const userID = base64Decode(req.body.ident);
-    const pw = req.body.password;
-    UserModel.findOne({ _id: userID }).exec()
+exports.resetPassword = async (req, res) => {
+    try {
+        const userID = base64Decode(req.body.ident);
+        const pw = req.body.password;
+        const user = await UserModel.findOne({ _id: userID }).exec();
+        try {
+            const hashedPassword = await hash(pw, 10);
+            try {
+                user.password = hashedPassword;
+                await user.save();
+                return res.status(201).json({
+                    success: true,
+                    message: 'The password reset was successful'
+                });
+            } catch(error) {
+                return res.status(500).json({
+                    error: 'Server error: Could not reset password.'
+                });
+            }
+        } catch(error) {
+            return res.status(500).json({
+                error: 'Server error: Could not complete API call.'
+            });
+        }
+    } catch(error) {
+        res.status(500).json({
+            error: 'Server error: Could not find your account.'
+        });
+    }
+    /*UserModel.findOne({ _id: userID }).exec()
     .then((user) => {
         hash(pw, 10)
         .then((hashedPassword) => {
@@ -452,7 +538,7 @@ exports.resetPassword = (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not find your account.'
         });
-    })
+    })*/
     /*try {
         const user = await UserModel.findOne({ _id: userID }).exec();
         const hashedPassword = await hash(pw, 10);
@@ -533,14 +619,38 @@ exports.checkConfirmationURL = async (req, res) => {
     } catch(error) {
         res.status(500).json({
             success: false,
-            error: 'could not mark the user as confirmed'
+            error: 'Server error: Could not confirm your account.'
         });
     }
 };
 
-exports.magicLogin = (req, res) => {
-    const userID = base64Decode(req.body.ident);
-    UserModel.findOne({ _id: userID }).exec()
+exports.magicLogin = async (req, res) => {
+    try {
+        const userID = base64Decode(req.body.ident);
+        const user = await UserModel.findOne({ _id: userID }).exec();
+        try {
+            const payload = {
+                id: user._id,
+                email: user.email
+            };
+            //create jwt token
+            const token = await sign(payload, SECRET);
+            return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
+                success: true,
+                error: '',
+                avatar: user.avatar
+            })
+        } catch(error) {
+            return res.status(500).json({
+                error: 'Server error: Could not log you in.'
+            });
+        }
+    } catch(error) {
+        return res.status(500).json({
+            error: 'Server error: Could not find your account.'
+        });
+    }
+    /*UserModel.findOne({ _id: userID }).exec()
     .then((user) => {
         const payload = {
             id: user._id,
@@ -565,7 +675,7 @@ exports.magicLogin = (req, res) => {
         return res.status(500).json({
             error: 'Server error: Could not find your account.'
         });
-    })
+    })*/
     /*try {
         const userID = base64Decode(req.body.ident);
         const user = await UserModel.findOne({ _id: userID }).exec();
@@ -587,10 +697,9 @@ exports.magicLogin = (req, res) => {
 };
 
 exports.sendChangeEmail = async (req, res) => {
-    const user = req.user; 
-    const toEmail = req.body.email;
-
-    try {        
+    try {  
+        const user = req.user; 
+        const toEmail = req.body.email;      
         // Generate the necessary data for the change-email link
         const today = base64Encode(new Date().toISOString());
         const ident = base64Encode(user._id);
