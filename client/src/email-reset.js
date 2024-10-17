@@ -22,14 +22,14 @@ const handlePageLoad = async () => {
         try {
             await onLogout();
             localStorage.setItem('isAuth', 'false');
+            const params = new URLSearchParams();
+            params.append('email-reset-success', 'true');
+            const queryString = params.toString();
             try {
                 const payload = { ident: ident };
                 const response = await magicLogin(payload);
                 localStorage.setItem('isAuth', 'true');
                 localStorage.setItem('avatar', response.data.avatar || '');
-                const params = new URLSearchParams();
-                params.append('email-reset-success', 'true');
-                const queryString = params.toString();
                 const url = `./change-email.html?${queryString}`;
                 window.location.href = url;
             } catch(error) {

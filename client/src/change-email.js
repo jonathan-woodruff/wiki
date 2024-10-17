@@ -152,7 +152,6 @@ const saveEmail = async (event) => {
         errorElement.innerHTML = 'response' in error ? error.response.data.error : 'Error: Check your internet connection.';
         errorElement.classList.remove('d-none');
         errorElement.classList.add('border-danger');
-        submitButton.disabled = true;
       }
     }
     setNotLoadingButton(submitButton, 'Change Email');

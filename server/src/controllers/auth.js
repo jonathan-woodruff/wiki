@@ -497,7 +497,7 @@ exports.resetPassword = async (req, res) => {
                 });
             } catch(error) {
                 return res.status(500).json({
-                    error: 'Server error: Could not reset password.'
+                    error: 'Server error: Could not reset your password.'
                 });
             }
         } catch(error) {
