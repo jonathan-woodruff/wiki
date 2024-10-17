@@ -123,7 +123,7 @@ const login = async (event) => {
       email: emailInput.value,
       password: passwordInput.value
     };
-    await onLogin(credentials);
+    const { data } = await onLogin(credentials);
     localStorage.setItem('isAuth', 'true');
     localStorage.setItem('avatar', data.avatar || '');
     goPlaces();
