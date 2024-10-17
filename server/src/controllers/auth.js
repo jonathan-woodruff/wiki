@@ -1,4 +1,4 @@
-const { UserModel } = require('../models/index');
+const { UserModel, ErrorLogModel } = require('../models/index');
 const { hash } = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 const { 
@@ -93,8 +93,9 @@ const sendConfEmail = (user) => {
 };
 
 exports.register = async (req, res) => {
+    const { name, email, password } = req.body;
     try {
-        const { name, email, password } = req.body;
+        throw Error('');
         const hashedPassword = await hash(password, 10);
         try {
             const user = new UserModel({
@@ -112,14 +113,28 @@ exports.register = async (req, res) => {
                 error: ''
             })
         } catch(error) {
-            return res.status(500).json({
+            res.status(500).json({
                 error: 'Server error: Could not sign you up.'
             });
+            const log = new ErrorLogModel({
+                email: email,
+                functionName: 'register',
+                description: 'Could not sign you up.'
+            });
+            await log.save();
+            return;
         }
     } catch(error) {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not complete API call.'
         });
+        const log = new ErrorLogModel({
+            email: email || '',
+            functionName: 'register',
+            description: 'Could not complete API call.'
+        });
+        await log.save();
+        return;
     }
     /*hash(password, 10)
     .then((hashedPassword) => {
@@ -192,9 +207,16 @@ exports.sendConfirmationEmail = async (req, res) => {
             error: ''
         })
     } catch(error) {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not send confirmation email.'
         });
+        const log = new ErrorLogModel({
+            email: req.body.email || '',
+            functionName: 'sendConfirmationEmail',
+            description: 'Could not send confirmation email.'
+        });
+        await log.save();
+        return;
     }
     /*UserModel.findOne({ email: req.body.email }).exec()
     .then((user) => {
@@ -231,8 +253,8 @@ exports.sendConfirmationEmail = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+    const user = req.user;
     try {
-        const user = req.user;
         const payload = {
             id: user._id,
             email: user.email
@@ -245,6 +267,14 @@ exports.login = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not log you in.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'login',
+            description: 'Could not log you in.'
+        });
+        await log.save();
+        return;
     }
 };
 
@@ -259,6 +289,12 @@ exports.logout = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not log you out.'
         });
+        const log = new ErrorLogModel({
+            functionName: 'logout',
+            description: 'Could not log you out.'
+        });
+        await log.save();
+        return;
     }
 };
 
@@ -287,10 +323,10 @@ const sendPasswordChangeEmail = (user) => {
     });
 };
 
-exports.changePassword = async (req, res) => {    
+exports.changePassword = async (req, res) => {  
+    const password = req.body.password;
+    const user = req.user;  
     try {
-        const password = req.body.password;
-        const user = req.user;
         const hashedPassword = await hash(password, 10);
         user.password = hashedPassword;
         try {
@@ -301,14 +337,30 @@ exports.changePassword = async (req, res) => {
                 message: 'The password change was successful'
             });
         } catch(error) {
-            return res.status(500).json({
+            res.status(500).json({
                 error: 'Server error: Could not complete password change.'
             });
+            const log = new ErrorLogModel({
+                userId: user._id || '',
+                email: user.email || '',
+                functionName: 'changePassword',
+                description: 'Could not complete password change.'
+            });
+            await log.save();
+            return;
         }
     } catch(error) {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not complete API call.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'changePassword',
+            description: 'Could not complete API call.'
+        });
+        await log.save();
+        return;
     }
     /*hash(password, 10)
     .then((hashedPassword) => {
@@ -373,8 +425,8 @@ exports.changePassword = async (req, res) => {
 };*/
 
 exports.sendPasswordResetEmail = async (req, res) => {
+    const email = req.body.email;
     try {
-        const email = req.body.email;
         const user = await UserModel.findOne({ email: email }).exec();
         // Generate the necessary data for the password reset link
         const today = base64Encode(new Date().toISOString());
@@ -427,6 +479,13 @@ exports.sendPasswordResetEmail = async (req, res) => {
             success: false,
             error: 'Server error: Could not send email.'
         });
+        const log = new ErrorLogModel({
+            email: email || '',
+            functionName: 'sendPasswordResetEmail',
+            description: 'Could not send email.'
+        });
+        await log.save();
+        return;
     }
 };
 
@@ -496,19 +555,41 @@ exports.resetPassword = async (req, res) => {
                     message: 'The password reset was successful'
                 });
             } catch(error) {
-                return res.status(500).json({
+                res.status(500).json({
                     error: 'Server error: Could not reset your password.'
                 });
+                const log = new ErrorLogModel({
+                    userId: user._id || '',
+                    email: user.email || '',
+                    functionName: 'resetPassword',
+                    description: 'Could not reset your password.'
+                });
+                await log.save();
+                return;
             }
         } catch(error) {
-            return res.status(500).json({
+            res.status(500).json({
                 error: 'Server error: Could not complete API call.'
             });
+            const log = new ErrorLogModel({
+                userId: user._id || '',
+                email: user.email || '',
+                functionName: 'resetPassword',
+                description: 'Could not complete API call.'
+            });
+            await log.save();
+            return;
         }
     } catch(error) {
         res.status(500).json({
             error: 'Server error: Could not find your account.'
         });
+        const log = new ErrorLogModel({
+            functionName: 'resetPassword',
+            description: 'Could not find your account.'
+        });
+        await log.save();
+        return;
     }
     /*UserModel.findOne({ _id: userID }).exec()
     .then((user) => {
@@ -621,6 +702,14 @@ exports.checkConfirmationURL = async (req, res) => {
             success: false,
             error: 'Server error: Could not confirm your account.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'checkConfirmationURL',
+            description: 'Could not confirm your account.'
+        });
+        await log.save();
+        return;
     }
 };
 
@@ -641,14 +730,28 @@ exports.magicLogin = async (req, res) => {
                 avatar: user.avatar
             })
         } catch(error) {
-            return res.status(500).json({
+            res.status(500).json({
                 error: 'Server error: Could not log you in.'
             });
+            const log = new ErrorLogModel({
+                userId: user._id || '',
+                email: user.email || '',
+                functionName: 'magicLogin',
+                description: 'Could not log you in.'
+            });
+            await log.save();
+            return;
         }
     } catch(error) {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not find your account.'
         });
+        const log = new ErrorLogModel({
+            functionName: 'magicLogin',
+            description: 'Could not find your account.'
+        });
+        await log.save();
+        return;
     }
     /*UserModel.findOne({ _id: userID }).exec()
     .then((user) => {
@@ -697,9 +800,9 @@ exports.magicLogin = async (req, res) => {
 };
 
 exports.sendChangeEmail = async (req, res) => {
-    try {  
-        const user = req.user; 
-        const toEmail = req.body.email;      
+    const user = req.user; 
+    const toEmail = req.body.email;
+    try {        
         // Generate the necessary data for the change-email link
         const today = base64Encode(new Date().toISOString());
         const ident = base64Encode(user._id);
@@ -751,6 +854,14 @@ exports.sendChangeEmail = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not send confirmation email.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'sendChangeEmail',
+            description: 'Could not send confirmation email.'
+        });
+        await log.save();
+        return;
     }
 };
 
@@ -808,7 +919,15 @@ exports.tryEmailReset = async (req, res) => {
     } catch(error) {
         res.status(500).json({
             success: false,
-            error: 'Unknown error'
+            error: 'Server error: Could not confirm your account.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'tryEmaliReset',
+            description: 'Could not confirm your account.'
+        });
+        await log.save();
+        return;
     }
 };

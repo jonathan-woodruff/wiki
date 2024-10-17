@@ -7,6 +7,7 @@ const stripe = require('stripe')(STRIPE_KEY);
 const nodemailer = require('nodemailer');
 
 exports.postWiki = async (req, res) => {
+    const user = req.user;
     try {
         const country = req.body.country;
         const sector = req.body.sector;
@@ -25,7 +26,6 @@ exports.postWiki = async (req, res) => {
         const savedWiki = await newWiki.save();
         try {
             // post to the wiki history model
-            const user = req.user;
             const newWikiHistory = new WikiHistoryModel({
                 wikiId: savedWiki._id,
                 authorUserId: user._id,
@@ -45,19 +45,43 @@ exports.postWiki = async (req, res) => {
                     wikiID: savedWiki._id
                 });
             } catch(error) {
-                return res.status(500).json({
-                    error: 'Server error: Could not update your user stats.'
+                res.status(201).json({
+                    wikiID: savedWiki._id
                 });
+                const log = new ErrorLogModel({
+                    userId: user._id || '',
+                    email: user.email || '',
+                    functionName: 'postWiki',
+                    description: 'Could not update your user stats.'
+                });
+                await log.save();
+                return;
             }
         } catch(error) {
-            return res.status(500).json({
-                error: 'Server error: Could not save wiki history.'
+            res.status(201).json({
+                wikiID: savedWiki._id
             });
+            const log = new ErrorLogModel({
+                userId: user._id || '',
+                email: user.email || '',
+                functionName: 'postWiki',
+                description: 'Could not save wiki history.'
+            });
+            await log.save();
+            return;
         }
     } catch(error) {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not save wiki.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'postWiki',
+            description: 'Could not save wiki.'
+        });
+        await log.save();
+        return;
     }
     /*newWiki.save()
     .then((savedWiki) => {
@@ -161,10 +185,16 @@ exports.getWikis = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not load wikis.'
         });
+        const log = new ErrorLogModel({
+            functionName: 'getWikis',
+            description: 'Could not load wikis.'
+        });
+        await log.save();
+        return;
     }
 };
 
-exports.getProfileData = (req, res) => {
+exports.getProfileData = async (req, res) => {
     const user = req.user;
     if (user) {
         //const avatarPath = path.resolve(`./public/avatars/${user.photo}`);
@@ -180,12 +210,20 @@ exports.getProfileData = (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not load profile data.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'getProfileData',
+            description: 'Could not load profile data.'
+        });
+        await log.save();
+        return;
     }
 };
 
 exports.postAvatar = async (req, res) => {
+    const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
     try {
-        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
         user.photo = req.file.filename;
         await user.save();
         return res.status(200).json({
@@ -196,12 +234,20 @@ exports.postAvatar = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not save profile pic.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'postAvatar',
+            description: 'Could not save profile pic.'
+        });
+        await log.save();
+        return;
     }
 };
 
 exports.updateProfile = async (req, res) => {
+    const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
     try {
-        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
         const avatarURL = req.body.avatarURL;
         if (avatarURL !== 'not changed') user.photo = req.body.avatarURL;
         user.name = req.body.name;
@@ -216,10 +262,18 @@ exports.updateProfile = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not save profile.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'updateProfile',
+            description: 'Could not save profile.'
+        });
+        await log.save();
+        return;
     }
 };
 
-exports.getCreateWikiData = (req, res) => {
+exports.getCreateWikiData = async (req, res) => {
     const user = req.user;
     if (user) {
         const [countries, sectors] = parseServices(user.services);
@@ -231,6 +285,14 @@ exports.getCreateWikiData = (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not load data.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'getCreatedWikiData',
+            description: 'Could not load data.'
+        });
+        await log.save();
+        return;
     }
 };
 
@@ -242,13 +304,20 @@ exports.getWikiByID = async (req, res) => {
             wiki: wiki
         });
     } else {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not load wiki.'
-        })
+        });
+        const log = new ErrorLogModel({
+            functionName: 'getWikiByID',
+            description: 'Could not load wiki.'
+        });
+        await log.save();
+        return;
     }
 };
 
 exports.publishWikiEdits = async (req, res) => {
+    const user = req.user;
     try {
         const wikiId = req.body.wikiId;
         const contentTime = req.body.article.time;
@@ -263,7 +332,6 @@ exports.publishWikiEdits = async (req, res) => {
             await wiki.save();
             try {
                 // add the wiki version to the wiki history model
-                const user = req.user;
                 const newWikiEdit = new WikiHistoryModel({
                     wikiId: wikiId,
                     authorUserId: user._id,
@@ -284,24 +352,59 @@ exports.publishWikiEdits = async (req, res) => {
                         message: 'updated wiki'
                     });
                 } catch(error) {
-                    return res.status(500).json({
-                        error: 'Server error: Could not save your user stats.'
+                    //return successful wiki save but log an error about the user stats
+                    res.status(200).json({
+                        success: true,
+                        message: 'updated wiki'
                     });
+                    const log = new ErrorLogModel({
+                        userId: user._id || '',
+                        email: user.email || '',
+                        functionName: 'publishWikiEdits',
+                        description: 'Could not save your user stats.'
+                    });
+                    await log.save();
+                    return;
                 }
             } catch(error) {
-                return res.status(500).json({
-                    error: 'Server error: Could not save wiki history.'
+                res.status(200).json({
+                    success: true,
+                    message: 'updated wiki'
                 });
+                const log = new ErrorLogModel({
+                    userId: user._id || '',
+                    email: user.email || '',
+                    functionName: 'publishWikiEdits',
+                    description: 'Could not save wiki history.'
+                });
+                await log.save();
+                return;
             }
         } catch(error) {
-            return res.status(500).json({
+            res.status(500).json({
                 error: 'Server error: Could not save wiki.'
             });
+            const log = new ErrorLogModel({
+                userId: user._id || '',
+                email: user.email || '',
+                functionName: 'publishWikiEdits',
+                description: 'Could not save wiki.'
+            });
+            await log.save();
+            return;
         }
     } catch(error) {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not find wiki.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'publishWikiEdits',
+            description: 'Could not find wiki.'
+        });
+        await log.save();
+        return;
     }
     /*WikisModel.findOne({ _id: wikiId }).exec()
     .then((wiki) => {
@@ -419,19 +522,37 @@ exports.getHistory = async (req, res) => {
                     wikiHistory: wikiHistory
                 });
             } else {
-                return res.status(500).json({
+                res.status(500).json({
                     error: 'Server error: Could not load wiki history.'
                 })
+                const log = new ErrorLogModel({
+                    functionName: 'getHistory',
+                    description: 'Could not load wiki history.'
+                });
+                await log.save();
+                return;
             }
         } catch(error) {
-            return res.status(500).json({
+            res.status(500).json({
                 error: 'Server error: Could not find wiki history.'
             })
+            const log = new ErrorLogModel({
+                functionName: 'getHistory',
+                description: 'Could not find wiki history.'
+            });
+            await log.save();
+            return;
         }
     } catch(error) {
-        return res.status(500).json({
+        res.status(500).json({
             error: 'Server error: Could not find wiki.'
         })
+        const log = new ErrorLogModel({
+            functionName: 'getHistory',
+            description: 'Could not find wiki.'
+        });
+        await log.save();
+        return;
     }
     /*const wikiID = req.query.wiki;
     WikisModel.findOne({ _id: wikiID }).exec()
@@ -527,6 +648,14 @@ exports.getViewProfileData = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not get profile data.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'getViewProfileData',
+            description: 'Could not get profile data.'
+        });
+        await log.save();
+        return;
     }
 };
 
@@ -553,13 +682,19 @@ exports.getHistoricalWikiData = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not load historical wiki data.'
         });
+        const log = new ErrorLogModel({
+            functionName: 'getHistoricalWikiData',
+            description: 'Could not load historical data.'
+        });
+        await log.save();
+        return;
     }
 };
 
 exports.postCommunity = async (req, res) => {
+    const user = req.user;
     try {
         //const user = await UserModel.findOne({ email: req.user.email }).exec();
-        const user = req.user;
         const newCommunityEntry = new CommunityModel({
             userId: user._id,
             userObjectId: user._id,
@@ -575,6 +710,14 @@ exports.postCommunity = async (req, res) => {
         res.status(500).json({
             error: 'Server error: Could not save submission.'
         });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'postCommunity',
+            description: 'Could not save submission.'
+        });
+        await log.save();
+        return;
     }
 };
 

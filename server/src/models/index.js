@@ -125,7 +125,22 @@ const communitySchema = new Schema({
   other: String
 }, { timestamps: true });
 
+const errorLogSchema = new Schema({
+  userId: {
+    type: String,
+    ref: 'User'
+  },
+  userObjectId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  email: String,
+  functionName: String,
+  description: String
+}, { timestamps: true });
+
 exports.UserModel = mongoose.model('User', userSchema);
 exports.WikisModel = mongoose.model('Wikis', wikisSchema);
 exports.WikiHistoryModel = mongoose.model('WikiHistory', wikiHistorySchema);
 exports.CommunityModel = mongoose.model('Community', communitySchema);
+exports.ErrorLogModel = mongoose.model('ErrorLog', errorLogSchema);
