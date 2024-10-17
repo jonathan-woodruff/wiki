@@ -95,7 +95,6 @@ const sendConfEmail = (user) => {
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
     try {
-        throw Error('');
         const hashedPassword = await hash(password, 10);
         try {
             const user = new UserModel({
@@ -117,7 +116,7 @@ exports.register = async (req, res) => {
                 error: 'Server error: Could not sign you up.'
             });
             const log = new ErrorLogModel({
-                email: email,
+                email: email || '',
                 functionName: 'register',
                 description: 'Could not sign you up.'
             });
@@ -924,7 +923,7 @@ exports.tryEmailReset = async (req, res) => {
         const log = new ErrorLogModel({
             userId: user._id || '',
             email: user.email || '',
-            functionName: 'tryEmaliReset',
+            functionName: 'tryEmailReset',
             description: 'Could not confirm your account.'
         });
         await log.save();
