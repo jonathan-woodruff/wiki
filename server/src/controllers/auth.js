@@ -356,7 +356,7 @@ exports.changePassword = async (req, res) => {
     }*/
 };
 
-exports.updateUserName = async (req, res) => {
+/*exports.updateUserName = async (req, res) => {
     try {
         const user = req.user;
         user.name = req.body.name;
@@ -370,7 +370,7 @@ exports.updateUserName = async (req, res) => {
             error: 'Server error. Could not update your name.'
         });
     }
-};
+};*/
 
 exports.sendPasswordResetEmail = async (req, res) => {
     try {

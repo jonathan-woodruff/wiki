@@ -116,7 +116,6 @@ const handleSubmit = async (event) => {
         isEmailError = true;
         errorElement.innerHTML = errorMessage;
         errorElement.classList.remove('d-none')
-        submitButton.disabled = true;
         emailInput.classList.add('border-danger');
     }
     setNotLoadingButton(submitButton, 'Email Me a Password Reset Link');
