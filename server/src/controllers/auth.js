@@ -94,6 +94,7 @@ const sendConfEmail = (user) => {
 
 exports.register = async (req, res) => {
     try {
+        throw Error('test');
         const { name, email, password } = req.body;
         const hashedPassword = await hash(password, 10);
         try {

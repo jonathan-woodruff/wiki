@@ -1,3 +1,9 @@
+/************************************************************
+ * Ensure the user is not authenticated 
+************************************************************/
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
+if (isAuth) window.location.href = './index.html';
+
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
@@ -9,7 +15,6 @@ import './css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
