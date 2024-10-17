@@ -54,9 +54,8 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onRegister, onLogout } from './api/auth';
+import { onRegister } from './api/auth';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { showToast } from './utils/toast';
 
 const form = document.getElementById('form');
 const nameInput = document.getElementById('name');
@@ -65,9 +64,7 @@ const passwordInput = document.getElementById('password');
 const checkboxInput = document.getElementById('checkbox');
 const errorElement = document.getElementById('error-message');
 const loginLink = document.getElementById('login-link');
-const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
-const toastDiv = document.getElementById('toast');
 
 let isNameError = false;
 let isEmailError = false;
@@ -158,32 +155,11 @@ const clearError = (event) => {
 
 const goLogin = () => window.location.href = `./login.html${window.location.search}`;
 
-const handleLogout = async () => {
-  try {
-    await onLogout();
-    localStorage.setItem('isAuth', 'false');
-    window.location.reload();
-  } catch(error) {
-    showToast(
-      toastDiv, 
-      document.getElementById('toast-title'), 
-      document.getElementById('toast-body'), 
-      'Something went wrong', 
-      'response' in error ? error.response.data.error : 'Check your internet connection.', 
-      false
-    );
-  }
-};
-
-const hideToast = () => toastDiv.style.display = 'none';
-
 form.addEventListener('submit', registerUser);
 nameInput.addEventListener('input', clearError);
 emailInput.addEventListener('input', clearError);
 passwordInput.addEventListener('input', clearError);
 checkboxInput.addEventListener('input', clearError);
 loginLink.addEventListener('click', goLogin);
-logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
-toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');

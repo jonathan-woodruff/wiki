@@ -117,19 +117,19 @@ const goSuccess = () => {
 const login = async (event) => {
   event.preventDefault();
   const loginButton = document.getElementById('submit');
+  const credentials = {
+    email: emailInput.value,
+    password: passwordInput.value
+  };
+  setLoadingButton(loginButton, 'Logging In...');
   try {
-    setLoadingButton(loginButton, 'Logging In...');
-    const credentials = {
-      email: emailInput.value,
-      password: passwordInput.value
-    };
     const { data } = await onLogin(credentials);
     localStorage.setItem('isAuth', 'true');
     localStorage.setItem('avatar', data.avatar || '');
     goPlaces();
   } catch(error) {
-    let errorMessage = '';
-    if ('response' in error) errorMessage = error.response.data.error;
+    let showError = true;
+    let errorMessage = 'response' in error ? error.response.data.error : '';
     if (
       errorMessage === 'Please enter a valid email address' 
       || errorMessage === 'Email does not exist'
@@ -140,12 +140,15 @@ const login = async (event) => {
       try {
         await sendConfirmationEmail(credentials);
         goSuccess();
+        showError = false;
       } catch(emailError) {
         errorMessage = 'response' in emailError ? emailError.response.data.error : 'Error: Check your internet connection.'
       }
     }
-    errorElement.innerHTML = errorMessage;
-    errorElement.classList.remove('d-none');
+    if (showError) {
+      errorElement.innerHTML = errorMessage;
+      errorElement.classList.remove('d-none');
+    }
     setNotLoadingButton(loginButton, 'Log In');
   }
   /*const loginButton = document.getElementById('submit');
