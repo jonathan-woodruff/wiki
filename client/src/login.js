@@ -116,8 +116,8 @@ const goSuccess = () => {
 
 const login = async (event) => {
   event.preventDefault();
+  const loginButton = document.getElementById('submit');
   try {
-    const loginButton = document.getElementById('submit');
     setLoadingButton(loginButton, 'Logging In...');
     const credentials = {
       email: emailInput.value,

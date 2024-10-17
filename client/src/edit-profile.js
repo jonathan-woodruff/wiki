@@ -264,7 +264,7 @@ const loadServices = (storedServices) => {
   };
 };
 
-const loadDescription = (description) => descriptionInput.innerHTML || '';
+const loadDescription = (description) => descriptionInput.innerHTML = description || '';
 
 const loadName = (nameOfUser) => {
   userName.value = nameOfUser || '';

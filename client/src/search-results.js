@@ -285,7 +285,7 @@ const showPage = () => {
 
 showPage();
 focusOnEngine();
-spinner2Div.style.display = 'block';
+spinner2Div.style.display = 'block'; //show spinner2
 
 /************************************************************
  * All other JavaScript

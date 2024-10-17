@@ -49,6 +49,7 @@ const wikiID = currentUrlParams.get('wiki');
 const showMoreDiv = document.getElementById('show-more-div');
 const showMoreButton = document.getElementById('show-more-button');
 const toastDiv = document.getElementById('toast');
+const spinner2Div = document.getElementById('spinner2');
 
 const numCardsToShow = 5;
 let numShowMoreClicked = 0;
@@ -164,6 +165,7 @@ const loadPage = async () => {
         allEditions = data.wikiHistory;
         editionNum = allEditions.length;
         showCards(allEditions);
+        spinner2Div.style.display = 'none';
     } catch(error) {
         showToast(
             toastDiv, 
@@ -192,6 +194,7 @@ const showPage = () => {
 };
 
 showPage();
+spinner2Div.style.display = 'block'; //show spinner2
 
 /************************************************************
  * All other JavaScript
