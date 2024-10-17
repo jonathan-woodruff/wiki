@@ -60,7 +60,7 @@ const hideToast = () => toastDiv.style.display = 'none';
 
 logoutLink.addEventListener('click', handleLogout);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
-navRegisterButton.addEventListener('click', () => window.location.href = './login');
+navRegisterButton.addEventListener('click', () => window.location.href = './login.html');
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 
 /************************************************************
