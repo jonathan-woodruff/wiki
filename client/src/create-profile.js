@@ -38,6 +38,8 @@ const handlePageLoad = async () => {
             const queryString = params.toString();
             const url = `./login.html?${queryString}`;
             window.location.href = url;
+        } else if ('response' in error && error.response.data.error === 'User already confirmed') {
+            window.location.href = './edit-profile.html';
         } else {
             window.location.href = './fail.html';
         }

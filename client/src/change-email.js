@@ -94,7 +94,7 @@ const clearErrorMessage = () => {
   errorElement.innerHTML = '';
 };
 
-const clearError = (event) => {
+const clearError = () => {
   if (isEmailError) {
     emailInput.classList.remove('border-danger');
     clearErrorMessage();
@@ -102,16 +102,16 @@ const clearError = (event) => {
   }
 };
 
-const handleEmailInput = (event) => {
-    clearError();
+const handleEmailInput = () => {
+  clearError();
 
-    //enable/disable save button
-    if (emailInput.value === '' || emailInput.value === dbUserEmail) {
-      submitButton.disabled = true;
-    } else {
-      submitButton.disabled = false;
-    }
-  };
+  //enable/disable save button
+  if (emailInput.value === '' || emailInput.value === dbUserEmail) {
+    submitButton.disabled = true;
+  } else {
+    submitButton.disabled = false;
+  }
+};
 
 /*const handlePageshow = async () => {
     try {
@@ -136,6 +136,7 @@ const goSuccess = () => {
 
 const saveEmail = async (event) => {
     event.preventDefault();
+    clearError();
     setLoadingButton(submitButton, 'Saving...');
     try {
       const payload = {

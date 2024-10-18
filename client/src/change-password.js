@@ -79,6 +79,7 @@ const goLogin = () => {
 
 const changePassword = async (event) => {
   event.preventDefault();
+  clearErrorMessage();
   if (!currentPasswordInput.value) {
     isCurrentPasswordError = true;
     currentPasswordInput.classList.add('border-danger');
