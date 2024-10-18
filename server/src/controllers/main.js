@@ -664,7 +664,7 @@ exports.getHistoricalWikiData = async (req, res) => {
     const wikiHistory = await WikiHistoryModel.findOne({ _id: wikiHistoryID }).exec();
     const wiki = await WikisModel.findOne({ _id: wikiHistory.wikiId }).exec();
     const user = await UserModel.findOne({ _id: wikiHistory.authorUserId });
-    if (wikiHistory) {
+    if (wikiHistory && wiki && user) {
         return res.status(200).json({
             wikiID: wikiHistory.wikiId,
             country: wiki.country,
@@ -684,7 +684,7 @@ exports.getHistoricalWikiData = async (req, res) => {
         });
         const log = new ErrorLogModel({
             functionName: 'getHistoricalWikiData',
-            description: 'Could not load historical data.'
+            description: 'Could not load historical wiki data.'
         });
         await log.save();
         return;

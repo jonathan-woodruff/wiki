@@ -102,7 +102,8 @@ const handleSubmit = async (event) => {
           document.getElementById('toast-title'), 
           document.getElementById('toast-body'), 
           'Success!', 
-          'Your responses were saved.'
+          'Your responses were saved.',
+          true
         );
       } catch(error) {
         showToast(
