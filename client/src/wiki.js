@@ -77,6 +77,11 @@ const getWiki = async () => {
       'response' in error ? error.response.data.error : 'Check your internet connection.', 
       false
     );
+    return {
+      contentTime: '',
+      contentBlocks: [],
+      version: ''
+    };
   }
 };
 
@@ -181,7 +186,7 @@ showPage();
 import { arraysAreEqual } from './utils/index';
 import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
 import CancelIconWhite from './images/cancel_white.png';
-import { checkForCookie, onLogout } from './api/auth';
+import { /*checkForCookie, */onLogout } from './api/auth';
 
 const cancelButton = document.getElementById('cancel');
 const confirmCancelButton = document.getElementById('confirm-cancel');
@@ -206,7 +211,7 @@ const maxDescriptionLength = parseInt(maxLengthStr);
 const goEditMode = async () => {
   setLoadingButton(editButton, 'Working...');
   try {
-    await checkForCookie();
+    //await checkForCookie();
     editor.readOnly.toggle();
     const editRow = document.getElementById('edit-row');
     editRow.classList.add('d-none');

@@ -1,4 +1,4 @@
-const { UserModel, WikisModel, WikiHistoryModel, CommunityModel } = require('../models/index');
+const { UserModel, WikisModel, WikiHistoryModel, CommunityModel, ErrorLogModel } = require('../models/index');
 const { parseServices } = require('../utils/index');
 const path = require('path');
 const fs = require('fs');
@@ -221,9 +221,10 @@ exports.getProfileData = async (req, res) => {
     }
 };
 
-exports.postAvatar = async (req, res) => {
+/*exports.postAvatar = async (req, res) => {
     const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
     try {
+        throw Error('');
         user.photo = req.file.filename;
         await user.save();
         return res.status(200).json({
@@ -243,7 +244,7 @@ exports.postAvatar = async (req, res) => {
         await log.save();
         return;
     }
-};
+};*/
 
 exports.updateProfile = async (req, res) => {
     const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
@@ -288,7 +289,7 @@ exports.getCreateWikiData = async (req, res) => {
         const log = new ErrorLogModel({
             userId: user._id || '',
             email: user.email || '',
-            functionName: 'getCreatedWikiData',
+            functionName: 'getCreateWikiData',
             description: 'Could not load data.'
         });
         await log.save();
@@ -367,9 +368,8 @@ exports.publishWikiEdits = async (req, res) => {
                     return;
                 }
             } catch(error) {
-                res.status(200).json({
-                    success: true,
-                    message: 'updated wiki'
+                res.status(500).json({
+                    error: 'Server error: Could not save wiki history.'
                 });
                 const log = new ErrorLogModel({
                     userId: user._id || '',

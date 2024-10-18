@@ -20,7 +20,7 @@ const {
     getHistory,
     getViewProfileData,
     getHistoricalWikiData,
-    postAvatar,
+    //postAvatar,
     postCommunity,
     createPaymentIntent,
     sendEmail
@@ -37,7 +37,7 @@ router.put('/putWiki', userAuth, publishWikiEdits);
 router.get('/viewHistory', getHistory);
 router.get('/viewProfile', getViewProfileData);
 router.get('/viewHistoricalWiki', getHistoricalWikiData);
-router.post('/postAvatar', userAuth, upload.single('avatar'), postAvatar);
+//router.post('/postAvatar', userAuth, upload.single('avatar'), postAvatar);
 router.post('/postCommunity', userAuth, postCommunity);
 router.post('/createPaymentIntent', createPaymentIntent);
 router.post('/sendEmail', sendEmail);

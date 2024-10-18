@@ -438,7 +438,8 @@ const saveProfile = async (event) => {
         document.getElementById('toast-title'), 
         document.getElementById('toast-body'), 
         'Success!', 
-        'Your profile has been saved.'
+        'Your profile has been saved.',
+        true
       );
     } catch(error) {
       if ('response' in error && error.response.status === 401) {
