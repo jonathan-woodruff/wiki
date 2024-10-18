@@ -79,7 +79,7 @@ const clearErrorMessage = () => {
   errorElement.innerHTML = '';
 };
 
-const clearError = (event) => {
+const clearError = () => {
   if (isEmailError) {
     emailInput.classList.remove('border-danger');
     clearErrorMessage();
@@ -87,7 +87,7 @@ const clearError = (event) => {
   }
 };
 
-const handleEmailInput = (event) => {
+const handleEmailInput = () => {
     clearError();
 
     //enable/disable save button
@@ -104,6 +104,7 @@ const goSuccess = () => {
 
 const handleSubmit = async (event) => {
     event.preventDefault();
+    clearError();
     setLoadingButton(submitButton, 'Sending...');
     try {
       const payload = {

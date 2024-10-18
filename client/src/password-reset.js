@@ -69,6 +69,7 @@ const goLoginWithSuccess = () => {
 
 const changePassword = async (event) => {
   event.preventDefault();
+  clearError();
   if (!newPasswordInput1.value) {
     isNewPasswordError1 = true;
     newPasswordInput1.classList.add('border-danger');
@@ -117,7 +118,7 @@ const resetErrorStates = () => {
   isNewPasswordError2 = false;
 };
 
-const clearError = (event) => {
+const clearError = () => {
   newPasswordInput1.classList.remove('border-danger');
   newPasswordInput2.classList.remove('border-danger');
   clearErrorMessage();

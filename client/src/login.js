@@ -116,6 +116,7 @@ const goSuccess = () => {
 
 const login = async (event) => {
   event.preventDefault();
+  clearError();
   const loginButton = document.getElementById('submit');
   const credentials = {
     email: emailInput.value,

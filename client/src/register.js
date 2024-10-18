@@ -81,6 +81,7 @@ const goSuccess = () => {
 
 const registerUser = async (event) => {
   event.preventDefault();
+  clearErrorMessage();
   if (nameInput.value && emailInput.value && passwordInput.value && checkboxInput.checked) {
     const registerButton = document.getElementById('submit');
     setLoadingButton(registerButton, 'Signing Up...');
