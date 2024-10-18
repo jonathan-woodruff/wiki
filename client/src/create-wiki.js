@@ -50,9 +50,33 @@ import Header from '@editorjs/header';
 import Table from '@editorjs/table';
 import NestedList from '@editorjs/nested-list';
 import Underline from '@editorjs/underline';
+
+const errorRow = document.getElementById('error-row');
+const errorMessage = document.getElementById('error-message');
+const titleInput = document.getElementById('title');
+const editorDiv = document.getElementById('editorjs');
+
+let isTitleError = false;
+let isContentError = false;
+
+const hideError = () => {
+  errorRow.classList.add('d-none');
+  isTitleError = false;
+  isContentError = false;
+  titleInput.classList.remove('border-danger');
+  editorDiv.classList.remove('border-danger');
+};
+
+const showError = () => {
+  errorRow.classList.remove('d-none');
+};
+
 const editor = new EditorJS({
   holder: 'editorjs',
   placeholder: 'Starting writing. Wanna add an image? Just paste it in...',
+  onChange: (api, event) => {
+    if (isContentError) hideError();
+  },
   tools: {
     underline: Underline,
     image: SimpleImage,
@@ -166,49 +190,63 @@ const beerButton = document.getElementById('beer');
 
 const submitContent = async (event) => {
   event.preventDefault();
-  try {
-    setLoadingButton(button, 'Creating...');
-    const outputData = await editor.save();
+  hideError();
+  if (titleInput.value) {
     try {
-      const titleInput = document.getElementById('title');
-      const postData = {
-        country: countryInput.value,
-        sector: sectorInput.value,
-        title: titleInput.value,
-        article: outputData
-      };
-      const response = await onPostWiki(postData);
-      const wikiID = response.data.wikiID;
-      const params = new URLSearchParams();
-      params.append('wiki', wikiID);
-      const url = `./wiki.html?${params.toString()}`;
-      window.location.href = url;
-    } catch(error) {
-      if ('response' in error && error.response.status === 401) {
-        localStorage.setItem('isAuth', 'false');
-        window.location.reload();
+      setLoadingButton(button, 'Creating...');
+      const outputData = await editor.save();
+      if (outputData.blocks.length) {
+        try {
+          const postData = {
+            country: countryInput.value,
+            sector: sectorInput.value,
+            title: titleInput.value,
+            article: outputData
+          };
+          const response = await onPostWiki(postData);
+          const wikiID = response.data.wikiID;
+          const params = new URLSearchParams();
+          params.append('wiki', wikiID);
+          const url = `./wiki.html?${params.toString()}`;
+          window.location.href = url;
+        } catch(error) {
+          if ('response' in error && error.response.status === 401) {
+            localStorage.setItem('isAuth', 'false');
+            window.location.reload();
+          } else {
+            showToast(
+              toastDiv, 
+              document.getElementById('toast-title'), 
+              document.getElementById('toast-body'), 
+              'Something went wrong', 
+              'response' in error ? error.response.data.error : 'Check your internet connection.', 
+              false
+            );
+          }
+        }
       } else {
-        showToast(
-          toastDiv, 
-          document.getElementById('toast-title'), 
-          document.getElementById('toast-body'), 
-          'Something went wrong', 
-          'response' in error ? error.response.data.error : 'Check your internet connection.', 
-          false
-        );
+        errorMessage.innerHTML = 'Please enter wiki content';
+        isContentError = true;
+        editorDiv.classList.add('border-danger');
+        showError();
       }
+    } catch(error) {
+      showToast(
+        toastDiv, 
+        document.getElementById('toast-title'), 
+        document.getElementById('toast-body'), 
+        'Something went wrong', 
+        'Editor error: Could not save changes.', 
+        false
+      );
     }
-  } catch(error) {
-    showToast(
-      toastDiv, 
-      document.getElementById('toast-title'), 
-      document.getElementById('toast-body'), 
-      'Something went wrong', 
-      'Editor error: Could not save changes.', 
-      false
-    );
+    setNotLoadingButton(button, 'Create');
+  } else {
+    errorMessage.innerHTML = 'Please enter a title';
+    isTitleError = true;
+    titleInput.classList.add('border-danger');
+    showError();
   }
-  setNotLoadingButton(button, 'Create');
   /*setLoadingButton(button, 'Creating...');
   editor.save()
   .then((outputData) => {
@@ -287,6 +325,10 @@ const handleLogout = async () => {
   }
 };
 
+const handleTitleInput = () => {
+  if (isTitleError) hideError();
+};
+
 const hideToast = () => toastDiv.style.display = 'none';
 
 button.addEventListener('click', submitContent);
@@ -294,3 +336,4 @@ logoutLink.addEventListener('click', handleLogout);
 //window.addEventListener('pageshow', handlePageshow);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
+titleInput.addEventListener('input', handleTitleInput);
