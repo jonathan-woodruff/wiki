@@ -44,13 +44,13 @@ setNav();
 ************************************************************/
 import { getProfileData } from './api/main';
 
-const emailInput = document.getElementById('email');
+const emailSpan = document.getElementById('email-info');
 
 let dbUserEmail = '';
 
 const loadEmail = async () => {
   const { data } = await getProfileData();
-  emailInput.value = data.email || '';
+  emailSpan.innerHTML = data.email || '';
   dbUserEmail = data.email || '';
 };
 
@@ -86,6 +86,7 @@ const submitButton = document.getElementById('submit');
 const errorElement = document.getElementById('error-message');
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
+const emailInput = document.getElementById('email');
 
 let isEmailError = false;
 
@@ -128,8 +129,8 @@ const handleEmailInput = () => {
 
 const goSuccess = () => {
   const params = new URLSearchParams();
-  params.append('header', 'Nice!')
-  params.append('message', 'Please check your email');
+  params.append('header', 'One more step!')
+  params.append('message', 'Please click the verification link in the email we sent to ' + emailInput.value + '.');
   const url = `./success.html?${params.toString()}`;
   window.location.href = url;
 };

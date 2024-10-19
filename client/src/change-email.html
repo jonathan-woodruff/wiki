@@ -69,15 +69,16 @@
     <main id="main-container" class="container py-4 px-3 mx-auto mb-5" style="display: none;">
       <div class="row">
         <div class="col">
-          <h1 class="text-center mt-5 mb-3">Change Email</h1>
+          <h1 class="text-center mt-5 mb-5">Change Email</h1>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <form id="form">
+            <p class="text-center mb-3">Your current email address: <span id="email-info" class="fw-bold"></span></p>
             <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-3">
-                <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter email">
+                <label for="email">New email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter new email">
               </div>
             <div class="d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-2">
               <p id="error-message" class="text-danger text-center d-none"></p>
