@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
 const path = require('path');
-//const bodyParser = require('body-parser');
 
 require('./db'); 
 
@@ -17,7 +16,7 @@ app.use(express.urlencoded({ limit: '2mb', extended: true }));
 app.use(cookieParser()); //gives you access to req.cookies or req.signedCookies
 app.use(cors({ origin: CLIENT_URL, credentials: true })); //credentials: true will allow the client to send the cookie containing user credentials
 app.use(passport.initialize());
-app.use(express.static('./public'));
+//app.use(express.static('./public'));
 
 //import routes
 const authRoutes = require('./routes/auth');

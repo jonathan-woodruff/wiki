@@ -433,6 +433,7 @@ const saveProfile = async (event) => {
     };
     try {
       await putProfile(dataToSave);
+      if (isAvatarUpdated) localStorage.setItem('avatar', holderElement.children[0].src || '');
       showToast(
         toastDiv, 
         document.getElementById('toast-title'), 
