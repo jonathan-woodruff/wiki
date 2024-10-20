@@ -19,10 +19,11 @@ import { configureNav } from './utils/navbar';
 import Logo from './images/logo.png';
 import { refreshAvatar } from './utils/navbar';
 
+const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
+
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
   logoImg.src = Logo;
-  const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
   refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
 
@@ -433,7 +434,10 @@ const saveProfile = async (event) => {
     };
     try {
       await putProfile(dataToSave);
-      if (isAvatarUpdated) localStorage.setItem('avatar', holderElement.children[0].src || '');
+      if (isAvatarUpdated) {
+        localStorage.setItem('avatar', holderElement.children[0].src || '');
+        refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
+      }
       showToast(
         toastDiv, 
         document.getElementById('toast-title'), 
