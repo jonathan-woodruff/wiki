@@ -7,17 +7,16 @@ if (!isAuth) window.location.href = './login.html';
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -42,7 +41,7 @@ setNav();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading } from '../utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -53,9 +52,9 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { putPassword, /*checkForCookie, */onLogout } from './api/auth';
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { showToast } from './utils/toast';
+import { putPassword, /*checkForCookie, */onLogout } from '../api/auth';
+import { setLoadingButton, setNotLoadingButton } from '../utils/spinner';
+import { showToast } from '../utils/toast';
 
 const form = document.getElementById('form');
 const currentPasswordInput = document.getElementById('current-password');

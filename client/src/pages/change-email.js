@@ -7,17 +7,17 @@ if (!isAuth) window.location.href = './login.html';
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav } from '../utils/navbar';
+import Logo from '../images/logo.png';
+import { refreshAvatar } from '../utils/navbar';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -42,7 +42,7 @@ setNav();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { getProfileData } from './api/main';
+import { getProfileData } from '../api/main';
 
 const emailSpan = document.getElementById('email-info');
 
@@ -59,8 +59,8 @@ loadEmail();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
-import { showToast } from './utils/toast';
+import { setNotLoading } from '../utils/spinner';
+import { showToast } from '../utils/toast';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -78,8 +78,8 @@ if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), do
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onLogout, /*checkForCookie, */sendChangeEmail } from './api/auth';
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { onLogout, /*checkForCookie, */sendChangeEmail } from '../api/auth';
+import { setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const form = document.getElementById('form');
 const submitButton = document.getElementById('submit');

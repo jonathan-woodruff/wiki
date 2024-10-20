@@ -7,17 +7,16 @@ if (isAuth) window.location.href = './index.html';
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
@@ -43,7 +42,7 @@ setNav();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -54,8 +53,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onRegister } from './api/auth';
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { onRegister } from '../api/auth';
 
 const form = document.getElementById('form');
 const nameInput = document.getElementById('name');

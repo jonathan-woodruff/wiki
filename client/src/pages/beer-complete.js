@@ -1,14 +1,14 @@
-import { STRIPE_KEY } from './constants/index';
+import { STRIPE_KEY } from '../constants/index';
 import { loadStripe } from '@stripe/stripe-js';
-import { sendPaymentConfirmationEmail } from './api/main';
+//import { sendPaymentConfirmationEmail } from './api/main';
 
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/beer.css';
+import '../css/beer.css';
 
 // ------- UI Resources -------
 const SuccessIcon = 

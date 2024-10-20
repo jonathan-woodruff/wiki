@@ -7,13 +7,13 @@ if (isAuth) window.location.href = './change-password.html';
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 /************************************************************
  * Ensure the query params are valid. If so, show the page
 ************************************************************/
-import { checkResetURL } from './api/auth';
+import { checkResetURL, resetPassword } from '../api/auth';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -48,8 +48,7 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { resetPassword } from './api/auth';
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
+import { setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const form = document.getElementById('form');
 const newPasswordInput1 = document.getElementById('new-password-1');

@@ -10,28 +10,28 @@ module.exports = {
     stripe: 'stripe',
   },
   entry: {
-    'home': './src/index.js',
-    'create-wiki': './src/create-wiki.js',
-    'wiki': './src/wiki.js',
-    'register': './src/register.js',
-    'login': './src/login.js',
-    'edit-profile': './src/edit-profile.js',
-    'search-results': './src/search-results.js',
-    'history': './src/history.js',
-    'view-profile': './src/view-profile.js',
-    'view-historical-wiki': './src/view-historical-wiki.js',
-    'community': './src/community.js',
-    'buy-me-a-beer': './src/buy-me-a-beer.js',
-    'beer-pay': './src/beer-pay.js',
-    'beer-complete': './src/beer-complete.js',
-    'change-password': './src/change-password.js',
-    'change-email': './src/change-email.js',
-    'password-reset-start': './src/password-reset-start.js',
-    'password-reset': './src/password-reset.js',
-    'success': './src/success.js',
-    'create-profile': './src/create-profile.js',
-    'email-reset': './src/email-reset.js',
-    'fail': './src/fail.js'
+    'home': './src/pages/index.js',
+    'create-wiki': './src/pages/create-wiki.js',
+    'wiki': './src/pages/wiki.js',
+    'register': './src/pages/register.js',
+    'login': './src/pages/login.js',
+    'edit-profile': './src/pages/edit-profile.js',
+    'search-results': './src/pages/search-results.js',
+    'history': './src/pages/history.js',
+    'view-profile': './src/pages/view-profile.js',
+    'view-historical-wiki': './src/pages/view-historical-wiki.js',
+    'community': './src/pages/community.js',
+    'buy-me-a-beer': './src/pages/buy-me-a-beer.js',
+    'beer-pay': './src/pages/beer-pay.js',
+    'beer-complete': './src/pages/beer-complete.js',
+    'change-password': './src/pages/change-password.js',
+    'change-email': './src/pages/change-email.js',
+    'password-reset-start': './src/pages/password-reset-start.js',
+    'password-reset': './src/pages/password-reset.js',
+    'success': './src/pages/success.js',
+    'create-profile': './src/pages/create-profile.js',
+    'email-reset': './src/pages/email-reset.js',
+    'fail': './src/pages/fail.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -44,133 +44,133 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ 
-        template: './src/index.html',
+        template: './src/pages/index.html',
         filename: 'index.html',
         chunks: ['home'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/create-wiki.html',
+        template: './src/pages/create-wiki.html',
         filename: 'create-wiki.html',
         chunks: ['create-wiki'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/wiki.html',
+        template: './src/pages/wiki.html',
         filename: 'wiki.html',
         chunks: ['wiki'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/register.html',
+        template: './src/pages/register.html',
         filename: 'register.html',
         chunks: ['register'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/login.html',
+        template: './src/pages/login.html',
         filename: 'login.html',
         chunks: ['login'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/edit-profile.html',
+        template: './src/pages/edit-profile.html',
         filename: 'edit-profile.html',
         chunks: ['edit-profile'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/search-results.html',
+        template: './src/pages/search-results.html',
         filename: 'search-results.html',
         chunks: ['search-results'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/history.html',
+        template: './src/pages/history.html',
         filename: 'history.html',
         chunks: ['history'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/view-profile.html',
+        template: './src/pages/view-profile.html',
         filename: 'view-profile.html',
         chunks: ['view-profile'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/view-historical-wiki.html',
+        template: './src/pages/view-historical-wiki.html',
         filename: 'view-historical-wiki.html',
         chunks: ['view-historical-wiki'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/community.html',
+        template: './src/pages/community.html',
         filename: 'community.html',
         chunks: ['community'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/buy-me-a-beer.html',
+        template: './src/pages/buy-me-a-beer.html',
         filename: 'buy-me-a-beer.html',
         chunks: ['buy-me-a-beer'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/beer-pay.html',
+        template: './src/pages/beer-pay.html',
         filename: 'beer-pay.html',
         chunks: ['beer-pay'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/beer-complete.html',
+        template: './src/pages/beer-complete.html',
         filename: 'beer-complete.html',
         chunks: ['beer-complete'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/change-password.html',
+        template: './src/pages/change-password.html',
         filename: 'change-password.html',
         chunks: ['change-password'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/change-email.html',
+        template: './src/pages/change-email.html',
         filename: 'change-email.html',
         chunks: ['change-email'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/password-reset-start.html',
+        template: './src/pages/password-reset-start.html',
         filename: 'password-reset-start.html',
         chunks: ['password-reset-start'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/password-reset.html',
+        template: './src/pages/password-reset.html',
         filename: 'password-reset.html',
         chunks: ['password-reset'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/success.html',
+        template: './src/pages/success.html',
         filename: 'success.html',
         chunks: ['success'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/create-profile.html',
+        template: './src/pages/create-profile.html',
         filename: 'create-profile.html',
         chunks: ['create-profile'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/email-reset.html',
+        template: './src/pages/email-reset.html',
         filename: 'email-reset.html',
         chunks: ['email-reset'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
-        template: './src/fail.html',
+        template: './src/pages/fail.html',
         filename: 'fail.html',
         chunks: ['fail'],
         favicon: './public/favicon.ico'

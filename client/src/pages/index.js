@@ -1,18 +1,16 @@
 /************************************************************
  * Import Bootstrap CSS and JavaScript
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import SearchIcon from './images/search_icon.svg';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
@@ -41,7 +39,7 @@ setNav();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { countries, sectors } from './constants/profile';
+import { countries, sectors } from '../constants/profile';
 
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
@@ -70,8 +68,8 @@ loadSectors();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
-import { showToast } from './utils/toast';
+import { setNotLoading } from '../utils/spinner';
+import { showToast } from '../utils/toast';
 
 const toastDiv = document.getElementById('toast');
 
@@ -94,8 +92,8 @@ if (emailResetFail) showToast(toastDiv, document.getElementById('toast-title'), 
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { submitSearch } from './utils/search';
-import { onLogout } from './api/auth';
+import { submitSearch } from '../utils/search';
+import { onLogout } from '../api/auth';
 
 const logoutLink = document.getElementById('logout-link');
 const submitButton = document.getElementById('submit');

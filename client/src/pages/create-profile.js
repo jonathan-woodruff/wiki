@@ -1,13 +1,13 @@
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 /************************************************************
  * Ensure the query params are valid. If so, log in
 ************************************************************/
-import { checkConfirmationURL, magicLogin } from './api/auth';
+import { checkConfirmationURL, magicLogin } from '../api/auth';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);

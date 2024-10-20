@@ -7,17 +7,16 @@ if (!isAuth) window.location.href = './login.html';
 /************************************************************
  * Import Bootstrap CSS and JavaScript
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
 
@@ -43,8 +42,8 @@ setNav();
 /************************************************************
  * Configure buttons
 ************************************************************/
-import UploadIcon from './images/upload.png';
-import PlusIcon from './images/plus.png';
+import UploadIcon from '../images/upload.png';
+import PlusIcon from '../images/plus.png';
 
 const configureButtons = () => {
   const upload = document.getElementById('upload-icon');
@@ -58,10 +57,9 @@ configureButtons();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { getProfileData, putProfile } from './api/main';
-import { SERVER_URL } from './constants/index';
-import { sectors, countries } from './constants/profile';
-import RemoveIcon from './images/remove.png';
+import { getProfileData, putProfile } from '../api/main';
+import { sectors, countries } from '../constants/profile';
+import RemoveIcon from '../images/remove.png';
 
 const serviceSection = document.getElementById('service-section');
 const descriptionInput = document.getElementById('description');
@@ -295,7 +293,7 @@ loadFields();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -306,9 +304,8 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { /*checkForCookie, */onLogout } from './api/auth';
-import { showToast } from './utils/toast';
+import { /*checkForCookie, */onLogout } from '../api/auth';
+import { showToast } from '../utils/toast';
 
 const pictureInput = document.getElementById('profile-picture');
 const saveButton = document.getElementById('save');

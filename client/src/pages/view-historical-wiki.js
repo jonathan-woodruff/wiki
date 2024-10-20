@@ -1,17 +1,16 @@
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
@@ -38,8 +37,8 @@ setNav();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { onViewHistoricalWiki } from './api/main';
-import { showToast } from './utils/toast';
+import { onViewHistoricalWiki } from '../api/main';
+import { showToast } from '../utils/toast';
 const toastDiv = document.getElementById('toast');
 
 const queryString = window.location.search;
@@ -149,7 +148,7 @@ const editor = new EditorJS({
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading } from '../utils/spinner';
 
 const showPage = () => {
     const spinnerDiv = document.getElementById('spinner');
@@ -164,8 +163,8 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { goToWiki } from './utils/wiki';
-import { onLogout } from './api/auth';
+import { goToWiki } from '../utils/wiki';
+import { onLogout } from '../api/auth';
 
 const logoutLink = document.getElementById('logout-link');
 const viewCurrentButton = document.getElementById('current');

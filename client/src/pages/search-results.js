@@ -1,17 +1,16 @@
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
@@ -38,7 +37,7 @@ setNav();
 /************************************************************
  * Configure other images
 ************************************************************/
-import SearchIcon from './images/search_icon.svg';
+import SearchIcon from '../images/search_icon.svg';
 
 const searchImg = document.getElementById('search-icon');
 searchImg.src = SearchIcon;
@@ -46,11 +45,11 @@ searchImg.src = SearchIcon;
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { getWikis } from './api/main';
-import { goToWiki } from './utils/wiki';
-import { countries, sectors } from './constants/profile';
+import { getWikis } from '../api/main';
+import { goToWiki } from '../utils/wiki';
+import { countries, sectors } from '../constants/profile';
 import Fuse from 'fuse.js';
-import { showToast } from './utils/toast';
+import { showToast } from '../utils/toast';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -269,7 +268,7 @@ searchWikis(searchPattern);
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading } from '../utils/spinner';
 
 const focusOnEngine = () => {
   searchEngine.focus();
@@ -290,8 +289,8 @@ spinner2Div.style.display = 'block'; //show spinner2
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { submitSearch } from './utils/search';
-import { onLogout } from './api/auth';
+import { submitSearch } from '../utils/search';
+import { onLogout } from '../api/auth';
 
 const submitButton = document.getElementById('submit');
 const searchDiv = document.getElementById('search-div');

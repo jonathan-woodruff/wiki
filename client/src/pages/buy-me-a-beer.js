@@ -1,17 +1,16 @@
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
@@ -38,8 +37,9 @@ setNav();
 /************************************************************
  * Configure images
 ************************************************************/
-import BeerAvatar from './images/beer_avatar.png';
-import Beer from './images/beer.png';
+import BeerAvatar from '../images/beer_avatar.png';
+import Beer from '../images/beer.png';
+
 const beerAvatar = document.getElementById('beer-avatar');
 const beerImage1 = document.getElementById('beer-image1');
 const beerImage2 = document.getElementById('beer-image2');
@@ -53,7 +53,7 @@ beerImage3.src = Beer;
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading } from '../utils/spinner';
 
 const showPage = () => {
     const spinnerDiv = document.getElementById('spinner');
@@ -68,8 +68,8 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onLogout } from './api/auth';
-import { showToast } from './utils/toast';
+import { onLogout } from '../api/auth';
+import { showToast } from '../utils/toast';
 
 const logoutLink = document.getElementById('logout-link');
 const customButton = document.getElementById('button-custom');

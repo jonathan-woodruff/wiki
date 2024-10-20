@@ -7,17 +7,16 @@ if (!isAuth) window.location.href = './login.html';
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar 
 ************************************************************/
-import Logo from './images/logo.png';
-import { configureNav } from './utils/navbar';
-import { refreshAvatar } from './utils/navbar';
+import Logo from '../images/logo.png';
+import { configureNav, refreshAvatar } from '../utils/navbar';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -42,7 +41,7 @@ setNav();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -53,10 +52,9 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { /*checkForCookie, */onLogout } from './api/auth';
-import { postCommunity } from './api/main';
-import { showToast } from './utils/toast';
+import { /*checkForCookie, */onLogout } from '../api/auth';
+import { postCommunity } from '../api/main';
+import { showToast } from '../utils/toast';
 
 const submitButton = document.getElementById('submit');
 const reasonInput = document.getElementById('reason');

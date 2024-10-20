@@ -1,17 +1,16 @@
 /************************************************************
  * Import Bootstrap CSS and JavaScript
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
@@ -38,10 +37,10 @@ setNav();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { onViewHistory } from './api/main';
-import { convertTimestamp } from './utils/time';
-import PeaceChicken from './images/peace_chicken.jpg';
-import { showToast } from './utils/toast';
+import { onViewHistory } from '../api/main';
+import { convertTimestamp } from '../utils/time';
+import PeaceChicken from '../images/peace_chicken.jpg';
+import { showToast } from '../utils/toast';
 
 const currentQueryString = window.location.search;
 const currentUrlParams = new URLSearchParams(currentQueryString);
@@ -183,7 +182,7 @@ loadPage();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading } from '../utils/spinner';
 
 const showPage = () => {
     const spinnerDiv = document.getElementById('spinner');
@@ -199,7 +198,7 @@ spinner2Div.style.display = 'block'; //show spinner2
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onLogout } from './api/auth';
+import { onLogout } from '../api/auth';
 
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');

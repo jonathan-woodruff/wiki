@@ -1,18 +1,18 @@
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, refreshAvatar } from './utils/navbar';
-import Logo from './images/logo.png';
-import { onLogout } from './api/auth';
-import { showToast } from './utils/toast';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
+import { onLogout } from '../api/auth';
+import { showToast } from '../utils/toast';
 
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');
@@ -66,7 +66,7 @@ toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast fini
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading } from '../utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');

@@ -1,17 +1,16 @@
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
@@ -38,8 +37,8 @@ setNav();
 /************************************************************
  * Configure other images
 ************************************************************/
-import EditIcon from './images/edit.png';
-import CancelIconGrey from './images/cancel_grey.png';
+import EditIcon from '../images/edit.png';
+import CancelIconGrey from '../images/cancel_grey.png';
 
 const editImg = document.getElementById('edit-icon');
 const cancelImg = document.getElementById('cancel-img');
@@ -49,8 +48,9 @@ cancelImg.src = CancelIconGrey;
 /************************************************************
  * Configure the editor
 ************************************************************/
-import { onViewWiki, onPutWiki } from './api/main';
-import { showToast } from './utils/toast';
+import { onViewWiki, onPutWiki } from '../api/main';
+import { showToast } from '../utils/toast';
+
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -168,7 +168,7 @@ displayWiki(wiki);
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const showPage = () => {
   const spinnerDiv = document.getElementById('spinner');
@@ -183,10 +183,9 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { arraysAreEqual } from './utils/index';
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import CancelIconWhite from './images/cancel_white.png';
-import { /*checkForCookie, */onLogout } from './api/auth';
+import { arraysAreEqual } from '../utils/index';
+import CancelIconWhite from '../images/cancel_white.png';
+import { /*checkForCookie, */onLogout } from '../api/auth';
 
 const cancelButton = document.getElementById('cancel');
 const confirmCancelButton = document.getElementById('confirm-cancel');

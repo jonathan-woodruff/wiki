@@ -1,17 +1,16 @@
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav } from './utils/navbar';
-import Logo from './images/logo.png';
-import { refreshAvatar } from './utils/navbar';
+import { configureNav, refreshAvatar } from '../utils/navbar';
+import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
 
@@ -38,8 +37,8 @@ setNav();
 /************************************************************
  * Load data from backend 
 ************************************************************/
-import { onViewProfile } from './api/main';
-import { showToast } from './utils/toast';
+import { onViewProfile } from '../api/main';
+import { showToast } from '../utils/toast';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -109,7 +108,7 @@ getData();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading } from '../utils/spinner';
 
 const showPage = () => {
     const spinnerDiv = document.getElementById('spinner');
@@ -124,7 +123,7 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onLogout } from './api/auth';
+import { onLogout } from '../api/auth';
 
 const logoutLink = document.getElementById('logout-link');
 const beerButton = document.getElementById('beer');

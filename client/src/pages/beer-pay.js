@@ -1,13 +1,12 @@
-import { createPaymentIntent } from './api/main';
-import { STRIPE_KEY } from './constants/index';
+import { createPaymentIntent } from '../api/main';
+import { STRIPE_KEY, CLIENT_URL } from '../constants/index';
 import { loadStripe } from '@stripe/stripe-js';
-import BeerCheers from './images/beer-cheers.png';
-import { CLIENT_URL } from './constants/index';
+import BeerCheers from '../images/beer-cheers.png';
 
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 const stripe = await loadStripe(STRIPE_KEY);

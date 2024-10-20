@@ -7,17 +7,16 @@ if (!isAuth) window.location.href = './login.html';
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
-import './scss/styles.scss'; //css
+import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
-import './css/buttons.css';
+import '../css/buttons.css';
 
 /************************************************************
  * Configure the navbar 
 ************************************************************/
-import Logo from './images/logo.png';
-import { configureNav } from './utils/navbar';
-import { refreshAvatar } from './utils/navbar';
+import Logo from '../images/logo.png';
+import { configureNav, refreshAvatar } from '../utils/navbar';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -118,8 +117,8 @@ const editor = new EditorJS({
 /************************************************************
  * Load data from backend
 ************************************************************/
-import { onPostWiki, getCreateWikiData } from './api/main';
-import { showToast } from './utils/toast';
+import { onPostWiki, getCreateWikiData } from '../api/main';
+import { showToast } from '../utils/toast';
 
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
@@ -170,7 +169,7 @@ loadData();
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading } from './utils/spinner';
+import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
@@ -181,8 +180,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { setLoadingButton, setNotLoadingButton } from './utils/spinner';
-import { /*checkForCookie, */onLogout } from './api/auth';
+import { /*checkForCookie, */onLogout } from '../api/auth';
 
 const button = document.getElementById('submit');
 const logoutLink = document.getElementById('logout-link');
