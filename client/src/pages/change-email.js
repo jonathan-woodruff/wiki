@@ -78,7 +78,7 @@ if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), do
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { onLogout, /*checkForCookie, */sendChangeEmail } from '../api/auth';
+import { onLogout, sendChangeEmail } from '../api/auth';
 import { setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const form = document.getElementById('form');
@@ -113,19 +113,6 @@ const handleEmailInput = () => {
     submitButton.disabled = false;
   }
 };
-
-/*const handlePageshow = async () => {
-    try {
-      await checkForCookie();
-    } catch(error) {
-      if ('response' in error && error.response.status === 401) {
-        localStorage.setItem('isAuth', 'false');
-        window.location.href = './login.html';
-      } else {
-        window.location.href = './fail.html';
-      }
-    }
-};*/
 
 const goSuccess = () => {
   const params = new URLSearchParams();
@@ -181,6 +168,5 @@ const hideToast = () => toastDiv.style.display = 'none';
 form.addEventListener('submit', saveEmail);
 emailInput.addEventListener('input', handleEmailInput);
 logoutLink.addEventListener('click', handleLogout);
-//window.addEventListener('pageshow', handlePageshow);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

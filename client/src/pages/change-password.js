@@ -52,7 +52,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { putPassword, /*checkForCookie, */onLogout } from '../api/auth';
+import { putPassword, onLogout } from '../api/auth';
 import { setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 import { showToast } from '../utils/toast';
 
@@ -168,19 +168,6 @@ const handlePasswordInput1 = (event) => {
   clearError(event);
 };
 
-/*const handlePageshow = async () => {
-    try {
-      await checkForCookie();
-    } catch(error) {
-      if ('response' in error && error.response.status === 401) {
-        localStorage.setItem('isAuth', 'false');
-        window.location.href = './login.html';
-      } else {
-        window.location.href = './fail.html';
-      }
-    }
-};*/
-
 const handleLogout = async () => {
   try {
     await onLogout();
@@ -205,6 +192,5 @@ currentPasswordInput.addEventListener('input', clearError);
 newPasswordInput1.addEventListener('input', handlePasswordInput1);
 newPasswordInput2.addEventListener('input', clearError);
 logoutLink.addEventListener('click', handleLogout);
-//window.addEventListener('pageshow', handlePageshow);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding

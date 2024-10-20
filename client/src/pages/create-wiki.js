@@ -179,7 +179,7 @@ setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { /*checkForCookie, */onLogout } from '../api/auth';
+import { onLogout } from '../api/auth';
 
 const button = document.getElementById('submit');
 const logoutLink = document.getElementById('logout-link');
@@ -246,19 +246,6 @@ const submitContent = async (event) => {
   }
 };
 
-/*const handlePageshow = async () => {
-  try {
-    await checkForCookie();
-  } catch(error) {
-    if ('response' in error && error.response.status === 401) {
-      localStorage.setItem('isAuth', 'false');
-      window.location.href = './login.html';
-    } else {
-      window.location.href = './fail.html';
-    }
-  }
-};*/
-
 const handleLogout = async () => {
   try {
     await onLogout();
@@ -284,7 +271,6 @@ const hideToast = () => toastDiv.style.display = 'none';
 
 button.addEventListener('click', submitContent);
 logoutLink.addEventListener('click', handleLogout);
-//window.addEventListener('pageshow', handlePageshow);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 titleInput.addEventListener('input', handleTitleInput);

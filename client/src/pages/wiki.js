@@ -185,7 +185,7 @@ showPage();
 ************************************************************/
 import { arraysAreEqual } from '../utils/index';
 import CancelIconWhite from '../images/cancel_white.png';
-import { /*checkForCookie, */onLogout } from '../api/auth';
+import { onLogout } from '../api/auth';
 
 const cancelButton = document.getElementById('cancel');
 const confirmCancelButton = document.getElementById('confirm-cancel');
@@ -210,7 +210,6 @@ const maxDescriptionLength = parseInt(maxLengthStr);
 const goEditMode = async () => {
   setLoadingButton(editButton, 'Working...');
   try {
-    //await checkForCookie();
     editor.readOnly.toggle();
     const editRow = document.getElementById('edit-row');
     editRow.classList.add('d-none');
