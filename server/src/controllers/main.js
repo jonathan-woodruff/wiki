@@ -1,7 +1,5 @@
 const { UserModel, WikisModel, WikiHistoryModel, CommunityModel, ErrorLogModel } = require('../models/index');
 const { parseServices } = require('../utils/index');
-const path = require('path');
-const fs = require('fs');
 const { STRIPE_KEY, EMAIL_ADDRESS, APP_PASSWORD } = require('../constants/index');
 const stripe = require('stripe')(STRIPE_KEY);
 const nodemailer = require('nodemailer');
@@ -83,85 +81,6 @@ exports.postWiki = async (req, res) => {
         await log.save();
         return;
     }
-    /*newWiki.save()
-    .then((savedWiki) => {
-        // post to the wiki history model
-        const user = req.user;
-        const newWikiHistory = new WikiHistoryModel({
-            wikiId: savedWiki._id,
-            authorUserId: user._id,
-            wikiObjectId: savedWiki._id,
-            authorUserObjectId: user._id,
-            changeDescription: 'created wiki',
-            contentTime: contentTime,
-            contentBlocks: contentBlocks,
-            contentVersion: contentVersion
-        });
-        newWikiHistory.save()
-        .then(() => {
-            // update the user model 
-            user.wikisCreated++;
-            user.save()
-            .then(() => {
-                return res.status(201).json({
-                    wikiID: savedWiki._id
-                });
-            })
-            .catch(() => {
-                return res.status(500).json({
-                    error: 'Server error: Could not update your user stats.'
-                });
-            })
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not save wiki history.'
-            });
-        })
-    })
-    .catch(() => {
-        return res.status(500).json({
-            error: 'Server error: Could not save wiki.'
-        });
-    })*/
-    /*try {
-        // post to the wiki model 
-        const newWiki = new WikisModel({
-            country: country,
-            sector: sector,
-            title: title,
-            contentTime: contentTime,
-            contentBlocks: contentBlocks,
-            contentVersion: contentVersion
-        });
-        const savedWiki = await newWiki.save();
-
-        // post to the wiki history model
-        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
-        const newWikiHistory = new WikiHistoryModel({
-            wikiId: savedWiki._id,
-            authorUserId: user._id,
-            wikiObjectId: savedWiki._id,
-            authorUserObjectId: user._id,
-            changeDescription: 'created wiki',
-            contentTime: contentTime,
-            contentBlocks: contentBlocks,
-            contentVersion: contentVersion
-        });
-        await newWikiHistory.save();
-
-        // update the user model 
-        user.wikisCreated++;
-        await user.save();
-
-        return res.status(201).json({
-            wikiID: savedWiki._id
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error: Could not save wiki properly.'
-        });
-    }*/
 };
 
 exports.getWikis = async (req, res) => {
@@ -197,8 +116,6 @@ exports.getWikis = async (req, res) => {
 exports.getProfileData = async (req, res) => {
     const user = req.user;
     if (user) {
-        //const avatarPath = path.resolve(`./public/avatars/${user.photo}`);
-        //const base64Avatar = fs.readFileSync(avatarPath, { encoding: 'base64' })
         return res.status(200).json({
             name: user.name,
             email: user.email,
@@ -221,33 +138,8 @@ exports.getProfileData = async (req, res) => {
     }
 };
 
-/*exports.postAvatar = async (req, res) => {
-    const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
-    try {
-        throw Error('');
-        user.photo = req.file.filename;
-        await user.save();
-        return res.status(200).json({
-            success: true,
-            message: 'updated avatar'
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error: Could not save profile pic.'
-        });
-        const log = new ErrorLogModel({
-            userId: user._id || '',
-            email: user.email || '',
-            functionName: 'postAvatar',
-            description: 'Could not save profile pic.'
-        });
-        await log.save();
-        return;
-    }
-};*/
-
 exports.updateProfile = async (req, res) => {
-    const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
+    const user = req.user;
     try {
         const avatarURL = req.body.avatarURL;
         if (avatarURL !== 'not changed') user.photo = req.body.avatarURL;
@@ -406,91 +298,6 @@ exports.publishWikiEdits = async (req, res) => {
         await log.save();
         return;
     }
-    /*WikisModel.findOne({ _id: wikiId }).exec()
-    .then((wiki) => {
-        wiki.contentTime = contentTime;
-        wiki.contentBlocks = contentBlocks;
-        wiki.contentVersion = contentVersion;
-        wiki.save()
-        .then(() => {
-            // add the wiki version to the wiki history model
-            const user = req.user;
-            const newWikiEdit = new WikiHistoryModel({
-                wikiId: wikiId,
-                authorUserId: user._id,
-                wikiObjectId: wikiId,
-                authorUserObjectId: user._id,
-                changeDescription: changeDescription,
-                contentTime: contentTime,
-                contentBlocks: contentBlocks,
-                contentVersion: contentVersion
-            });
-            newWikiEdit.save()
-            .then(() => {
-                // update the user model
-                user.wikiEdits++;
-                user.save()
-                .then(() => {
-                    return res.status(200).json({
-                        success: true,
-                        message: 'updated wiki'
-                    });
-                })
-                .catch(() => {
-                    return res.status(500).json({
-                        error: 'Server error: Could not save your user stats.'
-                    });
-                })
-            })
-            .catch(() => {
-                return res.status(500).json({
-                    error: 'Server error: Could not save wiki history.'
-                });
-            })
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not save wiki.'
-            });
-        })
-    })
-    .catch(() => {
-        return res.status(500).json({
-            error: 'Server error: Could not find wiki.'
-        });
-    })*/
-    /*try {
-        // update the wiki in the wikis model
-        const wiki = await WikisModel.findOne({ _id: wikiId }).exec();
-        wiki.contentTime = contentTime;
-        wiki.contentBlocks = contentBlocks;
-        wiki.contentVersion = contentVersion;
-        await wiki.save();
-        // add the wiki version to the wiki history model
-        const user = req.user; //await UserModel.findOne({ email: req.user.email }).exec();
-        const newWikiEdit = new WikiHistoryModel({
-            wikiId: wikiId,
-            authorUserId: user._id,
-            wikiObjectId: wikiId,
-            authorUserObjectId: user._id,
-            changeDescription: changeDescription,
-            contentTime: contentTime,
-            contentBlocks: contentBlocks,
-            contentVersion: contentVersion
-        });
-        await newWikiEdit.save();
-        // update the user model
-        user.wikiEdits++;
-        user.save();
-        return res.status(200).json({
-            success: true,
-            message: 'updated wiki'
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error: Could not save your edits.'
-        });
-    }*/
 };
 
 exports.getHistory = async (req, res) => {
@@ -554,82 +361,6 @@ exports.getHistory = async (req, res) => {
         await log.save();
         return;
     }
-    /*const wikiID = req.query.wiki;
-    WikisModel.findOne({ _id: wikiID }).exec()
-    .then((wiki) => {
-        WikiHistoryModel
-        .aggregate([
-            {
-                $match: { wikiId: wikiID }
-            },
-            {
-                $sort: { contentTime: -1 }
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'authorUserObjectId',
-                    foreignField: '_id',
-                    as: 'user'
-                }
-            }
-        ])
-        .exec()
-        .then((wikiHistory) => {
-            if (wiki && wikiHistory.length) {
-                return res.status(200).json({
-                    wiki: wiki,
-                    wikiHistory: wikiHistory
-                });
-            } else {
-                return res.status(500).json({
-                    error: 'Server error: Could not load wiki history.'
-                })
-            }
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not find wiki history.'
-            })
-        })
-    })
-    .catch(() => {
-        return res.status(500).json({
-            error: 'Server error: Could not find wiki.'
-        })
-    })*/
-    /*try {
-        const wikiID = req.query.wiki;
-        const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
-        const wikiHistory = await WikiHistoryModel
-        .aggregate([
-            {
-                $match: { wikiId: wikiID }
-            },
-            {
-                $sort: { contentTime: -1 }
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'authorUserObjectId',
-                    foreignField: '_id',
-                    as: 'user'
-                }
-            }
-        ])
-        .exec();
-        if (wiki && wikiHistory.length) {
-            return res.status(200).json({
-                wiki: wiki,
-                wikiHistory: wikiHistory
-            });
-        }
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error: Could not load wiki history.'
-        })
-    }*/
 };
 
 exports.getViewProfileData = async (req, res) => {
@@ -694,7 +425,6 @@ exports.getHistoricalWikiData = async (req, res) => {
 exports.postCommunity = async (req, res) => {
     const user = req.user;
     try {
-        //const user = await UserModel.findOne({ email: req.user.email }).exec();
         const newCommunityEntry = new CommunityModel({
             userId: user._id,
             userObjectId: user._id,

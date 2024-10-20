@@ -18,18 +18,6 @@ exports.protected = (req, res) => {
     res.status(200).json({
         success: true
     });
-    /*console.log(req.user);
-    console.log('y01');
-    if (req.user) {
-        console.log('di');
-        res.status(200).json({
-            isAuth: true
-        });
-    } /*else {
-        res.status(200).json({
-            isAuth: false
-        });
-    }*/
 };
 
 const base64Encode = (data) => {
@@ -135,66 +123,6 @@ exports.register = async (req, res) => {
         await log.save();
         return;
     }
-    /*hash(password, 10)
-    .then((hashedPassword) => {
-        const user = new UserModel({
-            name: name,
-            email: email,
-            password: hashedPassword,
-            isConfirmed: false
-        });
-        // Create a new user
-        user.save()
-        .then(() => {
-            // send an email for the user to finish registration
-            sendConfEmail(user)
-            .then(() => {
-                return res.status(201).json({
-                    success: true,
-                    error: ''
-                })
-            })
-            .catch(() => {
-                return res.status(500).json({
-                    error: 'Server error: Could not send confirmation email.'
-                });
-            })
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not sign you up.'
-            });
-        })
-    })
-    .catch(() => {
-        return res.status(500).json({
-            error: 'Server error: Could not complete API call.'
-        });
-    })*/
-    /*
-    try {
-        // Create a new user
-        const hashedPassword = await hash(password, 10);
-        const user = new UserModel({
-            name: name,
-            email: email,
-            password: hashedPassword,
-            isConfirmed: false
-        });
-        await user.save();
-
-        // send an email for the user to finish registration
-        await sendConfEmail(user);
-
-        res.status(201).json({
-            success: true,
-            error: ''
-        })
-    } catch(error) {
-        return res.status(500).json({
-            error: 'Server error: Could not complete sign up.'
-        });
-    };*/
 };
 
 exports.sendConfirmationEmail = async (req, res) => {
@@ -217,38 +145,6 @@ exports.sendConfirmationEmail = async (req, res) => {
         await log.save();
         return;
     }
-    /*UserModel.findOne({ email: req.body.email }).exec()
-    .then((user) => {
-        sendConfEmail(user)
-        .then(() => {
-            return res.status(201).json({
-                success: true,
-                error: ''
-            })
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not send confirmation email.'
-            });
-        })
-    })
-    .catch(() => {
-        return res.status(500).json({
-            error: 'Server error: Could not find your account.'
-        });
-    })*/
-    /*try {
-        const user = await UserModel.findOne({ email: req.body.email }).exec();
-        await sendConfEmail(user);
-        res.status(201).json({
-            success: true,
-            error: ''
-        })
-    } catch(error) {
-        return res.status(500).json({
-            error: 'could not send confirmation email'
-        });
-    }*/
 };
 
 exports.login = async (req, res) => {
@@ -361,67 +257,7 @@ exports.changePassword = async (req, res) => {
         await log.save();
         return;
     }
-    /*hash(password, 10)
-    .then((hashedPassword) => {
-        user.password = hashedPassword;
-        user.save()
-        .then(() => {
-            sendPasswordChangeEmail(user)
-            .then(() => {
-                return res.status(201).json({
-                    success: true,
-                    message: 'The password change was successful'
-                });
-            })
-            .catch(() => {
-                return res.status(500).json({
-                    error: 'Server error: Could not send email.'
-                });
-            })
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not complete password change.'
-            });
-        })
-    })
-    .catch(() => {
-        return res.status(500).json({
-            error: 'Server error: Could not complete API call.'
-        });
-    })*/
-    /*try {
-        const user = req.user;
-        const hashedPassword = await hash(password, 10);
-        user.password = hashedPassword;
-        await user.save();
-        await sendPasswordChangeEmail(user)
-        return res.status(201).json({
-            success: true,
-            message: 'The password change was successful'
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error: Could not complete password change.'
-        });
-    }*/
 };
-
-/*exports.updateUserName = async (req, res) => {
-    try {
-        const user = req.user;
-        user.name = req.body.name;
-        await user.save();
-        return res.status(200).json({
-            success: true,
-            message: 'updated user name'
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error. Could not update your name.'
-        });
-    }
-};*/
 
 exports.sendPasswordResetEmail = async (req, res) => {
     const email = req.body.email;
@@ -590,49 +426,6 @@ exports.resetPassword = async (req, res) => {
         await log.save();
         return;
     }
-    /*UserModel.findOne({ _id: userID }).exec()
-    .then((user) => {
-        hash(pw, 10)
-        .then((hashedPassword) => {
-            user.password = hashedPassword;
-            user.save()
-            .then(() => {
-                return res.status(201).json({
-                    success: true,
-                    message: 'The password reset was successful'
-                });
-            })
-            .catch(() => {
-                return res.status(500).json({
-                    error: 'Server error: Could not reset password.'
-                });
-            })
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not complete API call.'
-            });
-        })
-    })
-    .catch(() => {
-        res.status(500).json({
-            error: 'Server error: Could not find your account.'
-        });
-    })*/
-    /*try {
-        const user = await UserModel.findOne({ _id: userID }).exec();
-        const hashedPassword = await hash(pw, 10);
-        user.password = hashedPassword;
-        await user.save();
-        return res.status(201).json({
-            success: true,
-            message: 'The password reset was successful'
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error: Could not reset password.'
-        });
-    }*/
 };
 
 exports.checkConfirmationURL = async (req, res) => {
@@ -752,50 +545,6 @@ exports.magicLogin = async (req, res) => {
         await log.save();
         return;
     }
-    /*UserModel.findOne({ _id: userID }).exec()
-    .then((user) => {
-        const payload = {
-            id: user._id,
-            email: user.email
-        };
-        //create jwt token
-        sign(payload, SECRET)
-        .then((token) => {
-            return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
-                success: true,
-                error: '',
-                avatar: user.avatar
-            })
-        })
-        .catch(() => {
-            return res.status(500).json({
-                error: 'Server error: Could not log you in.'
-            });
-        })
-    })
-    .catch(() => {
-        return res.status(500).json({
-            error: 'Server error: Could not find your account.'
-        });
-    })*/
-    /*try {
-        const userID = base64Decode(req.body.ident);
-        const user = await UserModel.findOne({ _id: userID }).exec();
-        const payload = {
-            id: user._id,
-            email: user.email
-        };
-        const token = await sign(payload, SECRET); //create jwt token
-        return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
-            success: true,
-            error: '',
-            avatar: user.avatar
-        })
-    } catch(error) {
-        res.status(500).json({
-            error: 'could not log the user in'
-        });
-    }*/
 };
 
 exports.sendChangeEmail = async (req, res) => {

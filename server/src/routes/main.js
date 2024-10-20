@@ -1,14 +1,5 @@
 const { Router } = require('express');
 const router = Router();
-//const multer = require('multer');
-//const upload = multer({ dest: './uploads/' })
-/*const storage = multer.diskStorage({
-    destination: "./public/avatars",
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});*/
-//const upload = multer({ storage: storage });
 const { 
     postWiki, 
     getWikis, 
@@ -20,7 +11,6 @@ const {
     getHistory,
     getViewProfileData,
     getHistoricalWikiData,
-    //postAvatar,
     postCommunity,
     createPaymentIntent,
     sendEmail
@@ -37,7 +27,6 @@ router.put('/putWiki', userAuth, publishWikiEdits);
 router.get('/viewHistory', getHistory);
 router.get('/viewProfile', getViewProfileData);
 router.get('/viewHistoricalWiki', getHistoricalWikiData);
-//router.post('/postAvatar', userAuth, upload.single('avatar'), postAvatar);
 router.post('/postCommunity', userAuth, postCommunity);
 router.post('/createPaymentIntent', createPaymentIntent);
 router.post('/sendEmail', sendEmail);
