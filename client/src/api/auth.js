@@ -15,10 +15,6 @@ export async function onLogout() {
     return await axios.get(`${SERVER_URL}/auth/logout`);
 };
 
-export async function checkProtected() {
-    //return await axios.get(`${SERVER_URL}/auth/protected`);
-};
-
 export async function checkForCookie() {
     return await axios.get(`${SERVER_URL}/auth/checkForCookie`);
 };
@@ -26,10 +22,6 @@ export async function checkForCookie() {
 export async function putPassword(payload) {
     return await axios.put(`${SERVER_URL}/auth/changePassword`, payload);
 };
-
-/*export async function putUserName(payload) {
-    return await axios.put(`${SERVER_URL}/auth/updateUserName`, payload);
-};*/
 
 export async function putEmail(payload) {
     return await axios.put(`${SERVER_URL}/auth/updateUserEmail`, payload);

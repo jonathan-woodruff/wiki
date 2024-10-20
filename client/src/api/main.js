@@ -19,10 +19,6 @@ export async function putProfile(profileData) {
     return await axios.put(`${SERVER_URL}/main/updateProfile`, profileData);
 };
 
-/*export async function postAvatar(payload) {
-    return await axios.post(`${SERVER_URL}/main/postAvatar`, payload);
-};*/
-
 export async function getCreateWikiData() {
     return await axios.get(`${SERVER_URL}/main/getCreateWikiData`);
 };
