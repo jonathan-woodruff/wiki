@@ -135,60 +135,6 @@ const changePassword = async (event) => {
       }
     }
     setNotLoadingButton(submitButton, 'Change Password');
-    /*putPassword(payload)
-    .then(() => {
-      onLogout()
-      .then(() => {
-        localStorage.setItem('isAuth', 'false');
-        goLogin();
-      })
-      .catch((logoutError) => {
-        showToast(
-          toastDiv, 
-          document.getElementById('toast-title'), 
-          document.getElementById('toast-body'), 
-          'Something went wrong', 
-          'response' in logoutError ? logoutError.response.data.error : 'Check your internet connection.', 
-          false
-        );
-      })
-    })
-    .catch((pwError) => {
-      const errorMessage = 'response' in pwError ? pwError.response.data.error : 'Could not change password.';
-      errorElement.innerHTML = errorMessage;
-      errorElement.classList.remove('d-none')
-      if (errorMessage === 'Password must be between 6 and 15 characters') {
-          isNewPasswordError1 = true;
-          newPasswordInput1.classList.add('border-danger');
-      } else if (errorMessage === 'Incorrect current password') {
-          isCurrentPasswordError = true;
-          currentPasswordInput.classList.add('border-danger');
-      }
-    })
-    setNotLoadingButton(submitButton, 'Change Password');
-    */
-    /*try {
-        const payload = {
-            currentPassword: currentPasswordInput.value,
-            password: newPasswordInput1.value
-        };
-        await putPassword(payload);
-        await onLogout();
-        localStorage.setItem('isAuth', 'false');
-        goLogin();
-    } catch(error) {
-        const errorMessage = 'response' in error ? error.response.data.error : 'Could not change password.';
-        errorElement.innerHTML = errorMessage;
-        errorElement.classList.remove('d-none')
-        if (errorMessage === 'Password must be between 6 and 15 characters') {
-            isNewPasswordError1 = true;
-            newPasswordInput1.classList.add('border-danger');
-        } else if (errorMessage === 'Incorrect current password') {
-            isCurrentPasswordError = true;
-            currentPasswordInput.classList.add('border-danger');
-        }
-        setNotLoadingButton(submitButton, 'Change Password');
-    }*/
   }
 };
 

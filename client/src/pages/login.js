@@ -150,68 +150,6 @@ const login = async (event) => {
     }
     setNotLoadingButton(loginButton, 'Log In');
   }
-  /*const loginButton = document.getElementById('submit');
-  setLoadingButton(loginButton, 'Logging In...');
-  const credentials = {
-    email: emailInput.value,
-    password: passwordInput.value
-  };
-  onLogin(credentials)
-  .then(() => {
-    localStorage.setItem('isAuth', 'true');
-    localStorage.setItem('avatar', data.avatar || '');
-    goPlaces();
-  })
-  .catch((error) => {
-    let errorMessage = '';
-    if ('response' in error) errorMessage = error.response.data.error;
-    if (
-      errorMessage === 'Please enter a valid email address' 
-      || errorMessage === 'Email does not exist'
-      || errorMessage === 'Wrong password'
-    ) {
-      errorMessage = 'Incorrect email or password';
-    } else if (errorMessage === 'User is not confirmed') {
-      sendConfirmationEmail(credentials)
-      .then(() => {
-        goSuccess();
-      })
-      .catch((confError) => {
-        errorMessage = 'response' in confError ? confError.response.data.error : 'Error: Check your internet connection.'
-      })
-    }
-    errorElement.innerHTML = errorMessage;
-    errorElement.classList.remove('d-none');
-    setNotLoadingButton(loginButton, 'Log In');
-  })*/
-  /*try {
-    const { data } = await onLogin(credentials);
-    localStorage.setItem('isAuth', 'true');
-    localStorage.setItem('avatar', data.avatar || '');
-    goPlaces();
-  } catch(error) {
-    let shouldGoSuccess = false;
-    let errorMessage = '';
-    if ('response' in error) errorMessage = error.response.data.error.toLowerCase();
-    if (errorMessage.includes('email') || errorMessage.includes('password')) {
-      errorMessage = 'Incorrect email or password';
-    } else if (errorMessage === 'user is not confirmed') {
-      shouldGoSuccess = true;
-    } else {
-      errorMessage = 'Error: Could not log you in.';
-    }
-    if (shouldGoSuccess) {
-      try {
-        await sendConfirmationEmail(credentials);
-        goSuccess();
-      } catch(error) {
-        errorMessage = 'Error: Could not send your account confirmation email.'
-      }
-    };
-    errorElement.innerHTML = errorMessage;
-    errorElement.classList.remove('d-none');
-    setNotLoadingButton(loginButton, 'Log In');
-  };*/
 };
 
 const clearError = () => {

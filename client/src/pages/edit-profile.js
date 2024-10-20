@@ -355,16 +355,6 @@ const showPreview = (file) => {
   reader.readAsDataURL(file);
 };
 
-/*
-const getNumServices = (nodesList) => {
-  let count = 0;
-  nodesList.forEach(node => {
-    if (node.nodeType === 1) count++; //only count children that are elements, not things like comments or new line characters
-  });
-  return count;
-};
-*/
-
 const processServicesForBackend = () => {
   const services = [];
   let errorService = null;
@@ -391,22 +381,6 @@ const processServicesForBackend = () => {
   })
   return [services, errorService];
 };
-
-/* Reusable function for saving files to the backend
-const putPhoto = (event) => {
-  const url = new URL(form.action);
-  const formData = new FormData(form);
-
-  const fetchOptions = {
-    method: form.method,
-    body: formData
-  };
-
-  fetch(url, fetchOptions);
-
-  event.preventDefault();
-};
-*/
 
 const saveProfile = async (event) => {
   event.preventDefault();
@@ -458,16 +432,6 @@ const saveProfile = async (event) => {
         );
       }
     }
-    /*try {
-      const formData = new FormData();
-      formData.append('avatar', pictureInput.files[0])
-      await postAvatar(formData);
-    } catch(error) {
-      if (error.response.status === 401) {
-        localStorage.setItem('isAuth', 'false');
-        window.location.reload();
-      }
-    }*/
     setNotLoadingButton(saveButton, 'Save Profile');
   }
 };

@@ -43,7 +43,6 @@ setNav();
 ************************************************************/
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
-import ImageTool from '@editorjs/image';
 import SimpleImage from '@editorjs/simple-image';
 import Header from '@editorjs/header';
 import Table from '@editorjs/table';
@@ -245,52 +244,6 @@ const submitContent = async (event) => {
     titleInput.classList.add('border-danger');
     showError();
   }
-  /*setLoadingButton(button, 'Creating...');
-  editor.save()
-  .then((outputData) => {
-    const titleInput = document.getElementById('title');
-    const postData = {
-      country: countryInput.value,
-      sector: sectorInput.value,
-      title: titleInput.value,
-      article: outputData
-    };
-    onPostWiki(postData)
-    .then((response) => {
-      const wikiID = response.data.wikiID;
-      const params = new URLSearchParams();
-      params.append('wiki', wikiID);
-      const url = `./wiki.html?${params.toString()}`;
-      window.location.href = url;
-    })
-    .catch((error => {
-      if ('response' in error && error.response.status === 401) {
-        localStorage.setItem('isAuth', 'false');
-        window.location.reload();
-      } else {
-        showToast(
-          toastDiv, 
-          document.getElementById('toast-title'), 
-          document.getElementById('toast-body'), 
-          'Something went wrong', 
-          'response' in error ? error.response.data.error : 'Check your internet connection.', 
-          false
-        );
-      }
-      setNotLoadingButton(button, 'Create');
-    }))
-  })
-  .catch((error) => {
-    showToast(
-      toastDiv, 
-      document.getElementById('toast-title'), 
-      document.getElementById('toast-body'), 
-      'Something went wrong', 
-      'Editor error: Could not save changes.', 
-      false
-    );
-    setNotLoadingButton(button, 'Create');
-  });*/
 };
 
 /*const handlePageshow = async () => {

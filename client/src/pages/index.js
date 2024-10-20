@@ -16,9 +16,7 @@ const navRegisterButton = document.getElementById('nav-register-button');
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
-  //const searchImg = document.getElementById('search-icon');
   logoImg.src = Logo;
-  //searchImg.src = SearchIcon;
   const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
   refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };

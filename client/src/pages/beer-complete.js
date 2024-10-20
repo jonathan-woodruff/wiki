@@ -1,6 +1,5 @@
 import { STRIPE_KEY } from '../constants/index';
 import { loadStripe } from '@stripe/stripe-js';
-//import { sendPaymentConfirmationEmail } from './api/main';
 
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
@@ -77,9 +76,6 @@ async function setPaymentDetails(intent) {
     };
     await sendEmail(payload);
   }
-  //document.querySelector("#intent-id").textContent = intent.id;
-  //document.querySelector("#intent-status").textContent = intent.status;
-  //document.querySelector("#view-details").href = `https://dashboard.stripe.com/payments/${intent.id}`;
 }
 
 function setErrorState() {
@@ -88,7 +84,6 @@ function setErrorState() {
   document.querySelector("#status-text").textContent = "Something went wrong, please try again.";
   document.querySelector("#status-subtext").innerHTML = "";
   document.querySelector("#details-table").classList.add("hidden");
-  //document.querySelector("#view-details").classList.add("hidden");
 }
 
 // Stripe.js instance

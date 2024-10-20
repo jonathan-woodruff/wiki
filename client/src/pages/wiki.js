@@ -285,47 +285,6 @@ const publishEdits = async () => {
       );
     }
   }
-  /*
-  onPutWiki(putData)
-      .then((response) => {
-        refresh();
-      })
-      .catch((error) => {
-        publishModal.hide();
-        dontShowLoadingButton();
-        alert('Submit failed: ', error)
-      })
-  
-  editor.save()
-  .then((outputData) => {
-    const putData = {
-      wikiId: wikiID,
-      changeDescription: changeDescription.value,
-      article: outputData
-    };
-    const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
-    if (wikiChanged) {
-      onPutWiki(putData)
-      .then((response) => {
-        refresh();
-      })
-      .catch((error) => {
-        publishModal.hide();
-        dontShowLoadingButton();
-        alert('Submit failed: ', error)
-      })
-    } else { //no edits were made to the wiki, so there is nothing to save
-      publishModal.hide();
-      dontShowLoadingButton();
-      showNoEditsError();
-    }
-  })
-  .catch((error) => {
-    publishModal.hide();
-    dontShowLoadingButton();
-    alert('Saving failed: ', error);
-  });
-  */
 };
 
 const hideError = () => {
@@ -387,33 +346,6 @@ const checkPublish = async () => {
         false
       );
     }
-    /*editor.save()
-    .then((outputData) => {
-      const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
-      if (wikiChanged) {
-        editorData = outputData;
-        const publishModalDiv = document.getElementById('publish-modal');
-        publishModalDiv.style.display = 'block';
-        publishModal.show();
-        dontShowLoadingButton();
-      } else { //no edits were made to the wiki, so there is nothing to save
-        publishModal.hide();
-        dontShowLoadingButton();
-        showNoEditsError();
-      }
-    })
-    .catch((error) => {
-      publishModal.hide();
-      dontShowLoadingButton();
-      showToast(
-        toastDiv, 
-        document.getElementById('toast-title'), 
-        document.getElementById('toast-body'), 
-        'Something went wrong', 
-        'Editor error: Could not save your edits.', 
-        false
-      );
-    });*/
   }
 };
 
