@@ -64,6 +64,9 @@ const urlParams = new URLSearchParams(queryString);
 const wikiID = urlParams.get('wiki');
 const toastDiv = document.getElementById('toast');
 
+let isDescriptionError = false;
+let isNoEditsError = false;
+
 const getWiki = async () => {
   try {
     const { data } = await onViewWiki(wikiID);
@@ -98,7 +101,7 @@ const editor = new EditorJS({
   readOnly: true,
   data: editorData,
   onChange: (api, event) => {
-    hideNoEditsError();
+    if (isNoEditsError) hideNoEditsError();
   },
   tools: {
       underline: Underline,
@@ -249,15 +252,18 @@ const showNoEditsError = () => {
   errorRow.classList.remove('d-none');
   editorDiv.classList.add('border');
   editorDiv.classList.add('border-danger');
+  isNoEditsError = true;
 };
 
 const hideNoEditsError = () => {
   errorRow.classList.add('d-none');
   editorDiv.classList.remove('border');
   editorDiv.classList.remove('border-danger');
+  isNoEditsError = false;
 };
 
 const publishEdits = async () => {
+  clearAllErrors();
   showLoadingButton();
   const putData = {
     wikiId: wikiID,
@@ -290,6 +296,15 @@ const hideError = () => {
   errorRow.classList.add('d-none');
   changeDescription.classList.remove('border');
   changeDescription.classList.remove('border-danger');
+  isDescriptionError = false;
+};
+
+const showError = () => {
+  errorParagraph.innerHTML = 'Please describe the changes you made';
+  errorRow.classList.remove('d-none');
+  changeDescription.classList.add('border');
+  changeDescription.classList.add('border-danger');
+  isDescriptionError = true;
 };
 
 const showCharactersRemaining = () => {
@@ -307,16 +322,20 @@ const useGreyIcon = () => {
 };
 
 const handleDescriptionInput = () => {
-  hideError();
+  if (isDescriptionError) hideError();
   showCharactersRemaining();
+  
+};
+
+const clearAllErrors = () => {
+  hideError();
+  hideNoEditsError();
 };
 
 const checkPublish = async () => {
+  clearAllErrors();
   if (!changeDescription.value) {
-    errorParagraph.innerHTML = 'Please describe the changes you made';
-    errorRow.classList.remove('d-none');
-    changeDescription.classList.add('border');
-    changeDescription.classList.add('border-danger');
+    showError();
   } else {
     showLoadingButton();
     try {
