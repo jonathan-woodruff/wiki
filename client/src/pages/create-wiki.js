@@ -144,6 +144,8 @@ const loadSectors = (sectors) => {
 const loadData = async () => {
   try {
     const { data } = await getCreateWikiData();
+    countryInput.removeChild(document.getElementById('country-loading'));
+    sectorInput.removeChild(document.getElementById('sector-loading'));
     loadCountries(data.countries);
     loadSectors(data.sectors);
   } catch(error) {
