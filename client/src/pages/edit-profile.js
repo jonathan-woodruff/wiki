@@ -60,6 +60,7 @@ configureButtons();
 import { getProfileData, putProfile } from '../api/main';
 import { sectors, countries } from '../constants/profile';
 import RemoveIcon from '../images/remove.png';
+import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const serviceSection = document.getElementById('service-section');
 const descriptionInput = document.getElementById('description');
@@ -276,7 +277,21 @@ const loadFields = async () => {
     refreshAvatar(data.photo, holderElement, 'avatar', '200px');
     loadServices(data.services);
     loadDescription(data.description);
+
+    //show the page to the user
+    setNotLoading(
+      document.getElementById('spinner'), 
+      document.getElementById('main-container'), 
+      document.getElementById('navbar'), 
+      document.getElementById('footer')
+    );
   } catch(error) {
+    setNotLoading(
+      document.getElementById('spinner'), 
+      document.getElementById('main-container'), 
+      document.getElementById('navbar'), 
+      document.getElementById('footer')
+    );
     showToast(
       toastDiv, 
       document.getElementById('toast-title'), 
@@ -289,17 +304,6 @@ const loadFields = async () => {
 };
 
 loadFields();
-
-/************************************************************
- * Show the page to the user
-************************************************************/
-import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
-
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-const footer = document.getElementById('footer');
-setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 /************************************************************
  * All other JavaScript
@@ -330,14 +334,16 @@ const showAvatarError = () => {
 const handlePictureInput = () => {
   // Get the selected file
   const file = pictureInput.files[0];
-  if (file.size < 2000000) {
-    isAvatarUpdated = true;
-    hideAvatarError();
-    showPreview(file);
-    isAvatarError = false;
-  } else {
-    isAvatarError = true;
-    showAvatarError();
+  if (file) {
+    if (file.size < 2000000) {
+      isAvatarUpdated = true;
+      hideAvatarError();
+      showPreview(file);
+      isAvatarError = false;
+    } else {
+      isAvatarError = true;
+      showAvatarError();
+    }
   }
 };
 
