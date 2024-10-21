@@ -36,8 +36,10 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-setSources();
-setNav();
+if (!isAuth) {
+  setSources();
+  setNav();
+}
 
 /************************************************************
  * Show the page to the user
@@ -49,14 +51,14 @@ const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
-setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+if (!isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const passwordFail = urlParams.get('password-reset-fail') === 'true' ? true : false;
 const toastDiv = document.getElementById('toast');
 
-if (passwordFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try resetting your password again.', false);
+if (!isAuth && passwordFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try resetting your password again.', false);
 
 /************************************************************
  * All other JavaScript

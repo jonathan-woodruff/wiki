@@ -36,8 +36,10 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-setSources();
-setNav();
+if (isAuth) {
+  setSources();
+  setNav();
+}
 
 /************************************************************
  * Load data from backend 
@@ -56,7 +58,7 @@ const loadEmail = async () => {
   dbUserEmail = data.email || '';
 };
 
-loadEmail();
+if (isAuth) loadEmail();
 
 /************************************************************
  * Show the page to the user
@@ -68,14 +70,14 @@ const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
-setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+if (isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const emailSuccess = urlParams.get('email-reset-success') === 'true' ? true : false;
 const toastDiv = document.getElementById('toast');
 
-if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'You\'re all set.');;
+if (isAuth && emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'You\'re all set.');;
 
 /************************************************************
  * All other JavaScript

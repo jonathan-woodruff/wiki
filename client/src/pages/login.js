@@ -36,8 +36,10 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-setSources();
-setNav();
+if (!isAuth) {
+  setSources();
+  setNav();
+}
 
 /************************************************************
  * Show the page to the user
@@ -49,7 +51,7 @@ const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
-setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+if (!isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -59,13 +61,13 @@ const registrationFail = urlParams.get('registration-confirm-fail') === 'true' ?
 const registrationSuccess = urlParams.get('registration-confirm-success') === 'true' ? true : false;
 const toastDiv = document.getElementById('toast');
 
-if (passwordSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Password successfully changed!', 'Log in using your new password.');
+if (!isAuth && passwordSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Password successfully changed!', 'Log in using your new password.');
 
-if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'Log in using your new email.');
+if (!isAuth && emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'Log in using your new email.');
 
-if (registrationFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try logging in and confirming again', false);
+if (!isAuth && registrationFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try logging in and confirming again', false);
 
-if (registrationSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Account successfully created!', 'You can log in.');
+if (!isAuth && registrationSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Account successfully created!', 'You can log in.');
 
 /************************************************************
  * All other JavaScript

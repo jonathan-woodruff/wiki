@@ -35,8 +35,10 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-setSources();
-setNav();
+if (isAuth) {
+  setSources();
+  setNav();
+}
 
 /************************************************************
  * Show the page to the user
@@ -47,7 +49,7 @@ const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
-setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+if (isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 /************************************************************
  * All other JavaScript

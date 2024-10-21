@@ -35,8 +35,10 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-setSources();
-setNav();
+if (isAuth) {
+  setSources();
+  setNav();
+}
 
 /************************************************************
  * Configure the editor
@@ -165,7 +167,7 @@ const loadData = async () => {
   }
 };
 
-loadData();
+if (isAuth) loadData();
 
 /************************************************************
  * Show the page to the user
@@ -176,7 +178,7 @@ const spinnerDiv = document.getElementById('spinner');
 const mainContainer = document.getElementById('main-container');
 const navbar = document.getElementById('navbar');
 const footer = document.getElementById('footer');
-setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+if (isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 /************************************************************
  * All other JavaScript
@@ -222,12 +224,14 @@ const submitContent = async (event) => {
               false
             );
           }
+          setNotLoadingButton(button, 'Create');
         }
       } else {
         errorMessage.innerHTML = 'Please enter wiki content';
         isContentError = true;
         editorDiv.classList.add('border-danger');
         showError();
+        setNotLoadingButton(button, 'Create');
       }
     } catch(error) {
       showToast(
@@ -238,8 +242,8 @@ const submitContent = async (event) => {
         'Editor error: Could not save changes.', 
         false
       );
+      setNotLoadingButton(button, 'Create');
     }
-    setNotLoadingButton(button, 'Create');
   } else {
     errorMessage.innerHTML = 'Please enter a title';
     isTitleError = true;

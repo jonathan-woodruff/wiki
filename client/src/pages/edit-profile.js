@@ -36,8 +36,10 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-setSources();
-setNav();
+if (isAuth) {
+  setSources();
+  setNav();
+}
 
 /************************************************************
  * Configure buttons
@@ -52,7 +54,7 @@ const configureButtons = () => {
   plus.src = PlusIcon;
 };
 
-configureButtons();
+if (isAuth) configureButtons();
 
 /************************************************************
  * Load data from backend 
@@ -303,7 +305,7 @@ const loadFields = async () => {
   }
 };
 
-loadFields();
+if (isAuth) loadFields();
 
 /************************************************************
  * All other JavaScript

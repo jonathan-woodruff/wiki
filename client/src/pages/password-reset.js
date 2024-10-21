@@ -43,7 +43,7 @@ const showPage = async () => {
   }
 };
 
-showPage();
+if (!isAuth) showPage();
 
 /************************************************************
  * All other JavaScript

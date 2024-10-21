@@ -18,6 +18,7 @@ const amount = Number(urlParams.get('amount'));
 const items = [{ id: "beer", amount: amount }];
 
 let elements;
+let shouldShowPage = true;
 
 initialize();
 
@@ -26,29 +27,32 @@ document.getElementById('payment-form').addEventListener("submit", handleSubmit)
 // Fetches a payment intent and captures the client secret
 async function initialize() {
   //ensure the amount is valid
-  if (!(typeof(amount) === 'number' && amount >= 100 && Number.isInteger(amount))) window.location.href = './buy-me-a-beer.html';
+  if (!(typeof(amount) === 'number' && amount >= 100 && Number.isInteger(amount))) {
+    window.location.href = './buy-me-a-beer.html';
+    shouldShowPage = false;
+  } else {
+    const { data } = await createPaymentIntent(items);
+    const clientSecret = data.clientSecret;
+    const dpmCheckerLink = data.dpmCheckerLink;
 
-  const { data } = await createPaymentIntent(items);
-  const clientSecret = data.clientSecret;
-  const dpmCheckerLink = data.dpmCheckerLink;
+    const appearance = {
+      theme: 'stripe',
+    };
+    elements = stripe.elements({ appearance, clientSecret });
 
-  const appearance = {
-    theme: 'stripe',
-  };
-  elements = stripe.elements({ appearance, clientSecret });
+    const paymentElementOptions = {
+      layout: "tabs",
+    };
 
-  const paymentElementOptions = {
-    layout: "tabs",
-  };
+    const paymentElement = elements.create("payment", paymentElementOptions);
+    paymentElement.mount("#payment-element");
 
-  const paymentElement = elements.create("payment", paymentElementOptions);
-  paymentElement.mount("#payment-element");
+    //assign image source
+    document.getElementById('beer-cheers').src = BeerCheers
 
-  //assign image source
-  document.getElementById('beer-cheers').src = BeerCheers
-
-  //show the total amount the user is paying
-  document.getElementById('total').innerHTML += `$${(amount / 100).toFixed(2)}`;
+    //show the total amount the user is paying
+    document.getElementById('total').innerHTML += `$${(amount / 100).toFixed(2)}`;
+  }
 }
 
 const nameInput = document.getElementById('name');
@@ -139,7 +143,7 @@ const showPage = () => {
   spinnerDiv.style.display = 'none';
 };
 
-showPage();
+if (shouldShowPage) showPage();
 
 /************************************************************
  * All other JavaScript
