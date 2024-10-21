@@ -75,7 +75,12 @@
       <div class="row">
         <div class="col">
           <form id="form">
-            <p class="text-center mb-3">Your current email address: <span id="email-info" class="fw-bold"></span></p>
+            <p class="text-center mb-3">Your current email address: 
+              <span id="email-spinner" class="spinner-border" role="status">
+                <span style="visibility: hidden">Loading...</span>
+              </span>
+              <span id="email-info" class="fw-bold"></span>
+            </p>
             <div class="form-group d-grid col-sm-10 col-md-8 col-lg-6 mx-auto mb-3">
                 <label for="email">New email address</label>
                 <input type="email" class="form-control" id="email" placeholder="Enter new email">

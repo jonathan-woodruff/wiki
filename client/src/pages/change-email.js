@@ -50,6 +50,8 @@ let dbUserEmail = '';
 
 const loadEmail = async () => {
   const { data } = await getProfileData();
+  const emailSpinner = document.getElementById('email-spinner');
+  emailSpinner.style.display = 'none';
   emailSpan.innerHTML = data.email || '';
   dbUserEmail = data.email || '';
 };
@@ -117,7 +119,7 @@ const handleEmailInput = () => {
 const goSuccess = () => {
   const params = new URLSearchParams();
   params.append('header', 'One more step!')
-  params.append('message', 'Please click the verification link in the email we sent to ' + emailInput.value + '.');
+  params.append('message', 'Please click the verification link in the email I sent to ' + emailInput.value + '.');
   const url = `./success.html?${params.toString()}`;
   window.location.href = url;
 };
