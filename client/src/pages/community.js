@@ -72,6 +72,7 @@ let isAmountError = false;
 
 const handleSubmit = async (event) => {
     event.preventDefault();
+    clearAllErrors();
     const otherInput = document.getElementById('other');
     const payload = {
         reason: reasonInput.value,
@@ -131,6 +132,13 @@ const clearErrorMessage = () => {
 const resetErrorStates = () => {
   isReasonError = false;
   isAmountError = false;
+};
+
+const clearAllErrors = () => {
+  reasonInput.classList.remove('border-danger');
+  amountInput.classList.remove('border-danger');
+  clearErrorMessage();
+  resetErrorStates();
 };
 
 const clearError = (event) => {

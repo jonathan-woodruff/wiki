@@ -55,6 +55,7 @@ async function initialize() {
   }
 }
 
+const messageContainer = document.querySelector("#payment-message");
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 let isNameError = false;
@@ -62,6 +63,7 @@ let isEmailError = false;
 
 async function handleSubmit(e) {
   e.preventDefault();
+  clearErrors();
 
   if (nameInput.value && emailInput.value) {
     setLoading(true);
@@ -103,11 +105,18 @@ async function handleSubmit(e) {
   }
 }
 
+const clearErrors = () => {
+  isNameError = false;
+  isEmailError = false;
+  nameInput.classList.remove('border-danger');
+  emailInput.classList.remove('border-danger');
+  messageContainer.classList.add('hidden');
+  messageContainer.textContent = '';
+};
+
 // ------- UI helpers -------
 
 function showMessage(messageText) {
-  const messageContainer = document.querySelector("#payment-message");
-
   messageContainer.classList.remove("hidden");
   messageContainer.textContent = messageText;
 

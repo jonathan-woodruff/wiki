@@ -81,7 +81,7 @@ const goSuccess = () => {
 
 const registerUser = async (event) => {
   event.preventDefault();
-  clearErrorMessage();
+  clearAllErrors();
   if (nameInput.value && emailInput.value && passwordInput.value && checkboxInput.checked) {
     const registerButton = document.getElementById('submit');
     setLoadingButton(registerButton, 'Signing Up...');
@@ -138,6 +138,15 @@ const resetErrorStates = () => {
   isEmailError = false;
   isPasswordError = false;
   isCheckboxError = false;
+};
+
+const clearAllErrors = () => {
+  nameInput.classList.remove('border-danger');
+  emailInput.classList.remove('border-danger');
+  passwordInput.classList.remove('border-danger');
+  checkboxInput.classList.remove('border-danger');
+  clearErrorMessage();
+  resetErrorStates();
 };
 
 const clearError = (event) => {
