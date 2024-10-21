@@ -46,4 +46,8 @@ const handlePageLoad = async () => {
     }
 };
 
-handlePageLoad();
+if (ident && today && hash) {
+    handlePageLoad();
+} else {
+    window.location.href = './fail.html';
+}
