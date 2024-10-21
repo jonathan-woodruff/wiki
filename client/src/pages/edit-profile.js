@@ -101,12 +101,9 @@ const addCountryField = (rowElement) => {
   return countrySelect;
 };
 
-const clearServiceError = (event) => {
+const clearServiceErrorEvent = (event) => {
   const service = event.target.parentNode.parentNode;
-  service.classList.remove('border');
-  service.classList.remove('border-danger');
-  errorMessage.classList.add('d-none');
-  errorMessage.innerHTML = '';
+  clearServiceError(service);
 };
 
 const loadCountries = (countrySelectElement) => {
@@ -218,11 +215,13 @@ const removeService = (event) => {
   button.removeEventListener('click', removeService);
   const serviceToRemove = button.parentNode.parentNode;
   const countrySelect = serviceToRemove.children[0].children[1];
-  countrySelect.removeEventListener('input', clearServiceError);
+  countrySelect.removeEventListener('input', clearServiceErrorEvent);
   const sectorSelect = serviceToRemove.children[1].children[1];
-  sectorSelect.removeEventListener('input', clearServiceError);
+  sectorSelect.removeEventListener('input', clearServiceErrorEvent);
   const yearSelect = serviceToRemove.children[2].children[1];
-  yearSelect.removeEventListener('input', clearServiceError);
+  yearSelect.removeEventListener('input', clearServiceErrorEvent);
+
+  if (serviceToRemove === errorService) clearServiceError(errorService);
 
   serviceSection.removeChild(serviceToRemove)
 };
@@ -231,17 +230,17 @@ const addService = (countryValue='Select', sectorValue='Select', yearValue='Sele
   const row = addServiceRow();
 
   const countrySelect = addCountryField(row);
-  countrySelect.addEventListener('input', clearServiceError);
+  countrySelect.addEventListener('input', clearServiceErrorEvent);
   loadCountries(countrySelect);
   countrySelect.value = countryValue;
 
   const sectorSelect = addSectorField(row);
-  sectorSelect.addEventListener('input', clearServiceError);
+  sectorSelect.addEventListener('input', clearServiceErrorEvent);
   loadSectors(sectorSelect);
   sectorSelect.value = sectorValue;
 
   const yearSelect = addYearField(row);
-  yearSelect.addEventListener('input', clearServiceError);
+  yearSelect.addEventListener('input', clearServiceErrorEvent);
   loadYears(yearSelect);
   yearSelect.value = yearValue;
 
@@ -324,6 +323,7 @@ const beerButton = document.getElementById('beer');
 let isAvatarError = false;
 let isAvatarUpdated = false;
 let isNameError = false;
+let errorService = null;
 
 const hideAvatarError = () => {
   avatarErrorMessage.classList.add('d-none');
@@ -365,7 +365,6 @@ const showPreview = (file) => {
 
 const processServicesForBackend = () => {
   const services = [];
-  let errorService = null;
   let index = 0;
   serviceSection.childNodes.forEach(service => {
     if (service.nodeType === 1) { //the node is a real html element (which is a service)
@@ -392,17 +391,12 @@ const processServicesForBackend = () => {
 
 const saveProfile = async (event) => {
   event.preventDefault();
+  clearAllErrors();
   const [services, errorService] = processServicesForBackend();
   if (errorService) {
-    errorService.classList.add('border');
-    errorService.classList.add('border-danger');
-    errorMessage.innerHTML = 'Please complete your services';
-    errorMessage.classList.remove('d-none');
+    showServiceError(errorService);
   } else if (!userName.value) {
-    isNameError = true;
-    userName.classList.add('border-danger');
-    errorMessage.innerHTML = 'Please enter your name';
-    errorMessage.classList.remove('d-none');
+    showNameError();
   } else if (!isAvatarError) {
     setLoadingButton(saveButton, 'Saving...');
     const dataToSave = {
@@ -453,11 +447,46 @@ const clearErrorMessage = () => {
   errorMessage.innerHTML = '';
 };
 
+const showServiceError = (service) => {
+  service.classList.add('border');
+  service.classList.add('border-danger');
+  errorMessage.innerHTML = 'Please complete your services';
+  errorMessage.classList.remove('d-none');
+};
+
+const clearServiceBorder = (service) => {
+  service.classList.remove('border');
+  service.classList.remove('border-danger');
+};
+
+const clearServiceError = (service) => {
+  clearServiceBorder(service);
+  clearErrorMessage();
+  errorService = null;
+  if (!userName.value) showNameError();
+};
+
 const clearNameError = () => {
   if (isNameError) {
     userName.classList.remove('border-danger');
     clearErrorMessage();
     isNameError = false;
+    if (errorService) showServiceError(errorService);
+  }
+};
+
+const showNameError = () => {
+  userName.classList.add('border-danger');
+  errorMessage.innerHTML = 'Please enter your name';
+  errorMessage.classList.remove('d-none');
+  isNameError = true;
+};
+
+const clearAllErrors = () => {
+  clearNameError();
+  if (errorService) {
+    clearServiceBorder(errorService);
+    errorService = null;
   }
 };
 
