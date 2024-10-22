@@ -98,8 +98,7 @@ const goPlaces = () => {
     'view-historical-wiki', 
     'view-profile', 
     'wiki',
-    'buy-me-a-beer',
-    'password-reset-start'
+    'buy-me-a-beer'
   ];
   const url = pages.includes(prevPageName) ? getURL(params, prevPageName) : './index.html';
   window.location.href = url;
