@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { MONGO_URL } = require('../constants/index');
+const { MONGO_URL, DB_NAME } = require('../constants/index');
 
 class Database {
   constructor() {
@@ -8,7 +8,7 @@ class Database {
 
   _connect() {
     mongoose 
-    .connect(MONGO_URL, {
+    .connect(MONGO_URL + DB_NAME, {
 
     })   
     .then(() => console.log("Database connected!"))
