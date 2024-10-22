@@ -43,7 +43,11 @@ const showPage = async () => {
   }
 };
 
-if (!isAuth) showPage();
+if (!isAuth && ident && today && hash) {
+  showPage();
+} else {
+  window.location.href = './fail.html';
+}
 
 /************************************************************
  * All other JavaScript
