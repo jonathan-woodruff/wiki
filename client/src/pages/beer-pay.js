@@ -18,18 +18,25 @@ const amount = Number(urlParams.get('amount'));
 const items = [{ id: "beer", amount: amount }];
 
 let elements;
-let shouldShowPage = true;
 
 initialize();
 
 document.getElementById('payment-form').addEventListener("submit", handleSubmit);
+
+const showPage = () => {
+  const spinnerDiv = document.getElementById('spinner');
+  const mainContainer = document.getElementById('main-container');
+  const footer = document.getElementById('footer');
+  footer.style.display = 'block';
+  mainContainer.style.display = 'block';
+  spinnerDiv.style.display = 'none';
+};
 
 // Fetches a payment intent and captures the client secret
 async function initialize() {
   //ensure the amount is valid
   if (!(typeof(amount) === 'number' && amount >= 100 && Number.isInteger(amount))) {
     window.location.href = './buy-me-a-beer.html';
-    shouldShowPage = false;
   } else {
     const { data } = await createPaymentIntent(items);
     const clientSecret = data.clientSecret;
@@ -52,6 +59,8 @@ async function initialize() {
 
     //show the total amount the user is paying
     document.getElementById('total').innerHTML += `$${(amount / 100).toFixed(2)}`;
+
+    showPage();
   }
 }
 
@@ -139,20 +148,6 @@ function setLoading(isLoading) {
     document.querySelector("#button-text").classList.remove("hidden");
   }
 }
-
-/************************************************************
- * Show the page to the user
-************************************************************/
-const showPage = () => {
-  const spinnerDiv = document.getElementById('spinner');
-  const mainContainer = document.getElementById('main-container');
-  const footer = document.getElementById('footer');
-  footer.style.display = 'block';
-  mainContainer.style.display = 'block';
-  spinnerDiv.style.display = 'none';
-};
-
-if (shouldShowPage) showPage();
 
 /************************************************************
  * All other JavaScript
