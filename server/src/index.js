@@ -26,9 +26,10 @@ app.use('/main', mainRoutes);
 
 //app start
 const appStart = () => {
+    const myPort = PORT || '8000';
     try {
-        app.listen(PORT, () => {
-            console.log(`The app is running at http://localhost:${PORT} `)
+        app.listen(myPort, () => {
+            console.log(`The app is running on port ${PORT} `)
         })
     } catch(error) {
         console.log(`Error: ${error.message}`)
