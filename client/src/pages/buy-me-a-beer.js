@@ -157,8 +157,10 @@ const handleButtonClick = (event) => {
         beerCheers.innerHTML = 'Cheeeeeeeeers!'
         //set button as selected
         selectedButton = 'custom';
-        //disable continueButton if input field is empty
-        if (customAmountInput.value === '') disableContinueButton();
+        //focus on the amount input
+        customAmountInput.focus();
+        hideCustomInputError();
+        enableContinueButton();
     }
     beerImagesDiv.style.display = '';
 };
