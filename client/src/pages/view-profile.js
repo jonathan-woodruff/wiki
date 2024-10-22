@@ -39,6 +39,7 @@ setNav();
 ************************************************************/
 import { onViewProfile } from '../api/main';
 import { showToast } from '../utils/toast';
+import { setNotLoading } from '../utils/spinner';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -82,6 +83,14 @@ const showActivity = (numWikisCreated, numWikiEdits) => {
     wikiEditsLI.innerHTML = '# wiki edits: ' + numWikiEdits; 
 };
 
+const showPage = () => {
+    const spinnerDiv = document.getElementById('spinner');
+    const mainContainer = document.getElementById('main-container');
+    const navbar = document.getElementById('navbar');
+    const footer = document.getElementById('footer');
+    setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+};
+
 const getData = async () => {
     try {
         const { data } = await onViewProfile(userID);
@@ -91,6 +100,7 @@ const getData = async () => {
         showDescription(data.description);
         showServices(data.services);
         showActivity(data.wikisCreated, data.wikiEdits);
+        showPage(); //show page to the user
     } catch(error) {
         showToast(
             toastDiv, 
@@ -104,21 +114,6 @@ const getData = async () => {
 };
 
 getData();
-
-/************************************************************
- * Show the page to the user
-************************************************************/
-import { setNotLoading } from '../utils/spinner';
-
-const showPage = () => {
-    const spinnerDiv = document.getElementById('spinner');
-    const mainContainer = document.getElementById('main-container');
-    const navbar = document.getElementById('navbar');
-    const footer = document.getElementById('footer');
-    setNotLoading(spinnerDiv, mainContainer, navbar, footer);
-};
-
-showPage();
 
 /************************************************************
  * All other JavaScript
