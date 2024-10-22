@@ -1,5 +1,6 @@
 import { STRIPE_KEY } from '../constants/index';
 import { loadStripe } from '@stripe/stripe-js';
+import { sendEmail } from '../api/main';
 
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
@@ -43,7 +44,7 @@ async function setPaymentDetails(intent) {
   switch (intent.status) {
     case "succeeded":
       statusText = "Payment succeeded";
-      statusSubtext = "Jonathan says, thank you!!! I'll send you an email confirmation."
+      statusSubtext = "Thank you!!! I'll send you an email confirmation."
       iconColor = "#30B130";
       icon = SuccessIcon;
       shouldSendEmail = true;
