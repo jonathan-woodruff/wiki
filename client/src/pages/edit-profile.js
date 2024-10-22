@@ -70,6 +70,11 @@ const userName = document.getElementById('name');
 const addServiceButton = document.getElementById('add-service');
 const holderElement = document.getElementById('avatar-holder');
 
+let isNameError = false;
+let servicesAreEmpty = false;
+let errorService = null;
+let services = [];
+
 const addServiceRow = () => {
   const row = document.createElement('div');
   row.classList.add('row');
@@ -104,6 +109,7 @@ const addCountryField = (rowElement) => {
 const clearServiceErrorEvent = (event) => {
   const service = event.target.parentNode.parentNode;
   clearServiceError(service);
+  clearEmptyServicesError();
 };
 
 const loadCountries = (countrySelectElement) => {
@@ -250,6 +256,7 @@ const addService = (countryValue='Select', sectorValue='Select', yearValue='Sele
 
 const onAddService = (event) => {
   event.preventDefault();
+  clearEmptyServicesError();
   addService();
 };
 
@@ -322,8 +329,6 @@ const beerButton = document.getElementById('beer');
 
 let isAvatarError = false;
 let isAvatarUpdated = false;
-let isNameError = false;
-let errorService = null;
 
 const hideAvatarError = () => {
   avatarErrorMessage.classList.add('d-none');
@@ -364,7 +369,7 @@ const showPreview = (file) => {
 };
 
 const processServicesForBackend = () => {
-  const services = [];
+  services = [];
   let index = 0;
   serviceSection.childNodes.forEach(service => {
     if (service.nodeType === 1) { //the node is a real html element (which is a service)
@@ -392,9 +397,11 @@ const processServicesForBackend = () => {
 const saveProfile = async (event) => {
   event.preventDefault();
   clearAllErrors();
-  const [services, errorService] = processServicesForBackend();
+  [services, errorService] = processServicesForBackend();
   if (errorService) {
     showServiceError(errorService);
+  } else if (!services.length) {
+    showEmptyServicesError();
   } else if (!userName.value) {
     showNameError();
   } else if (!isAvatarError) {
@@ -463,7 +470,29 @@ const clearServiceError = (service) => {
   clearServiceBorder(service);
   clearErrorMessage();
   errorService = null;
-  if (!userName.value) showNameError();
+  if (!services.length) {
+    showEmptyServicesError()
+  } else if (!userName.value) {
+    showNameError();
+  }
+};
+
+const clearEmptyServicesError = () => {
+  if (servicesAreEmpty) {
+    clearErrorMessage();
+    servicesAreEmpty = false;
+    if (errorService) {
+      showServiceError(errorService);
+    } else if (!userName.value) {
+      showNameError();
+    }
+  }
+};
+
+const showEmptyServicesError = () => {
+  errorMessage.innerHTML = 'Please complete your services';
+  errorMessage.classList.remove('d-none');
+  servicesAreEmpty = true;
 };
 
 const clearNameError = () => {
@@ -471,7 +500,11 @@ const clearNameError = () => {
     userName.classList.remove('border-danger');
     clearErrorMessage();
     isNameError = false;
-    if (errorService) showServiceError(errorService);
+    if (!services.length) {
+      showEmptyServicesError();
+    } else if (errorService) {
+      showServiceError(errorService);
+    }
   }
 };
 
@@ -484,6 +517,7 @@ const showNameError = () => {
 
 const clearAllErrors = () => {
   clearNameError();
+  clearEmptyServicesError();
   if (errorService) {
     clearServiceBorder(errorService);
     errorService = null;
