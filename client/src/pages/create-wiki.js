@@ -16,11 +16,16 @@ import '../css/buttons.css';
  * Configure the navbar 
 ************************************************************/
 import Logo from '../images/logo.png';
+import Info from '../images/info.png';
 import { configureNav, refreshAvatar } from '../utils/navbar';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
+  const countryInfo = document.getElementById('country-info');
+  const sectorInfo = document.getElementById('sector-info');
   logoImg.src = Logo;
+  countryInfo.src = Info;
+  sectorInfo.src = Info;
   const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
   refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
