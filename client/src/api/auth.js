@@ -4,6 +4,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true; //send the cookie back to the server with token
 
 export async function onRegister(credentials) {
+    console.log(SERVER_URL);
     return await axios.post(`${SERVER_URL}/auth/register`, credentials);
 };
 
