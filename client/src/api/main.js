@@ -12,7 +12,6 @@ export async function getWikis(selectedCountry, selectedSector) {
 };
 
 export async function getProfileData() {
-    console.log(SERVER_URL);
     return await axios.get(`${SERVER_URL}/main/getProfileData`);
 };
 
