@@ -4,7 +4,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true; //send the cookie back to the server with token
 
 export async function onRegister(credentials) {
-    return await axios.post(`${SERVER_URL}/auth/register`, credentials);
+    return await axios.post(`https://wiki-web-service.onrender.com/auth/register`, credentials);
 };
 
 export async function onLogin(credentials) {
