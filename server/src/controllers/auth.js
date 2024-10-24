@@ -154,8 +154,8 @@ exports.login = async (req, res) => {
             id: user._id,
             email: user.email
         };
-        const token = await sign(payload, SECRET, { expiresIn: 60 * 60 * 24 * 365 }); //create jwt token expiry 1 year
-        return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
+        const token = await sign(payload, SECRET); //create jwt token
+        return res.status(200).cookie('token', token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 365 }).json({ //send the user a cookie
             avatar: user.photo
         })
     } catch(error) {
@@ -176,7 +176,7 @@ exports.login = async (req, res) => {
 //delete the cookie
 exports.logout = async (req, res) => {
     try {
-        return res.status(200).clearCookie('token', { httpOnly: true, secure: true }).json({
+        return res.status(200).clearCookie('token', { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 365 }).json({
             success: true,
             message: 'Logged out successfully'
         });
@@ -515,8 +515,8 @@ exports.magicLogin = async (req, res) => {
                 email: user.email
             };
             //create jwt token
-            const token = await sign(payload, SECRET, { expiresIn: 60 * 60 * 24 * 365 });
-            return res.status(200).cookie('token', token, { httpOnly: true, secure: true }).json({ //send the user a cookie
+            const token = await sign(payload, SECRET);
+            return res.status(200).cookie('token', token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 365 }).json({ //send the user a cookie
                 success: true,
                 error: '',
                 avatar: user.avatar
