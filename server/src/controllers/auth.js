@@ -155,7 +155,7 @@ exports.login = async (req, res) => {
             email: user.email
         };
         const token = await sign(payload, SECRET); //create jwt token
-        return res.status(200).cookie('token', token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 365 }).json({ //send the user a cookie
+        return res.status(200).cookie('token', token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 30 }).json({ //send the user a cookie
             avatar: user.photo
         })
     } catch(error) {
@@ -176,7 +176,7 @@ exports.login = async (req, res) => {
 //delete the cookie
 exports.logout = async (req, res) => {
     try {
-        return res.status(200).clearCookie('token', { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 365 }).json({
+        return res.status(200).clearCookie('token', { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 30 }).json({
             success: true,
             message: 'Logged out successfully'
         });
@@ -516,7 +516,7 @@ exports.magicLogin = async (req, res) => {
             };
             //create jwt token
             const token = await sign(payload, SECRET);
-            return res.status(200).cookie('token', token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 365 }).json({ //send the user a cookie
+            return res.status(200).cookie('token', token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 30 }).json({ //send the user a cookie
                 success: true,
                 error: '',
                 avatar: user.avatar

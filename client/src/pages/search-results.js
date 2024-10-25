@@ -110,12 +110,16 @@ const showPreview = (contentBlocks) => {
   let blockIndex = 0;
   while (!reachedPreviewLimit && blockIndex < contentBlocks.length) {
     let block = contentBlocks[blockIndex];
-    if (block.type === 'paragraph') {
+    if (block.type === 'paragraph' || block.type === 'header' || block.type === 'quote') {
       preview += block.data.text + ' ';
-      if (preview.length > previewLimit) {
-        preview = preview.slice(0, previewLimit);
-        reachedPreviewLimit = true;
-      }
+    } else if (block.type === 'list') {
+      block.data.items.forEach((item) => {
+        preview += item.content + ' ';
+      })
+    }
+    if (preview.length > previewLimit) {
+      preview = preview.slice(0, previewLimit);
+      reachedPreviewLimit = true;
     }
     blockIndex++;
   }
