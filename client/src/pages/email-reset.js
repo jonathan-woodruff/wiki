@@ -53,4 +53,8 @@ const handlePageLoad = async () => {
     }
 };
 
-handlePageLoad();
+if (ident && today && newEmail && hash) {
+    handlePageLoad();
+} else {
+    window.location.href = './fail.html';
+}

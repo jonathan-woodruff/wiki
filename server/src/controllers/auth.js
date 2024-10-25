@@ -15,7 +15,7 @@ const datefns = require('date-fns');
 const { createHmac } = require('node:crypto');
 
 exports.protected = (req, res) => {
-    res.status(200).json({
+    return res.status(200).json({
         success: true
     });
 };

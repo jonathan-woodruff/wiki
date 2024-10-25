@@ -2,4 +2,5 @@ export const SERVER_URL = 'https://api.peacechickens.com'; //'http://localhost:8
 export const CLIENT_URL = 'https://www.peacechickens.com'; //'http://localhost:8080';
 
 export const STRIPE_KEY = 'pk_live_51KvnDxQKwyW3kPTW1OaqSCK0O7KO3F6afYI2Dq8bkVJFYMfpiCosl8l8HXMl8bs6Swv6S1EUoQBPfsGmRrt0x2pB00C7zAaB1I';
-//'pk_test_51KvnDxQKwyW3kPTWa3Ng76cvf0duAnAtDB237GuVfr1xvlaRowgh7lfvER6e7afKJptiBog7UfnWc1ZUrGl5kvCq00BROAeKp5';
+//
+//'pk_test_51KvnDxQKwyW3kPTWa3Ng76cvf0duAnAtDB237GuVfr1xvlaRowgh7lfvER6e7afKJptiBog7UfnWc1ZUrGl5kvCq00BROAeKp5'

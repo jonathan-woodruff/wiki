@@ -1,10 +1,4 @@
 /************************************************************
- * Ensure the user is authenticated 
-************************************************************/
-const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
-if (!isAuth) window.location.href = './login.html';
-
-/************************************************************
  * Import Bootstrap CSS and JavaScript
 ************************************************************/
 import '../scss/styles.scss'; //css
@@ -13,57 +7,20 @@ import * as bootstrap from 'bootstrap'; //js
 import '../css/buttons.css';
 
 /************************************************************
- * Configure the navbar
+ * Functions and variables
 ************************************************************/
+import { checkForCookie } from '../api/auth';
 import { configureNav, refreshAvatar } from '../utils/navbar';
 import Logo from '../images/logo.png';
-
-const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
-
-const setSources = () => {
-  const logoImg = document.getElementById('logo-img');
-  logoImg.src = Logo;
-  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
-};
-
-const setNav = () => {
-  const navCreateLI = document.getElementById('nav-create-li');
-  const navCreateA = document.getElementById('nav-create-a');
-  const navCommunityLI = document.getElementById('nav-community-li');
-  const navCommunityA = document.getElementById('nav-community-a');
-  const navDropdown = document.getElementById('nav-dropdown');
-  const navRegisterButton = document.getElementById('nav-register-button');
-  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
-};
-
-if (isAuth) {
-  setSources();
-  setNav();
-}
-
-/************************************************************
- * Configure buttons
-************************************************************/
 import UploadIcon from '../images/upload.png';
 import PlusIcon from '../images/plus.png';
-
-const configureButtons = () => {
-  const upload = document.getElementById('upload-icon');
-  const plus = document.getElementById('plus-icon');
-  upload.src = UploadIcon;
-  plus.src = PlusIcon;
-};
-
-if (isAuth) configureButtons();
-
-/************************************************************
- * Load data from backend 
-************************************************************/
 import { getProfileData, putProfile } from '../api/main';
 import { sectors, countries } from '../constants/profile';
 import RemoveIcon from '../images/remove.png';
 import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
+const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
 const serviceSection = document.getElementById('service-section');
 const descriptionInput = document.getElementById('description');
 const userName = document.getElementById('name');
@@ -104,6 +61,59 @@ const addCountryField = (rowElement) => {
   countrySelect.ariaLabel = 'Country where you served';
   countryDiv.appendChild(countrySelect);
   return countrySelect;
+};
+
+const clearServiceBorder = (service) => {
+  service.classList.remove('border');
+  service.classList.remove('border-danger');
+};
+
+const showNameError = () => {
+  userName.classList.add('border-danger');
+  errorMessage.innerHTML = 'Please enter your name';
+  errorMessage.classList.remove('d-none');
+  isNameError = true;
+};
+
+const showEmptyServicesError = () => {
+  errorMessage.innerHTML = 'Please complete your services';
+  errorMessage.classList.remove('d-none');
+  servicesAreEmpty = true;
+};
+
+const clearErrorMessage = () => {
+  errorMessage.classList.add('d-none');
+  errorMessage.innerHTML = '';
+};
+
+const clearServiceError = (service) => {
+  clearServiceBorder(service);
+  clearErrorMessage();
+  errorService = null;
+  if (!services.length) {
+    showEmptyServicesError()
+  } else if (!userName.value) {
+    showNameError();
+  }
+};
+
+const showServiceError = (service) => {
+  service.classList.add('border');
+  service.classList.add('border-danger');
+  errorMessage.innerHTML = 'Please complete your services';
+  errorMessage.classList.remove('d-none');
+};
+
+const clearEmptyServicesError = () => {
+  if (servicesAreEmpty) {
+    clearErrorMessage();
+    servicesAreEmpty = false;
+    if (errorService) {
+      showServiceError(errorService);
+    } else if (!userName.value) {
+      showNameError();
+    }
+  }
 };
 
 const clearServiceErrorEvent = (event) => {
@@ -278,40 +288,78 @@ const loadName = (nameOfUser) => {
   userName.value = nameOfUser || '';
 };
 
-const loadFields = async () => {
-  try {
-    const { data } = await getProfileData();
-    loadName(data.name);
-    refreshAvatar(data.photo, holderElement, 'avatar', '200px');
-    loadServices(data.services);
-    loadDescription(data.description);
-
-    //show the page to the user
-    setNotLoading(
-      document.getElementById('spinner'), 
-      document.getElementById('main-container'), 
-      document.getElementById('navbar'), 
-      document.getElementById('footer')
-    );
-  } catch(error) {
-    setNotLoading(
-      document.getElementById('spinner'), 
-      document.getElementById('main-container'), 
-      document.getElementById('navbar'), 
-      document.getElementById('footer')
-    );
-    showToast(
-      toastDiv, 
-      document.getElementById('toast-title'), 
-      document.getElementById('toast-body'), 
-      'Something went wrong', 
-      'response' in error ? error.response.data.error : 'Check your internet connection.', 
-      false
-    );
-  }
+const setSources = () => {
+  const logoImg = document.getElementById('logo-img');
+  logoImg.src = Logo;
+  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
 };
 
-if (isAuth) loadFields();
+const setNav = () => {
+  const navCreateLI = document.getElementById('nav-create-li');
+  const navCreateA = document.getElementById('nav-create-a');
+  const navCommunityLI = document.getElementById('nav-community-li');
+  const navCommunityA = document.getElementById('nav-community-a');
+  const navDropdown = document.getElementById('nav-dropdown');
+  const navRegisterButton = document.getElementById('nav-register-button');
+  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
+};
+
+const configureButtons = () => {
+  const upload = document.getElementById('upload-icon');
+  const plus = document.getElementById('plus-icon');
+  upload.src = UploadIcon;
+  plus.src = PlusIcon;
+};
+
+/************************************************************
+ * Ensure the user is authenticated and load/show data
+************************************************************/
+if (!isAuth) {
+  window.location.href = './login.html';
+} else { //double check there's a cookie
+    try {
+      await checkForCookie();
+      //configure navbar
+      setSources();
+      setNav();
+      //configure buttons
+      configureButtons();
+      //load page data and show to the user
+      try {
+        const { data } = await getProfileData();
+        loadName(data.name);
+        refreshAvatar(data.photo, holderElement, 'avatar', '200px');
+        loadServices(data.services);
+        loadDescription(data.description);
+    
+        //show the page to the user
+        setNotLoading(
+          document.getElementById('spinner'), 
+          document.getElementById('main-container'), 
+          document.getElementById('navbar'), 
+          document.getElementById('footer')
+        );
+      } catch(error) {
+        setNotLoading(
+          document.getElementById('spinner'), 
+          document.getElementById('main-container'), 
+          document.getElementById('navbar'), 
+          document.getElementById('footer')
+        );
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Something went wrong', 
+          'response' in error ? error.response.data.error : 'Check your internet connection.', 
+          false
+        );
+      }
+    } catch(error) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.reload();
+    }
+}
 
 /************************************************************
  * All other JavaScript
@@ -394,6 +442,28 @@ const processServicesForBackend = () => {
   return [services, errorService];
 };
 
+const clearNameError = () => {
+  if (isNameError) {
+    userName.classList.remove('border-danger');
+    clearErrorMessage();
+    isNameError = false;
+    if (!services.length) {
+      showEmptyServicesError();
+    } else if (errorService) {
+      showServiceError(errorService);
+    }
+  }
+};
+
+const clearAllErrors = () => {
+  clearNameError();
+  clearEmptyServicesError();
+  if (errorService) {
+    clearServiceBorder(errorService);
+    errorService = null;
+  }
+};
+
 const saveProfile = async (event) => {
   event.preventDefault();
   clearAllErrors();
@@ -447,81 +517,6 @@ const saveProfile = async (event) => {
 
 const hideToast = () => {
   toastDiv.style.display = 'none';
-};
-
-const clearErrorMessage = () => {
-  errorMessage.classList.add('d-none');
-  errorMessage.innerHTML = '';
-};
-
-const showServiceError = (service) => {
-  service.classList.add('border');
-  service.classList.add('border-danger');
-  errorMessage.innerHTML = 'Please complete your services';
-  errorMessage.classList.remove('d-none');
-};
-
-const clearServiceBorder = (service) => {
-  service.classList.remove('border');
-  service.classList.remove('border-danger');
-};
-
-const clearServiceError = (service) => {
-  clearServiceBorder(service);
-  clearErrorMessage();
-  errorService = null;
-  if (!services.length) {
-    showEmptyServicesError()
-  } else if (!userName.value) {
-    showNameError();
-  }
-};
-
-const clearEmptyServicesError = () => {
-  if (servicesAreEmpty) {
-    clearErrorMessage();
-    servicesAreEmpty = false;
-    if (errorService) {
-      showServiceError(errorService);
-    } else if (!userName.value) {
-      showNameError();
-    }
-  }
-};
-
-const showEmptyServicesError = () => {
-  errorMessage.innerHTML = 'Please complete your services';
-  errorMessage.classList.remove('d-none');
-  servicesAreEmpty = true;
-};
-
-const clearNameError = () => {
-  if (isNameError) {
-    userName.classList.remove('border-danger');
-    clearErrorMessage();
-    isNameError = false;
-    if (!services.length) {
-      showEmptyServicesError();
-    } else if (errorService) {
-      showServiceError(errorService);
-    }
-  }
-};
-
-const showNameError = () => {
-  userName.classList.add('border-danger');
-  errorMessage.innerHTML = 'Please enter your name';
-  errorMessage.classList.remove('d-none');
-  isNameError = true;
-};
-
-const clearAllErrors = () => {
-  clearNameError();
-  clearEmptyServicesError();
-  if (errorService) {
-    clearServiceBorder(errorService);
-    errorService = null;
-  }
 };
 
 const handleLogout = async () => {

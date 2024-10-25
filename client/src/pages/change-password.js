@@ -1,9 +1,3 @@
-/************************************************************
- * Ensure the user is authenticated 
-************************************************************/
-const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
-if (!isAuth) window.location.href = './login.html';
-
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
@@ -13,10 +7,14 @@ import * as bootstrap from 'bootstrap'; //js
 import '../css/buttons.css';
 
 /************************************************************
- * Configure the navbar
+ * Ensure the user is authenticated 
 ************************************************************/
+import { checkForCookie } from '../api/auth';
+import { setNotLoading } from '../utils/spinner';
 import { configureNav, refreshAvatar } from '../utils/navbar';
 import Logo from '../images/logo.png';
+
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -35,21 +33,26 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-if (isAuth) {
-  setSources();
-  setNav();
+if (!isAuth) {
+  window.location.href = './login.html';
+} else { //double check there's a cookie
+    try {
+      await checkForCookie();
+      //configure navbar
+      setSources();
+      setNav();
+      //show page to the user
+      setNotLoading(
+        document.getElementById('spinner'), 
+        document.getElementById('main-container'), 
+        document.getElementById('navbar'), 
+        document.getElementById('footer')
+      );
+    } catch(error) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.reload();
+    }
 }
-
-/************************************************************
- * Show the page to the user
-************************************************************/
-import { setNotLoading } from '../utils/spinner';
-
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-const footer = document.getElementById('footer');
-if (isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 /************************************************************
  * All other JavaScript

@@ -144,13 +144,21 @@ const editor = new EditorJS({
 /************************************************************
  * Configure the edit button
 ************************************************************/
+import { checkForCookie } from '../api/auth';
+
 const editButton = document.getElementById('edit-button');
 
-const configureEditButton = () => {
+const configureEditButton = async () => {
   if (isAuth) {
-    editButton.disabled = false;
-    const editButtonWrapper = document.getElementById('edit-button-wrapper');
-    editButtonWrapper.title = '';
+    //double check there's a cookie
+    try {
+      await checkForCookie();
+      editButton.disabled = false;
+      const editButtonWrapper = document.getElementById('edit-button-wrapper');
+      editButtonWrapper.title = '';
+    } catch(error) {
+      //do nothing if user is not logged in
+    }
   }
 };
 

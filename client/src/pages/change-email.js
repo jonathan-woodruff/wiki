@@ -1,9 +1,3 @@
-/************************************************************
- * Ensure the user is authenticated 
-************************************************************/
-const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
-if (!isAuth) window.location.href = './login.html';
-
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
@@ -13,11 +7,19 @@ import * as bootstrap from 'bootstrap'; //js
 import '../css/buttons.css';
 
 /************************************************************
- * Configure the navbar
+ * Ensure the user is authenticated 
 ************************************************************/
+import { getProfileData } from '../api/main';
+import { checkForCookie } from '../api/auth';
+import { setNotLoading } from '../utils/spinner';
+import { showToast } from '../utils/toast';
 import { configureNav } from '../utils/navbar';
 import Logo from '../images/logo.png';
 import { refreshAvatar } from '../utils/navbar';
+
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
+const toastDiv = document.getElementById('toast');
+let dbUserEmail = '';
 
 const setSources = () => {
   const logoImg = document.getElementById('logo-img');
@@ -36,48 +38,41 @@ const setNav = () => {
   configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
 };
 
-if (isAuth) {
-  setSources();
-  setNav();
+if (!isAuth) {
+  window.location.href = './login.html';
+} else { //double check there's a cookie
+    try {
+      await checkForCookie();
+      //configure navbar
+      setSources();
+      setNav();
+      //show page to the user
+      setNotLoading(
+        document.getElementById('spinner'), 
+        document.getElementById('main-container'), 
+        document.getElementById('navbar'), 
+        document.getElementById('footer')
+      );
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const emailSuccess = urlParams.get('email-reset-success') === 'true' ? true : false;
+      if (emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'You\'re all set.');
+      
+      try { //get user's current email and show it
+        const { data } = await getProfileData();
+        document.getElementById('email-spinner').style.display = 'none';
+        document.getElementById('email-info').innerHTML = data.email || '';
+        dbUserEmail = data.email || '';
+      } catch(error) {
+        document.getElementById('email-spinner').style.display = 'none';
+        document.getElementById('email-info').innerHTML = '...could not load email';
+      }
+    } catch(error) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.reload();
+    }
 }
-
-/************************************************************
- * Load data from backend 
-************************************************************/
-import { getProfileData } from '../api/main';
-
-const emailSpan = document.getElementById('email-info');
-
-let dbUserEmail = '';
-
-const loadEmail = async () => {
-  const { data } = await getProfileData();
-  const emailSpinner = document.getElementById('email-spinner');
-  emailSpinner.style.display = 'none';
-  emailSpan.innerHTML = data.email || '';
-  dbUserEmail = data.email || '';
-};
-
-if (isAuth) loadEmail();
-
-/************************************************************
- * Show the page to the user
-************************************************************/
-import { setNotLoading } from '../utils/spinner';
-import { showToast } from '../utils/toast';
-
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-const footer = document.getElementById('footer');
-if (isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
-
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const emailSuccess = urlParams.get('email-reset-success') === 'true' ? true : false;
-const toastDiv = document.getElementById('toast');
-
-if (isAuth && emailSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Email successfully changed!', 'You\'re all set.');;
 
 /************************************************************
  * All other JavaScript
