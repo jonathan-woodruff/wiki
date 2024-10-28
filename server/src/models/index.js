@@ -38,6 +38,20 @@ const userSchema = new Schema({
 }, { timestamps: true });
 
 const wikisSchema = new Schema({
+  originalAuthorUserId: {
+    type: String,
+    ref: 'User',
+    required: true
+  },
+  originalAuthorUserObjectId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  isPublished: {
+    type: Boolean,
+    required: true
+  },
   country: {
     type: String,
     required: true
@@ -46,10 +60,7 @@ const wikisSchema = new Schema({
     type: String,
     required: true
   },
-  title: {
-    type: String,
-    required: true
-  },
+  title: String,
   contentTime: {
     type: Number,
     required: true
@@ -101,7 +112,7 @@ const wikiHistorySchema = new Schema({
     type: String,
     required: true
   }
-});
+}, { timestamps: true });
 
 const communitySchema = new Schema({
   userId: {

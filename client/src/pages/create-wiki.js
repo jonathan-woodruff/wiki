@@ -1,9 +1,3 @@
-/************************************************************
- * Ensure the user is authenticated 
-************************************************************/
-const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
-if (!isAuth) window.location.href = './login.html';
-
 /************************************************************ 
  * Import Bootstrap CSS and JavaScript 
 ************************************************************/
@@ -11,39 +5,6 @@ import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 import '../css/buttons.css';
-
-/************************************************************
- * Configure the navbar 
-************************************************************/
-import Logo from '../images/logo.png';
-import Info from '../images/info.png';
-import { configureNav, refreshAvatar } from '../utils/navbar';
-
-const setSources = () => {
-  const logoImg = document.getElementById('logo-img');
-  const countryInfo = document.getElementById('country-info');
-  const sectorInfo = document.getElementById('sector-info');
-  logoImg.src = Logo;
-  countryInfo.src = Info;
-  sectorInfo.src = Info;
-  const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
-  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
-};
-
-const setNav = () => {
-  const navCreateLI = document.getElementById('nav-create-li');
-  const navCreateA = document.getElementById('nav-create-a');
-  const navCommunityLI = document.getElementById('nav-community-li');
-  const navCommunityA = document.getElementById('nav-community-a');
-  const navDropdown = document.getElementById('nav-dropdown');
-  const navRegisterButton = document.getElementById('nav-register-button');
-  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
-};
-
-if (isAuth) {
-  setSources();
-  setNav();
-}
 
 /************************************************************
  * Configure the editor
@@ -63,6 +24,8 @@ const editorDiv = document.getElementById('editorjs');
 
 let isTitleError = false;
 let isContentError = false;
+let everythingIsSaved = true;
+let finishedSaving = true;
 
 const hideError = () => {
   errorRow.classList.add('d-none');
@@ -81,6 +44,8 @@ const editor = new EditorJS({
   placeholder: 'Starting writing. Wanna add an image? Just paste it in...',
   onChange: (api, event) => {
     if (isContentError) hideError();
+    everythingIsSaved = false;
+    autoSave();
   },
   tools: {
     underline: Underline,
@@ -121,14 +86,45 @@ const editor = new EditorJS({
 });
 
 /************************************************************
- * Load data from backend
+ * Ensure the user is authenticated 
 ************************************************************/
-import { onPostWiki, getCreateWikiData } from '../api/main';
+import { checkForCookie } from '../api/auth';
+import { onPostDraft, saveDraft, getCreateWikiData } from '../api/main';
+import Logo from '../images/logo.png';
+import Info from '../images/info.png';
+import { configureNav, refreshAvatar } from '../utils/navbar';
 import { showToast } from '../utils/toast';
+import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
 const countryInput = document.getElementById('country');
 const sectorInput = document.getElementById('sector');
 const toastDiv = document.getElementById('toast');
+
+const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
+
+const urlParams = new URLSearchParams(window.location.search);
+const wikiID = urlParams.get('wiki');
+
+const setSources = () => {
+  const logoImg = document.getElementById('logo-img');
+  const countryInfo = document.getElementById('country-info');
+  const sectorInfo = document.getElementById('sector-info');
+  logoImg.src = Logo;
+  countryInfo.src = Info;
+  sectorInfo.src = Info;
+  const navbarHolderSpan = document.getElementById('navbar-avatar-holder');
+  refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
+};
+
+const setNav = () => {
+  const navCreateLI = document.getElementById('nav-create-li');
+  const navCreateA = document.getElementById('nav-create-a');
+  const navCommunityLI = document.getElementById('nav-community-li');
+  const navCommunityA = document.getElementById('nav-community-a');
+  const navDropdown = document.getElementById('nav-dropdown');
+  const navRegisterButton = document.getElementById('nav-register-button');
+  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
+};
 
 const loadCountries = (countries) => {
   countries.forEach(country => {
@@ -148,47 +144,85 @@ const loadSectors = (sectors) => {
   });
 };
 
-const loadData = async () => {
-  try {
-    const { data } = await getCreateWikiData();
-    countryInput.removeChild(document.getElementById('country-loading'));
-    sectorInput.removeChild(document.getElementById('sector-loading'));
-    loadCountries(data.countries);
-    loadSectors(data.sectors);
-  } catch(error) {
-    if ('response' in error && error.response.status === 401) {
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
+const handleGetWikiError = (error) => {
+  const errorResponse = 'response' in error ? error.response.data.error : '';
+    if (errorResponse === 'Wiki is published') {
+      const params = new URLSearchParams();
+      params.append('wiki', wikiID);
+      const url = `./wiki.html?${params.toString()}`;
+      window.location.href = url;
+    } else if (errorResponse === 'User is not the author') {
+      window.location.href = './index.html';
     } else {
       showToast(
         toastDiv, 
         document.getElementById('toast-title'), 
         document.getElementById('toast-body'), 
         'Something went wrong', 
-        'response' in error ? error.response.data.error : 'Check your internet connection.', 
+        errorResponse || 'Check your internet connection.', 
         false
       );
     }
-  }
 };
 
-if (isAuth) loadData();
-
-/************************************************************
- * Show the page to the user
-************************************************************/
-import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
-
-const spinnerDiv = document.getElementById('spinner');
-const mainContainer = document.getElementById('main-container');
-const navbar = document.getElementById('navbar');
-const footer = document.getElementById('footer');
-if (isAuth) setNotLoading(spinnerDiv, mainContainer, navbar, footer);
+if (!isAuth) {
+  window.location.href = './login.html';
+} else { //double check there's a cookie
+    try {
+      await checkForCookie();
+      if (wikiID) { //user is editing an existing draft
+        //configure navbar
+        setSources();
+        setNav();
+        try {
+          //load the data
+          const { data } = await getCreateWikiData(wikiID);
+          loadCountries(data.countryOptions);
+          loadSectors(data.sectorOptions);
+          countryInput.value = data.country;
+          sectorInput.value = data.sector;
+          titleInput.value = data.title;
+          editor.render({
+            time: data.contentTime,
+            blocks: data.contentBlocks,
+            version: data.contentVersion
+          });
+          //show page to the user
+          setNotLoading(
+            document.getElementById('spinner'), 
+            document.getElementById('main-container'), 
+            document.getElementById('navbar'), 
+            document.getElementById('footer')
+          );
+        } catch(error) {
+          handleGetWikiError(error);
+        }
+      } else { //User is creating a new draft
+        try {
+          //create draft in database
+          const editorData = await editor.save();
+          const payload = { article: editorData };
+          const draftResponse = await onPostDraft(payload);
+          //reload page with the wikiID in the params
+          const params = new URLSearchParams();
+          params.append('wiki', draftResponse.data.wikiID);
+          const url = `./create-wiki.html?${params.toString()}`;
+          window.location.href = url;
+        } catch(error) {
+          window.location.href = './fail.html';
+        }
+      }
+    } catch(error) {
+      localStorage.setItem('isAuth', 'false');
+      window.location.reload();
+    }
+}
 
 /************************************************************
  * All other JavaScript
 ************************************************************/
 import { onLogout } from '../api/auth';
+import { goToWiki } from '../utils/wiki';
 
 const button = document.getElementById('submit');
 const logoutLink = document.getElementById('logout-link');
@@ -199,44 +233,37 @@ const submitContent = async (event) => {
   hideError();
   if (titleInput.value) {
     try {
-      setLoadingButton(button, 'Creating...');
+      setLoadingButton(button, 'Publishing...');
       const outputData = await editor.save();
       if (outputData.blocks.length) {
         try {
-          const postData = {
+          const payload = {
+            wikiID: wikiID,
+            isPublished: true,
             country: countryInput.value,
             sector: sectorInput.value,
             title: titleInput.value,
             article: outputData
           };
-          const response = await onPostWiki(postData);
-          const wikiID = response.data.wikiID;
-          const params = new URLSearchParams();
-          params.append('wiki', wikiID);
-          const url = `./wiki.html?${params.toString()}`;
-          window.location.href = url;
+          await saveDraft(payload);
+          goToWiki(wikiID);
         } catch(error) {
-          if ('response' in error && error.response.status === 401) {
-            localStorage.setItem('isAuth', 'false');
-            window.location.reload();
-          } else {
-            showToast(
-              toastDiv, 
-              document.getElementById('toast-title'), 
-              document.getElementById('toast-body'), 
-              'Something went wrong', 
-              'response' in error ? error.response.data.error : 'Check your internet connection.', 
-              false
-            );
-          }
-          setNotLoadingButton(button, 'Create');
+          showToast(
+            toastDiv, 
+            document.getElementById('toast-title'), 
+            document.getElementById('toast-body'), 
+            'Something went wrong', 
+            'response' in error ? error.response.data.error : 'Check your internet connection.', 
+            false
+          );
+          setNotLoadingButton(button, 'Publish');
         }
       } else {
         errorMessage.innerHTML = 'Please enter wiki content';
         isContentError = true;
         editorDiv.classList.add('border-danger');
         showError();
-        setNotLoadingButton(button, 'Create');
+        setNotLoadingButton(button, 'Publish');
       }
     } catch(error) {
       showToast(
@@ -247,7 +274,7 @@ const submitContent = async (event) => {
         'Editor error: Could not save changes.', 
         false
       );
-      setNotLoadingButton(button, 'Create');
+      setNotLoadingButton(button, 'Publish');
     }
   } else {
     errorMessage.innerHTML = 'Please enter a title';
@@ -274,8 +301,64 @@ const handleLogout = async () => {
   }
 };
 
+const showSavedStatus = (statusStr) => {
+  const savedStatusSpan = document.getElementById('saved-status');
+  const savedStatusDiv = document.getElementById('saved-status-div');
+  if (statusStr === 'saved') {
+    savedStatusSpan.innerHTML = 'Draft Saved!';
+    savedStatusDiv.classList.replace('bg-danger', 'bg-light');
+    savedStatusSpan.classList.replace('text-white', 'text-dark');
+  } else if (statusStr === 'not saved') {
+    savedStatusSpan.innerHTML = '...saving';
+    savedStatusDiv.classList.replace('bg-danger', 'bg-light');
+    savedStatusSpan.classList.replace('text-white', 'text-dark');
+  } else if (statusStr === 'error') {
+    savedStatusSpan.innerHTML = 'Error: Could not save draft. Check your internet connection.';
+    savedStatusDiv.classList.replace('bg-light', 'bg-danger');
+    savedStatusSpan.classList.replace('text-dark', 'text-white');
+  }
+};
+
+const autoSave = async () => {
+  if (!everythingIsSaved && finishedSaving) {
+    showSavedStatus('not saved');
+    everythingIsSaved = true;
+    finishedSaving = false;
+    try {
+      const editorData = await editor.save();
+      //const editorData = await editorInstance.save();
+      const payload = {
+        wikiID: wikiID,
+        isPublished: false,
+        country: countryInput.value,
+        sector: sectorInput.value,
+        title: titleInput.value,
+        article: editorData
+      };
+      await saveDraft(payload);
+      finishedSaving = true;
+      if (everythingIsSaved) showSavedStatus('saved');
+      autoSave();
+    } catch(error) {
+      showSavedStatus('error');
+    }
+  }
+};
+
 const handleTitleInput = () => {
   if (isTitleError) hideError();
+  everythingIsSaved = false;
+  autoSave();
+};
+
+const handleCountryInput = () => {
+  everythingIsSaved = false;
+  autoSave();
+};
+
+const handleSectorInput = () => {
+  everythingIsSaved = false;
+  autoSave();
 };
 
 const hideToast = () => toastDiv.style.display = 'none';
@@ -285,3 +368,5 @@ logoutLink.addEventListener('click', handleLogout);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
 titleInput.addEventListener('input', handleTitleInput);
+countryInput.addEventListener('input', handleCountryInput);
+sectorInput.addEventListener('input', handleSectorInput);

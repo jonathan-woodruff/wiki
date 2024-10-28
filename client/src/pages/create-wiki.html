@@ -35,6 +35,7 @@
                   <span id="navbar-avatar-holder"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="./my-wikis.html">My Wikis</a></li>
                   <li><a class="dropdown-item" href="./edit-profile.html">Edit Profile</a></li>
                   <li><a class="dropdown-item" href="./change-email.html">Change Email</a></li>
                   <li><a class="dropdown-item" href="./change-password.html">Change Password</a></li>
@@ -72,6 +73,11 @@
           <h1 class="text-center mt-5">Create Wiki</h1>
         </div>
       </div>
+      <div class="row mb-3 mx-auto position-sticky top-0 z-2">
+        <div id="saved-status-div" class="col col-md-11 col-lg-10 col-xl-9 mx-auto bg-light p-3">
+          <span id="saved-status" class="fst-italic text-dark">Draft Saved!</span>
+        </div>
+      </div>
       <form>
         <div class="row mb-3 mx-auto">
           <div class="col col-md-11 col-lg-10 col-xl-9 mx-auto">
@@ -80,14 +86,12 @@
                 <label for="country">Country <img id="country-info" alt="info" style="width: 16px; height: 16px;" data-bs-toggle="tooltip" title="Options are the countries you served. Edit your profile to see more options."></label>
                 <select id="country" class="form-select" aria-label="country for which you are writing this wiki">
                   <option selected value="All">All</option>
-                  <option id="country-loading" disabled value="test">Loading...</option>
                 </select>
               </div>
               <div class="col col-12 col-md-6 mb-3">
                 <label for="sector">Sector <img id="sector-info" alt="info" style="width: 16px; height: 16px;" data-bs-toggle="tooltip" title="Options are the sectors you served. Edit your profile to see more options."></label>
                 <select id="sector" class="form-select" aria-label="sector for which you are writing this wiki">
                   <option selected value="All">All</option>
-                  <option id="sector-loading" disabled value="test">Loading...</option>
                 </select>
               </div>
             </div>
@@ -112,7 +116,7 @@
         </div>
         <div class="row mx-auto">
           <div class="d-grid col-8 col-sm-6 col-md-4 col-lg-3 col-xl-2 mx-auto">
-            <button id="submit" class="btn btn-primary rounded">Create</button>
+            <button id="submit" class="btn btn-primary rounded">Publish</button>
           </div>
         </div>
       </form>

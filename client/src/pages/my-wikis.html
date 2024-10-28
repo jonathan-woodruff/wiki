@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Error | Peace Chickens</title>
+    <title>My Wikis | Peace Chickens</title>
   </head>
   <body class="d-flex flex-column min-vh-100">
     <!-- Spinner -->
@@ -59,24 +59,59 @@
 
     <!-- Toast -->
     <div id="toast" class="toast bg-dark text-white position-sticky top-0 start-50 translate-middle-x p-3 z-3" role="alert" style="display: none;" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <strong id="toast-title" class="me-auto"></strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div id="toast-body" class="toast-body"></div>
+        <div class="toast-header">
+            <strong id="toast-title" class="me-auto"></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div id="toast-body" class="toast-body"></div>
     </div>
 
     <!-- Main content -->
-    <main id="main-container" class="container mt-5" style="display: none;">
-      <div class="row">
+    <main id="main-container" class="container py-4 px-3 mx-auto mb-5" style="display: none;">
+      <div class="row mt-5">
         <div class="col">
-          <h1 id="h1" class="text-center mt-5 mb-4">Ruh roh</h1>
+          <h1 class="text-center mb-4">My Wikis</h1>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col col-sm-11 col-lg-10 mx-auto">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="draft-radio" value="drafts" checked>
+            <label class="form-check-label" for="draft-radio">Drafts</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="published-radio" value="published">
+            <label class="form-check-label" for="published-radio">Published</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="edited-radio" value="edited">
+            <label class="form-check-label" for="edited-radio">Edited</label>
+          </div>
         </div>
       </div>
       <div class="row">
-        <div class="col col-10 col-sm-9 col-md-8 col-lg-6 mx-auto">
-          <p id="message" class="text-center mb-3 h5">Something didn't work correctly.</p>
-          <p>It could be your network connection. If not, and if you think there's a problem with the website that should be fixed, please <a href="mailto:jonathanMwoodruff@gmail.com" alt="link to email creator of Peace Chickens" class="text-decoration-none">report the issue to Jonathan (me), the creator of Peace Chickens.</a> I'm a one-man operation, but I do my best to make this site fantastic.</p>
+        <div id="card-div" class="col col-sm-11 col-lg-10 mx-auto">
+          <!-- sample of what shows when no search results found
+          <p class="fs-6 text-center mt-2">-----------</p>
+          <p class="fs-6 text-center mb-2">No wikis found. Try a different search.</p>
+          -->
+          <!-- sample search result card
+          <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+              <h2 class="card-title h4">Card title</h2>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <span style="font-size: 0.9em">Country: </span>
+              <span style="font-size: 0.9em">Sector: </span>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+
+      <!-- Show More button -->
+      <div id="show-more-div" class="row mx-auto" style="display: none;">
+        <div class="d-grid col-8 col-sm-6 col-md-4 col-lg-3 col-xl-2 mx-auto">
+          <button id="show-more-button" class="btn btn-outline-secondary rounded">Show More</button>
         </div>
       </div>
     </main>

@@ -4,79 +4,129 @@ const { STRIPE_KEY, EMAIL_ADDRESS, APP_PASSWORD } = require('../constants/index'
 const stripe = require('stripe')(STRIPE_KEY);
 const nodemailer = require('nodemailer');
 
-exports.postWiki = async (req, res) => {
+exports.postDraft = async (req, res) => {
     const user = req.user;
     try {
-        const country = req.body.country;
-        const sector = req.body.sector;
-        const title = req.body.title;
-        const contentTime = req.body.article.time;
-        const contentBlocks = req.body.article.blocks;
-        const contentVersion = req.body.article.version;
         const newWiki = new WikisModel({
-            country: country,
-            sector: sector,
-            title: title,
-            contentTime: contentTime,
-            contentBlocks: contentBlocks,
-            contentVersion: contentVersion
+            originalAuthorUserId: user._id,
+            originalAuthorUserObjectId: user._id,
+            isPublished: false,
+            country: 'All',
+            sector: 'All',
+            title: '',
+            contentTime: req.body.article.time,
+            contentBlocks: req.body.article.blocks,
+            contentVersion: req.body.article.version
         });
         const savedWiki = await newWiki.save();
+        return res.status(201).json({
+            wikiID: savedWiki._id
+        })
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error: 'Server error: Could not create draft.'
+        });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'postDraft',
+            description: 'Could not create draft.'
+        });
+        await log.save();
+        return;
+    }
+};
+
+exports.putDraft = async (req, res) => {
+    const user = req.user;
+    try {
+        const wikiID = req.body.wikiID;
+        const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
         try {
-            // post to the wiki history model
-            const newWikiHistory = new WikiHistoryModel({
-                wikiId: savedWiki._id,
-                authorUserId: user._id,
-                wikiObjectId: savedWiki._id,
-                authorUserObjectId: user._id,
-                changeDescription: 'created wiki',
-                contentTime: contentTime,
-                contentBlocks: contentBlocks,
-                contentVersion: contentVersion
-            });
-            await newWikiHistory.save();
-            try {
-                // update the user model 
-                user.wikisCreated++;
-                await user.save();
+            const isPublished = req.body.isPublished;
+            wiki.isPublished = isPublished;
+            wiki.country = req.body.country;
+            wiki.sector = req.body.sector;
+            wiki.title = req.body.title;
+            wiki.contentTime = req.body.article.time;
+            wiki.contentBlocks = req.body.article.blocks;
+            wiki.contentVersion = req.body.article.version;
+            const savedWiki = await wiki.save();
+            if (isPublished) {
+                try {
+                    // post to the wiki history model
+                    const newWikiHistory = new WikiHistoryModel({
+                        wikiId: savedWiki._id,
+                        authorUserId: user._id,
+                        wikiObjectId: savedWiki._id,
+                        authorUserObjectId: user._id,
+                        changeDescription: 'created wiki',
+                        contentTime: req.body.article.time,
+                        contentBlocks: req.body.article.blocks,
+                        contentVersion: req.body.article.version
+                    });
+                    await newWikiHistory.save();
+                    try {
+                        // update the user model 
+                        user.wikisCreated++;
+                        await user.save();
+                        return res.status(201).json({
+                            wikiID: savedWiki._id
+                        });
+                    } catch(error) {
+                        res.status(201).json({
+                            wikiID: savedWiki._id
+                        });
+                        const log = new ErrorLogModel({
+                            userId: user._id || '',
+                            email: user.email || '',
+                            functionName: 'putDraft',
+                            description: 'Could not update your user stats.'
+                        });
+                        await log.save();
+                        return;
+                    }
+                } catch(error) {
+                    res.status(201).json({
+                        wikiID: savedWiki._id
+                    });
+                    const log = new ErrorLogModel({
+                        userId: user._id || '',
+                        email: user.email || '',
+                        functionName: 'putDraft',
+                        description: 'Could not save wiki history.'
+                    });
+                    await log.save();
+                    return;
+                }
+            } else {
                 return res.status(201).json({
-                    wikiID: savedWiki._id
+                    success: true
                 });
-            } catch(error) {
-                res.status(201).json({
-                    wikiID: savedWiki._id
-                });
-                const log = new ErrorLogModel({
-                    userId: user._id || '',
-                    email: user.email || '',
-                    functionName: 'postWiki',
-                    description: 'Could not update your user stats.'
-                });
-                await log.save();
-                return;
             }
         } catch(error) {
-            res.status(201).json({
-                wikiID: savedWiki._id
+            res.status(500).json({
+                error: 'Server error: Could not save.'
             });
             const log = new ErrorLogModel({
                 userId: user._id || '',
                 email: user.email || '',
-                functionName: 'postWiki',
-                description: 'Could not save wiki history.'
+                functionName: 'putDraft',
+                description: 'Could not save. Trying to publish = ' + isPublished
             });
             await log.save();
             return;
         }
     } catch(error) {
         res.status(500).json({
-            error: 'Server error: Could not save wiki.'
+            error: 'Server error: Could not find draft.'
         });
         const log = new ErrorLogModel({
             userId: user._id || '',
             email: user.email || '',
-            functionName: 'postWiki',
-            description: 'Could not save wiki.'
+            functionName: 'putDraft',
+            description: 'Could not find draft.'
         });
         await log.save();
         return;
@@ -89,13 +139,13 @@ exports.getWikis = async (req, res) => {
         const sector = req.query.sector;
         let wikis;
         if (country === 'All' && sector === 'All') {
-            wikis = await WikisModel.find().sort({ 'updatedAt': -1 }).exec();
+            wikis = await WikisModel.find({ isPublished: true }).sort({ 'updatedAt': -1 }).exec();
         } else if (country === 'All') {
-            wikis = await WikisModel.find({ sector: sector }).sort({ 'updatedAt': -1 }).exec();
+            wikis = await WikisModel.find({ isPublished: true, sector: sector }).sort({ 'updatedAt': -1 }).exec();
         } else if (sector === 'All') {
-            wikis = await WikisModel.find({ country: country }).sort({ 'updatedAt': -1 }).exec();
+            wikis = await WikisModel.find({ isPublished: true, country: country }).sort({ 'updatedAt': -1 }).exec();
         } else { //both country and sector are selected to be filtered
-            wikis = await WikisModel.find({ country: country, sector: sector }).sort({ 'updatedAt': -1 }).exec();
+            wikis = await WikisModel.find({ isPublished: true, country: country, sector: sector }).sort({ 'updatedAt': -1 }).exec();
         }
         return res.status(200).json({
             wikis: wikis
@@ -168,21 +218,51 @@ exports.updateProfile = async (req, res) => {
 
 exports.getCreateWikiData = async (req, res) => {
     const user = req.user;
-    if (user) {
-        const [countries, sectors] = parseServices(user.services);
-        return res.status(200).json({
-            countries: countries,
-            sectors: sectors
-        });
-    } else {
+    const wikiID = req.query.wiki;
+    try {
+        const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
+        if (user && !wiki.isPublished && user._id.equals(wiki.originalAuthorUserObjectId)) {
+            const [countries, sectors] = parseServices(user.services);
+            return res.status(200).json({
+                countryOptions: countries,
+                sectorOptions: sectors,
+                country: wiki.country,
+                sector: wiki.sector,
+                title: wiki.title,
+                contentTime: wiki.contentTime,
+                contentBlocks: wiki.contentBlocks,
+                contentVersion: wiki.contentVersion
+            });
+        } else if (wiki.isPublished) {
+            return res.status(500).json({
+                error: 'Wiki is published'
+            });
+        } else if (!user._id.equals(wiki.originalAuthorUserObjectId)) {
+            return res.status(500).json({
+                error: 'User is not the author'
+            });
+        } else {
+            res.status(500).json({
+                error: 'Server error: Could not load data.'
+            });
+            const log = new ErrorLogModel({
+                userId: user._id || '',
+                email: user.email || '',
+                functionName: 'getCreateWikiData',
+                description: 'Could not load data.'
+            });
+            await log.save();
+            return;
+        }
+    } catch(error) {
         res.status(500).json({
-            error: 'Server error: Could not load data.'
+            error: 'Server error: Could not find wiki.'
         });
         const log = new ErrorLogModel({
             userId: user._id || '',
             email: user.email || '',
             functionName: 'getCreateWikiData',
-            description: 'Could not load data.'
+            description: 'Could not find wiki.'
         });
         await log.save();
         return;
@@ -191,12 +271,18 @@ exports.getCreateWikiData = async (req, res) => {
 
 exports.getWikiByID = async (req, res) => {
     const wikiID = req.query.wiki;
-    const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
-    if (wiki) {
-        return res.status(200).json({
-            wiki: wiki
-        });
-    } else {
+    try {
+        const wiki = await WikisModel.findOne({ _id: wikiID }).exec();
+        if (wiki.isPublished) {
+            return res.status(200).json({
+                wiki: wiki
+            });
+        } else {
+            return res.status(500).json({
+                error: 'Wiki is a draft'
+            })
+        }
+    } catch(error) {
         res.status(500).json({
             error: 'Server error: Could not load wiki.'
         });
@@ -508,4 +594,78 @@ exports.sendEmail = (req, res) => {
           console.log('Email sent: ' + info.response);
         }
     });
+};
+
+exports.getMyStuff = async (req, res) => {
+    const user = req.user;
+    try {
+        const draftedWikis = await WikisModel.find({ originalAuthorUserId: user._id, isPublished: false }).sort({ 'updatedAt': -1 }).exec();
+        const publishedHistories = await WikiHistoryModel
+        .aggregate([
+            {
+                $match: { authorUserObjectId: user._id, changeDescription: 'created wiki' }
+            },
+            {
+                $sort: { 'createdAt': -1 }
+            },
+            {
+                $lookup: {
+                    from: 'wikis',
+                    localField: 'wikiObjectId',
+                    foreignField: '_id',
+                    as: 'wikis'
+                }
+            }
+        ])
+        .exec();
+        const publishedWikis = [];
+        publishedHistories.forEach(publishedHistory => {
+            publishedWikis.push(publishedHistory.wikis[0]);
+        });
+        const editedHistories = await WikiHistoryModel
+        .aggregate([
+            {
+                $match: { authorUserObjectId: user._id, changeDescription: { $ne: 'created wiki' }}
+            },
+            { 
+                $group: { 
+                    _id: '$wikiObjectId',
+                    lastUpdated: { $max: '$updatedAt' }
+                } 
+            },
+            {
+                $sort: { lastUpdated: -1 }
+            },
+            {
+                $lookup: {
+                    from: 'wikis',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'wikis'
+                }
+            }
+        ])
+        .exec();
+        const editedWikis = [];
+        editedHistories.forEach(editedHistory => {
+            editedWikis.push(editedHistory.wikis[0]);
+        });
+        return res.status(201).json({
+            drafts: draftedWikis,
+            published: publishedWikis,
+            edits: editedWikis
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: 'Server error: Could not get your stuff.'
+        });
+        const log = new ErrorLogModel({
+            userId: user._id || '',
+            email: user.email || '',
+            functionName: 'getMyStuff',
+            description: 'Could not get my stuff.'
+        });
+        await log.save();
+        return;
+    }
 };

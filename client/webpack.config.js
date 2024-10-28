@@ -5,7 +5,7 @@ const autoprefixer = require('autoprefixer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  mode: 'production',
+  mode: 'production', //'development',
   externals: {
     stripe: 'stripe',
   },
@@ -31,7 +31,8 @@ module.exports = {
     'success': './src/pages/success.js',
     'create-profile': './src/pages/create-profile.js',
     'email-reset': './src/pages/email-reset.js',
-    'fail': './src/pages/fail.js'
+    'fail': './src/pages/fail.js',
+    'my-wikis': './src/pages/my-wikis.js'
   },
   output: {
     filename: '[name]/output.js',
@@ -173,6 +174,12 @@ module.exports = {
         template: './src/pages/fail.html',
         filename: 'fail.html',
         chunks: ['fail'],
+        favicon: './public/favicon.ico'
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/pages/my-wikis.html',
+        filename: 'my-wikis.html',
+        chunks: ['my-wikis'],
         favicon: './public/favicon.ico'
       })
   ],

@@ -3,8 +3,12 @@ import { SERVER_URL } from '../constants/index';
 import axios from 'axios';
 axios.defaults.withCredentials = true; //send the cookie back to the server with token
 
-export async function onPostWiki(wikiContent) {
-    return await axios.post(`${SERVER_URL}/main/postWiki`, wikiContent);
+export async function onPostDraft(payload) {
+    return await axios.post(`${SERVER_URL}/main/postDraft`, payload);
+};
+
+export async function saveDraft(payload) {
+    return await axios.put(`${SERVER_URL}/main/putDraft`, payload);
 };
 
 export async function getWikis(selectedCountry, selectedSector) {
@@ -19,8 +23,8 @@ export async function putProfile(profileData) {
     return await axios.put(`${SERVER_URL}/main/updateProfile`, profileData);
 };
 
-export async function getCreateWikiData() {
-    return await axios.get(`${SERVER_URL}/main/getCreateWikiData`);
+export async function getCreateWikiData(wikiID) {
+    return await axios.get(`${SERVER_URL}/main/getCreateWikiData?wiki=${wikiID}`);
 };
 
 export async function onViewWiki(wikiID) {
@@ -53,4 +57,8 @@ export async function createPaymentIntent(payload) {
 
 export async function sendEmail(payload) {
     return await axios.post(`${SERVER_URL}/main/sendEmail`, payload);
+};
+
+export async function getMyStuff() {
+    return await axios.get(`${SERVER_URL}/main/getMyStuff`);
 };

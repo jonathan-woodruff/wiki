@@ -72,19 +72,24 @@ const getWiki = async () => {
     const { data } = await onViewWiki(wikiID);
     return data.wiki;
   } catch(error) {
-    showToast(
-      toastDiv, 
-      document.getElementById('toast-title'), 
-      document.getElementById('toast-body'), 
-      'Something went wrong', 
-      'response' in error ? error.response.data.error : 'Check your internet connection.', 
-      false
-    );
-    return {
-      contentTime: '',
-      contentBlocks: [],
-      version: ''
-    };
+    const errorResponse = 'response' in error ? error.response.data.error : '';
+    if (errorResponse === 'Wiki is a draft') {
+      window.location.href = './index.html';
+    } else {
+      showToast(
+        toastDiv, 
+        document.getElementById('toast-title'), 
+        document.getElementById('toast-body'), 
+        'Something went wrong', 
+        errorResponse || 'Check your internet connection.', 
+        false
+      );
+      return {
+        contentTime: '',
+        contentBlocks: [],
+        version: ''
+      };
+    }
   }
 };
 

@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const router = Router();
 const { 
-    postWiki, 
+    postDraft,
+    putDraft,
     getWikis, 
     getProfileData, 
     updateProfile, 
@@ -13,11 +14,13 @@ const {
     getHistoricalWikiData,
     postCommunity,
     createPaymentIntent,
-    sendEmail
+    sendEmail,
+    getMyStuff
 } = require('../controllers/main');
 const { userAuth } = require('../middlewares/auth-middleware');
 
-router.post('/postWiki', userAuth, postWiki);
+router.post('/postDraft', userAuth, postDraft);
+router.put('/putDraft', userAuth, putDraft);
 router.get('/getWikis', getWikis);
 router.get('/getProfileData', userAuth, getProfileData);
 router.put('/updateProfile', userAuth, updateProfile);
@@ -30,5 +33,6 @@ router.get('/viewHistoricalWiki', getHistoricalWikiData);
 router.post('/postCommunity', userAuth, postCommunity);
 router.post('/createPaymentIntent', createPaymentIntent);
 router.post('/sendEmail', sendEmail);
+router.get('/getMyStuff', userAuth, getMyStuff);
 
 module.exports = router;
