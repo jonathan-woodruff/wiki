@@ -85,7 +85,9 @@ const showCards = (wikiHistory) => {
     const baseSlice = numShowMoreClicked * numCardsToShow;
     const endSlice = numCardsToShow;
     const editionsToShow = wikiHistory.slice(baseSlice, baseSlice + endSlice);
+    let cardNum = 0;
     editionsToShow.forEach(edition => {
+        cardNum++;
         const cardDiv = document.getElementById('card-div');
         const card = document.createElement('div');
         card.id = edition._id;
@@ -126,18 +128,10 @@ const showCards = (wikiHistory) => {
         authorLink.href = `./view-profile.html?${queryString}`;
         authorLink.alt = 'Link to user profile';
         authorLink.classList.add('text-decoration-none');
-        
-        const userAvatar = document.createElement('img');
-        userAvatar.alt = 'User profile picture';
-        userAvatar.src = edition.user[0].photo || PeaceChicken;
-        userAvatar.classList.add('img-fluid');
-        userAvatar.classList.add('rounded-circle');
-        userAvatar.classList.add('d-inline-block');
-        userAvatar.classList.add('align-text-center');
-        userAvatar.classList.add('p-1')
-        userAvatar.width = '40';
-        userAvatar.height = '40';
-        authorLink.appendChild(userAvatar);
+
+        const avatarHolderSpan = document.createElement('span');
+        authorLink.appendChild(avatarHolderSpan);
+        refreshAvatar(edition.user[0].photo || PeaceChicken, avatarHolderSpan, 'card-avatar-' + cardNum.toString(), '40px');
 
         const authorSpan = document.createElement('span');
         authorSpan.classList.add('ms-1');
