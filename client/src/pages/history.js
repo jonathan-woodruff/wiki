@@ -9,7 +9,7 @@ import '../css/buttons.css';
 /************************************************************
  * Configure the navbar
 ************************************************************/
-import { configureNav, refreshAvatar } from '../utils/navbar';
+import { configureNav, refreshAvatar, showAvatar } from '../utils/navbar';
 import Logo from '../images/logo.png';
 
 const navRegisterButton = document.getElementById('nav-register-button');
@@ -131,7 +131,7 @@ const showCards = (wikiHistory) => {
 
         const avatarHolderSpan = document.createElement('span');
         authorLink.appendChild(avatarHolderSpan);
-        refreshAvatar(edition.user[0].photo || PeaceChicken, avatarHolderSpan, 'card-avatar-' + cardNum.toString(), '40px');
+        showAvatar(edition.user[0].photo || PeaceChicken, avatarHolderSpan, 'card-avatar-' + cardNum.toString(), '40px');
 
         const authorSpan = document.createElement('span');
         authorSpan.classList.add('ms-1');

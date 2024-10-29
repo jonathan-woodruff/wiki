@@ -25,7 +25,7 @@ const clearAvatar = (holder, id) => {
 };
 
 //add avatar to the DOM
-const showAvatar = (avatarURL, holder, id, width) => {
+export const showAvatar = (avatarURL, holder, id, width) => {
   const newAvatar = document.createElement('img');
   newAvatar.id = id;
   newAvatar.src = avatarURL || PeaceChicken;
