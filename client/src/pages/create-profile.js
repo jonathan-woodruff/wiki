@@ -23,7 +23,11 @@ const handlePageLoad = async () => {
             await magicLogin(payload);
             localStorage.setItem('isAuth', 'true');
             localStorage.setItem('avatar', '');
-            window.location.href = './edit-profile.html';
+            const params = new URLSearchParams();
+            params.append('registration-success', 'true');
+            const queryString = params.toString();
+            const url = `./edit-profile.html?${queryString}`;
+            window.location.href = url;
         } catch(error) {
             const params = new URLSearchParams();
             params.append('registration-confirm-success', 'true');

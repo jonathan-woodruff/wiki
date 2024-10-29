@@ -84,8 +84,11 @@ showPage();
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const emailResetFail = urlParams.get('email-reset-fail') === 'true' ? true : false;
+const editProfileSuccess = urlParams.get('edit-profile-success') === 'true' ? true : false;
 
 if (emailResetFail) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Link is outdated', 'Try changing your email again.', false);
+
+if (editProfileSuccess) showToast(toastDiv, document.getElementById('toast-title'), document.getElementById('toast-body'), 'Success!', 'Your profile has been saved.', true);
 
 /************************************************************
  * All other JavaScript

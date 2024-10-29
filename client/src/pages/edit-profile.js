@@ -375,6 +375,9 @@ const avatarErrorMessage = document.getElementById('avatar-error');
 const errorMessage = document.getElementById('error-message');
 const beerButton = document.getElementById('beer');
 
+const urlParams = new URLSearchParams(window.location.search);
+const isJustRegistered = urlParams.get('registration-success') === 'true' ? true : false;
+
 let isAvatarError = false;
 let isAvatarUpdated = false;
 
@@ -484,18 +487,26 @@ const saveProfile = async (event) => {
     };
     try {
       await putProfile(dataToSave);
-      if (isAvatarUpdated) {
-        localStorage.setItem('avatar', holderElement.children[0].src || '');
-        refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
+      if (isJustRegistered) {
+        if (isAvatarUpdated) localStorage.setItem('avatar', holderElement.children[0].src || '');
+        const params = new URLSearchParams();
+        params.append('edit-profile-success', 'true');
+        const url = `./index.html?${params.toString()}`;
+        window.location.href = url;
+      } else {
+        if (isAvatarUpdated) {
+          localStorage.setItem('avatar', holderElement.children[0].src || '');
+          refreshAvatar(localStorage.getItem('avatar'), navbarHolderSpan, 'navbar-avatar', '40px');
+        }
+        showToast(
+          toastDiv, 
+          document.getElementById('toast-title'), 
+          document.getElementById('toast-body'), 
+          'Success!', 
+          'Your profile has been saved.',
+          true
+        );
       }
-      showToast(
-        toastDiv, 
-        document.getElementById('toast-title'), 
-        document.getElementById('toast-body'), 
-        'Success!', 
-        'Your profile has been saved.',
-        true
-      );
     } catch(error) {
       if ('response' in error && error.response.status === 401) {
         localStorage.setItem('isAuth', 'false');
