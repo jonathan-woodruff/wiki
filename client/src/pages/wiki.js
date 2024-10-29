@@ -184,17 +184,13 @@ displayWiki(wiki);
 /************************************************************
  * Show the page to the user
 ************************************************************/
-import { setNotLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
+import { setNotLoading, setLoading, setLoadingButton, setNotLoadingButton } from '../utils/spinner';
 
-const showPage = () => {
-  const spinnerDiv = document.getElementById('spinner');
-  const mainContainer = document.getElementById('main-container');
-  const navbar = document.getElementById('navbar');
-  const footer = document.getElementById('footer');
-  setNotLoading(spinnerDiv, mainContainer, navbar, footer);
-};
-
-showPage();
+const spinnerDiv = document.getElementById('spinner');
+const mainContainer = document.getElementById('main-container');
+const navbar = document.getElementById('navbar');
+const footer = document.getElementById('footer');
+setNotLoading(spinnerDiv, mainContainer, navbar, footer);
 
 /************************************************************
  * All other JavaScript
@@ -217,11 +213,14 @@ const closeButton = document.getElementById('close-button');
 const editorDiv = document.getElementById('editorjs');
 const logoutLink = document.getElementById('logout-link');
 const publishModal = new bootstrap.Modal(document.getElementById('publish-modal'));
+const publishModalDiv = document.getElementById('publish-modal');
 const beerButton = document.getElementById('beer');
 
 const maxLengthStr = changeDescription.getAttribute('maxlength');
 charactersRemaining.innerHTML = maxLengthStr;
 const maxDescriptionLength = parseInt(maxLengthStr);
+
+let isPublishing = false;
 
 const goEditMode = async () => {
   setLoadingButton(editButton, 'Working...');
@@ -276,6 +275,7 @@ const hideNoEditsError = () => {
 };
 
 const publishEdits = async () => {
+  isPublishing = true;
   clearAllErrors();
   showLoadingButton();
   const putData = {
@@ -287,6 +287,8 @@ const publishEdits = async () => {
     await onPutWiki(putData);
     refresh();
   } catch(error) {
+    isPublishing = false;
+    setNotLoading(spinnerDiv, mainContainer, navbar, footer);
     if ('response' in error && error.response.status === 401) {
       localStorage.setItem('isAuth', 'false');
       window.location.reload();
@@ -356,7 +358,6 @@ const checkPublish = async () => {
       const wikiChanged = !arraysAreEqual(outputData.blocks, wiki.contentBlocks); //true if the current edits on the front end are different from the current version of the wiki stored in the backend
       if (wikiChanged) {
         editorData = outputData;
-        const publishModalDiv = document.getElementById('publish-modal');
         publishModalDiv.style.display = 'block';
         publishModal.show();
         dontShowLoadingButton();
@@ -419,6 +420,10 @@ const handleLogout = async () => {
 
 const hideToast = () => toastDiv.style.display = 'none';
 
+const handleHiddenModal = () => {
+  if (isPublishing) setLoading(spinnerDiv, mainContainer, navbar, footer);
+};
+
 editButton.addEventListener('click', goEditMode);
 confirmCancelButton.addEventListener('click', refresh);
 cancelButton.addEventListener('mouseover', useWhiteIcon);
@@ -432,3 +437,4 @@ logoutLink.addEventListener('click', handleLogout);
 navRegisterButton.addEventListener('click', goLogin);
 beerButton.addEventListener('click', () => window.location.href = './buy-me-a-beer.html');
 toastDiv.addEventListener('hidden.bs.toast', hideToast); //fires when toast finishes hiding
+publishModalDiv.addEventListener('hidden.bs.modal', handleHiddenModal);
