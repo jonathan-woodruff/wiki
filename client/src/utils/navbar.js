@@ -1,6 +1,6 @@
 import PeaceChicken from '../images/peace_chicken.jpg';
 
-export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, createWikiAnchor, communityLI, communityAnchor) => {
+export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, createWikiAnchor) => {
     if (isAuth) {
         registerButton.classList.add('d-none');
         dropdown.classList.remove('d-none');
@@ -8,10 +8,6 @@ export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, cre
         createWikiAnchor.classList.remove('disabled');
         createWikiAnchor.setAttribute('tabindex', '1');
         createWikiAnchor.setAttribute('aria-disabled', 'false');
-        communityLI.setAttribute('title', '');
-        communityAnchor.classList.remove('disabled');
-        communityAnchor.setAttribute('tabindex', '1');
-        communityAnchor.setAttribute('aria-disabled', 'false');
     } else {
         registerButton.classList.remove('d-none');
         dropdown.classList.add('d-none');
@@ -19,10 +15,6 @@ export const configureNav = (isAuth, registerButton, dropdown, createWikiLI, cre
         createWikiAnchor.classList.add('disabled');
         createWikiAnchor.setAttribute('tabindex', '-1');
         createWikiAnchor.setAttribute('aria-disabled', 'true');
-        communityLI.setAttribute('title', 'Log in to view');
-        communityAnchor.classList.add('disabled');
-        communityAnchor.setAttribute('tabindex', '-1');
-        communityAnchor.setAttribute('aria-disabled', 'true');
     }
 };
 

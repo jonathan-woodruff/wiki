@@ -25,10 +25,8 @@ const setNav = () => {
   const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
   const navCreateLI = document.getElementById('nav-create-li');
   const navCreateA = document.getElementById('nav-create-a');
-  const navCommunityLI = document.getElementById('nav-community-li');
-  const navCommunityA = document.getElementById('nav-community-a');
   const navDropdown = document.getElementById('nav-dropdown');
-  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
+  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 };
 
 setSources();

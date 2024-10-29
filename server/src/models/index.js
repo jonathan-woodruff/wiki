@@ -114,28 +114,6 @@ const wikiHistorySchema = new Schema({
   }
 }, { timestamps: true });
 
-const communitySchema = new Schema({
-  userId: {
-    type: String,
-    ref: 'User',
-    required: true
-  },
-  userObjectId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  reason: {
-    type: String,
-    required: true
-  },
-  amount: {
-    type: Number,
-    required: true
-  },
-  other: String
-}, { timestamps: true });
-
 const errorLogSchema = new Schema({
   userId: {
     type: String,
@@ -153,5 +131,4 @@ const errorLogSchema = new Schema({
 exports.UserModel = mongoose.model('User', userSchema);
 exports.WikisModel = mongoose.model('Wikis', wikisSchema);
 exports.WikiHistoryModel = mongoose.model('WikiHistory', wikiHistorySchema);
-exports.CommunityModel = mongoose.model('Community', communitySchema);
 exports.ErrorLogModel = mongoose.model('ErrorLog', errorLogSchema);

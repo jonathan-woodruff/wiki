@@ -1,4 +1,4 @@
-const { UserModel, WikisModel, WikiHistoryModel, CommunityModel, ErrorLogModel } = require('../models/index');
+const { UserModel, WikisModel, WikiHistoryModel, ErrorLogModel } = require('../models/index');
 const { parseServices } = require('../utils/index');
 const { STRIPE_KEY, EMAIL_ADDRESS, APP_PASSWORD } = require('../constants/index');
 const stripe = require('stripe')(STRIPE_KEY);
@@ -502,35 +502,6 @@ exports.getHistoricalWikiData = async (req, res) => {
         const log = new ErrorLogModel({
             functionName: 'getHistoricalWikiData',
             description: 'Could not load historical wiki data.'
-        });
-        await log.save();
-        return;
-    }
-};
-
-exports.postCommunity = async (req, res) => {
-    const user = req.user;
-    try {
-        const newCommunityEntry = new CommunityModel({
-            userId: user._id,
-            userObjectId: user._id,
-            reason: req.body.reason,
-            amount: req.body.amount,
-            other: req.body.other
-        });
-        await newCommunityEntry.save();
-        return res.status(201).json({
-            success: true
-        });
-    } catch(error) {
-        res.status(500).json({
-            error: 'Server error: Could not save submission.'
-        });
-        const log = new ErrorLogModel({
-            userId: user._id || '',
-            email: user.email || '',
-            functionName: 'postCommunity',
-            description: 'Could not save submission.'
         });
         await log.save();
         return;

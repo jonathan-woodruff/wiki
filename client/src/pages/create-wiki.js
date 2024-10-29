@@ -119,11 +119,9 @@ const setSources = () => {
 const setNav = () => {
   const navCreateLI = document.getElementById('nav-create-li');
   const navCreateA = document.getElementById('nav-create-a');
-  const navCommunityLI = document.getElementById('nav-community-li');
-  const navCommunityA = document.getElementById('nav-community-a');
   const navDropdown = document.getElementById('nav-dropdown');
   const navRegisterButton = document.getElementById('nav-register-button');
-  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA, navCommunityLI, navCommunityA);
+  configureNav(isAuth, navRegisterButton, navDropdown, navCreateLI, navCreateA);
 };
 
 const loadCountries = (countries) => {

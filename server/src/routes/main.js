@@ -12,7 +12,6 @@ const {
     getHistory,
     getViewProfileData,
     getHistoricalWikiData,
-    postCommunity,
     createPaymentIntent,
     sendEmail,
     getMyStuff
@@ -30,7 +29,6 @@ router.put('/putWiki', userAuth, publishWikiEdits);
 router.get('/viewHistory', getHistory);
 router.get('/viewProfile', getViewProfileData);
 router.get('/viewHistoricalWiki', getHistoricalWikiData);
-router.post('/postCommunity', userAuth, postCommunity);
 router.post('/createPaymentIntent', createPaymentIntent);
 router.post('/sendEmail', sendEmail);
 router.get('/getMyStuff', userAuth, getMyStuff);

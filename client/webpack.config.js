@@ -5,7 +5,7 @@ const autoprefixer = require('autoprefixer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  mode: 'production', //'development',
+  mode: 'development', //'production', //'development',
   externals: {
     stripe: 'stripe',
   },
@@ -20,7 +20,6 @@ module.exports = {
     'history': './src/pages/history.js',
     'view-profile': './src/pages/view-profile.js',
     'view-historical-wiki': './src/pages/view-historical-wiki.js',
-    'community': './src/pages/community.js',
     'buy-me-a-beer': './src/pages/buy-me-a-beer.js',
     'beer-pay': './src/pages/beer-pay.js',
     'beer-complete': './src/pages/beer-complete.js',
@@ -38,11 +37,11 @@ module.exports = {
     filename: '[name]/output.js',
     path: path.resolve(__dirname, 'dist')
   },
-  /*devServer: {
+  devServer: {
     static: path.resolve(__dirname, 'dist'),
     port: 8080,
     hot: true
-  },*/
+  },
   plugins: [
     new HtmlWebpackPlugin({ 
         template: './src/pages/index.html',
@@ -102,12 +101,6 @@ module.exports = {
         template: './src/pages/view-historical-wiki.html',
         filename: 'view-historical-wiki.html',
         chunks: ['view-historical-wiki'],
-        favicon: './public/favicon.ico'
-      }),
-      new HtmlWebpackPlugin({
-        template: './src/pages/community.html',
-        filename: 'community.html',
-        chunks: ['community'],
         favicon: './public/favicon.ico'
       }),
       new HtmlWebpackPlugin({
