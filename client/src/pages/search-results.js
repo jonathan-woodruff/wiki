@@ -102,17 +102,23 @@ const handleClick = (event) => {
 };
 
 const showPreview = (contentBlocks) => {
-  const previewLimit = 80;
+  const previewLimit = 100;
   let preview = '';
   let reachedPreviewLimit = false;
   let blockIndex = 0;
   while (!reachedPreviewLimit && blockIndex < contentBlocks.length) {
     let block = contentBlocks[blockIndex];
     if (block.type === 'paragraph' || block.type === 'header' || block.type === 'quote') {
-      preview += block.data.text + ' ';
+      let wrapperDiv = document.createElement('div');
+      wrapperDiv.innerHTML = block.data.text;
+      let textToAdd = wrapperDiv.textContent || wrapperDiv.innerText || block.data.text;
+      preview += textToAdd + ' ';
     } else if (block.type === 'list') {
       block.data.items.forEach((item) => {
-        preview += item.content + ' ';
+        let wrapperDiv = document.createElement('div');
+        wrapperDiv.innerHTML = item.content;
+        let textToAdd = wrapperDiv.textContent || wrapperDiv.innerText || item.content;
+        preview += textToAdd + ' ';
       })
     }
     if (preview.length > previewLimit) {
