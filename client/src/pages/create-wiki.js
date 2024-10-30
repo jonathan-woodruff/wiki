@@ -311,7 +311,7 @@ const showSavedStatus = (statusStr) => {
     savedStatusDiv.classList.replace('bg-danger', 'bg-light');
     savedStatusSpan.classList.replace('text-white', 'text-dark');
   } else if (statusStr === 'error') {
-    savedStatusSpan.innerHTML = 'Error: Could not save draft. Check your internet connection.';
+    savedStatusSpan.innerHTML = 'Error saving. Draft not up to date. Check your internet connection.';
     savedStatusDiv.classList.replace('bg-light', 'bg-danger');
     savedStatusSpan.classList.replace('text-dark', 'text-white');
   }
@@ -338,6 +338,7 @@ const autoSave = async () => {
       if (everythingIsSaved) showSavedStatus('saved');
       autoSave();
     } catch(error) {
+      finishedSaving = true;
       showSavedStatus('error');
     }
   }
