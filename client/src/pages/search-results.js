@@ -44,7 +44,7 @@ searchImg.src = SearchIcon;
  * Load data from backend 
 ************************************************************/
 import { getWikis } from '../api/main';
-import { goToWiki } from '../utils/wiki';
+import { goToWiki, showPreview } from '../utils/wiki';
 import { countries, sectors } from '../constants/profile';
 import Fuse from 'fuse.js';
 import { showToast } from '../utils/toast';
@@ -99,36 +99,6 @@ const handleClick = (event) => {
   const card = event.currentTarget;
   const wikiID = card.id;
   goToWiki(wikiID);
-};
-
-const showPreview = (contentBlocks) => {
-  const previewLimit = 100;
-  let preview = '';
-  let reachedPreviewLimit = false;
-  let blockIndex = 0;
-  while (!reachedPreviewLimit && blockIndex < contentBlocks.length) {
-    let block = contentBlocks[blockIndex];
-    if (block.type === 'paragraph' || block.type === 'header' || block.type === 'quote') {
-      let wrapperDiv = document.createElement('div');
-      wrapperDiv.innerHTML = block.data.text;
-      let textToAdd = wrapperDiv.textContent || wrapperDiv.innerText || block.data.text;
-      preview += textToAdd + ' ';
-    } else if (block.type === 'list') {
-      block.data.items.forEach((item) => {
-        let wrapperDiv = document.createElement('div');
-        wrapperDiv.innerHTML = item.content;
-        let textToAdd = wrapperDiv.textContent || wrapperDiv.innerText || item.content;
-        preview += textToAdd + ' ';
-      })
-    }
-    if (preview.length > previewLimit) {
-      preview = preview.slice(0, previewLimit);
-      reachedPreviewLimit = true;
-    }
-    blockIndex++;
-  }
-  preview = preview.trimEnd();
-  return preview + '...';
 };
 
 const showCards = (wikis) => {

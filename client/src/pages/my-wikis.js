@@ -12,6 +12,7 @@ import '../css/buttons.css';
 import { checkForCookie } from '../api/auth';
 import { getMyStuff } from '../api/main';
 import { setNotLoading } from '../utils/spinner';
+import { showPreview } from '../utils/wiki';
 import Logo from '../images/logo.png';
 import { configureNav, refreshAvatar } from '../utils/navbar';
 import { showToast } from '../utils/toast';
@@ -68,30 +69,6 @@ const handleClick = (event) => {
   const queryString = params.toString();
   const url = `${relPath}?${queryString}`;
   window.location.href = url;
-};
-
-const showPreview = (contentBlocks) => {
-  const previewLimit = 80;
-  let preview = '';
-  let reachedPreviewLimit = false;
-  let blockIndex = 0;
-  while (!reachedPreviewLimit && blockIndex < contentBlocks.length) {
-    let block = contentBlocks[blockIndex];
-    if (block.type === 'paragraph' || block.type === 'header' || block.type === 'quote') {
-      preview += block.data.text + ' ';
-    } else if (block.type === 'list') {
-      block.data.items.forEach((item) => {
-        preview += item.content + ' ';
-      })
-    }
-    if (preview.length > previewLimit) {
-      preview = preview.slice(0, previewLimit);
-      reachedPreviewLimit = true;
-    }
-    blockIndex++;
-  }
-  preview = preview.trimEnd();
-  return preview + '...';
 };
 
 const showWikis = (wikiList) => {

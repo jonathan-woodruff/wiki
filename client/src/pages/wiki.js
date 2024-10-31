@@ -260,14 +260,12 @@ const dontShowLoadingButton = () => {
 const showNoEditsError = () => {
   errorParagraph.innerHTML = 'You did not make any edits. Please make edits before publishing.';
   errorRow.classList.remove('d-none');
-  editorDiv.classList.add('border');
   editorDiv.classList.add('border-danger');
   isNoEditsError = true;
 };
 
 const hideNoEditsError = () => {
   errorRow.classList.add('d-none');
-  editorDiv.classList.remove('border');
   editorDiv.classList.remove('border-danger');
   isNoEditsError = false;
 };
