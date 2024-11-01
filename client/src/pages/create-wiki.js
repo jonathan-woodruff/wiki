@@ -5,10 +5,13 @@ import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 import '../css/buttons.css';
+import '../css/editor.css';
 
 /************************************************************
  * Configure the editor
 ************************************************************/
+import { ButtonImage } from '../utils/wiki';
+
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -41,7 +44,7 @@ const showError = () => {
 
 const editor = new EditorJS({
   holder: 'editorjs',
-  placeholder: 'Starting writing. Wanna add an image? Just paste it in...',
+  placeholder: 'Starting writing...',
   onChange: (api, event) => {
     if (isContentError) hideError();
     everythingIsSaved = false;
@@ -49,7 +52,8 @@ const editor = new EditorJS({
   },
   tools: {
     underline: Underline,
-    image: SimpleImage,
+    image: ButtonImage,
+    image2: SimpleImage,
     list: {
       class: NestedList,
       inlineToolbar: true,

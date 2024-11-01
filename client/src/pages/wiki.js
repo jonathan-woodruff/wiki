@@ -5,6 +5,7 @@ import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 import '../css/buttons.css';
+import '../css/editor.css';
 
 /************************************************************
  * Configure the navbar
@@ -48,6 +49,7 @@ cancelImg.src = CancelIconGrey;
 ************************************************************/
 import { onViewWiki, onPutWiki } from '../api/main';
 import { showToast } from '../utils/toast';
+import { ButtonImage } from '../utils/wiki';
 
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
@@ -108,7 +110,8 @@ const editor = new EditorJS({
   },
   tools: {
       underline: Underline,
-      image: SimpleImage,
+      image: ButtonImage,
+      image2: SimpleImage,
       list: {
         class: NestedList,
         inlineToolbar: true,
