@@ -1,4 +1,4 @@
-const isProduction = false;
+const isProduction = true;
 
 export const SERVER_URL = isProduction ? 'https://api.peacechickens.com' : 'http://localhost:8000';
 export const CLIENT_URL = isProduction ? 'https://www.peacechickens.com' : 'http://localhost:8080';

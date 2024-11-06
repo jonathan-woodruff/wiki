@@ -5,7 +5,7 @@ const autoprefixer = require('autoprefixer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  mode: 'development', //'production', //'development',
+  mode: 'production', //'development',
   externals: {
     stripe: 'stripe',
   },
@@ -37,11 +37,11 @@ module.exports = {
     filename: '[name]/output.js',
     path: path.resolve(__dirname, 'dist')
   },
-  devServer: {
+  /*devServer: {
     static: path.resolve(__dirname, 'dist'),
     port: 8080,
     hot: true
-  },
+  },*/
   plugins: [
     new HtmlWebpackPlugin({ 
         template: './src/pages/index.html',
