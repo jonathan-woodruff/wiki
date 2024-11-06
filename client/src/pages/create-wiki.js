@@ -244,7 +244,7 @@ const submitContent = async (event) => {
             isPublished: true,
             country: countryInput.value,
             sector: sectorInput.value,
-            title: titleInput.value,
+            title: titleInput.value.trim(),
             article: outputData
           };
           await saveDraft(payload);
@@ -334,7 +334,7 @@ const autoSave = async () => {
         isPublished: false,
         country: countryInput.value,
         sector: sectorInput.value,
-        title: titleInput.value,
+        title: titleInput.value.trim(),
         article: editorData
       };
       await saveDraft(payload);
