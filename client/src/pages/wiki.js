@@ -173,9 +173,11 @@ configureEditButton();
 /************************************************************
  * Show page data
 ************************************************************/
+import { toTitleCase } from '../utils/index';
+
 const displayWiki = (wiki) => {
   const title = document.getElementById('title');
-  title.innerHTML = wiki.title;
+  title.innerHTML = toTitleCase(wiki.title);
   const countryAndSector = document.getElementById('country-sector');
   countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
 };

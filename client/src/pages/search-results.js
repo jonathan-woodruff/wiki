@@ -48,6 +48,7 @@ import { goToWiki, showPreview } from '../utils/wiki';
 import { countries, sectors } from '../constants/profile';
 import Fuse from 'fuse.js';
 import { showToast } from '../utils/toast';
+import { toTitleCase } from '../utils/index';
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -126,7 +127,7 @@ const showCards = (wikis) => {
       const h2 = document.createElement('h2');
       h2.classList.add('card-title');
       h2.classList.add('h4');
-      h2.innerHTML = wiki.title;
+      h2.innerHTML = toTitleCase(wiki.title);
       cardBody.appendChild(h2);
 
       const p1 = document.createElement('p');

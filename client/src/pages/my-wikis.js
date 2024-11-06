@@ -16,6 +16,7 @@ import { showPreview } from '../utils/wiki';
 import Logo from '../images/logo.png';
 import { configureNav, refreshAvatar } from '../utils/navbar';
 import { showToast } from '../utils/toast';
+import { toTitleCase } from '../utils/index';
 
 const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
 const navRegisterButton = document.getElementById('nav-register-button');
@@ -95,7 +96,7 @@ const showWikis = (wikiList) => {
       const h2 = document.createElement('h2');
       h2.classList.add('card-title');
       h2.classList.add('h4');
-      h2.innerHTML = wiki.title || 'Untitled';
+      h2.innerHTML = toTitleCase(wiki.title) || 'Untitled';
       cardBody.appendChild(h2);
 
       const p1 = document.createElement('p');

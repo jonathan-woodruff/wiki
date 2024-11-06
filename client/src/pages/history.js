@@ -39,6 +39,7 @@ import { onViewHistory } from '../api/main';
 import { convertTimestamp } from '../utils/time';
 import PeaceChicken from '../images/peace_chicken.jpg';
 import { showToast } from '../utils/toast';
+import { toTitleCase } from '../utils/index';
 
 const currentQueryString = window.location.search;
 const currentUrlParams = new URLSearchParams(currentQueryString);
@@ -77,7 +78,7 @@ const handleClick = (event) => {
 const displayWikiHeader = (wiki) => {
     const title = document.getElementById('title');
     const countryAndSector = document.getElementById('country-sector');
-    title.innerHTML = wiki.title;
+    title.innerHTML = toTitleCase(wiki.title);
     countryAndSector.innerHTML = 'Country: ' + wiki.country + '\xa0\xa0\xa0' + 'Sector: ' + wiki.sector;
 };
 

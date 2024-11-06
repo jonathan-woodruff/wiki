@@ -37,6 +37,8 @@ setNav();
 ************************************************************/
 import { onViewHistoricalWiki } from '../api/main';
 import { showToast } from '../utils/toast';
+import { toTitleCase } from '../utils/index';
+
 const toastDiv = document.getElementById('toast');
 
 const queryString = window.location.search;
@@ -66,7 +68,7 @@ const data = await getData();
 const loadHeader = () => {
     //h1
     const h1 = document.getElementById('h1');
-    h1.innerHTML = data.title + ' (' + editionHeader + ')';
+    h1.innerHTML = toTitleCase(data.title) + ' (' + editionHeader + ')';
     //country and sector
     const countryAndSector = document.getElementById('country-sector');
     countryAndSector.innerHTML = 'Country: ' + data.country + '\xa0\xa0\xa0' + 'Sector: ' + data.sector;
