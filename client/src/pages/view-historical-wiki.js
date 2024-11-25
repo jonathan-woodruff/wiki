@@ -5,6 +5,7 @@ import '../scss/styles.scss'; //css
 import * as bootstrap from 'bootstrap'; //js
 
 import '../css/buttons.css';
+import '../css/editor.css';
 
 /************************************************************
  * Configure the navbar
