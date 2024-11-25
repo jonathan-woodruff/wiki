@@ -91,6 +91,8 @@ loadHeader();
 /************************************************************
  * Configure the editor
 ************************************************************/
+import { ButtonImage, goToWiki } from '../utils/wiki';
+
 import EditorJS from '@editorjs/editorjs';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
@@ -109,7 +111,8 @@ const editor = new EditorJS({
     },
     tools: {
         underline: Underline,
-        image: SimpleImage,
+        image: ButtonImage,
+        image2: SimpleImage,
         list: {
             class: NestedList,
             inlineToolbar: true,
@@ -163,7 +166,6 @@ showPage();
 /************************************************************
  * All other JavaScript
 ************************************************************/
-import { goToWiki } from '../utils/wiki';
 import { onLogout } from '../api/auth';
 
 const logoutLink = document.getElementById('logout-link');
