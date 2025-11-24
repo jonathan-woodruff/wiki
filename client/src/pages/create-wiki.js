@@ -167,63 +167,72 @@ const handleGetWikiError = (error) => {
     }
 };
 
-if (!isAuth) {
-  window.location.href = './login.html';
-} else { //double check there's a cookie
-    try {
-      await checkForCookie();
-      if (wikiID) { //user is editing an existing draft
-        //configure navbar
-        setSources();
-        setNav();
-        try {
-          //load the data
-          const { data } = await getCreateWikiData(wikiID);
-          loadCountries(data.countryOptions);
-          loadSectors(data.sectorOptions);
-          countryInput.value = data.country;
-          sectorInput.value = data.sector;
-          titleInput.value = data.title;
-          editor.render({
-            time: data.contentTime,
-            blocks: data.contentBlocks,
-            version: data.contentVersion
-          });
-          //show page to the user
-          setNotLoading(
-            document.getElementById('spinner'), 
-            document.getElementById('main-container'), 
-            document.getElementById('navbar'), 
-            document.getElementById('footer')
-          );
-        } catch(error) {
-          handleGetWikiError(error);
-        }
-      } else { //User is creating a new draft
-        try {
-          //create draft in database
-          alert('hi1');
-          await editor.isReady;
-          alert('hi2');
-          const editorData = await editor.save();
-          alert('hi3');
-          const payload = { article: editorData };
-          const draftResponse = await onPostDraft(payload);
-          alert('hi4');
-          //reload page with the wikiID in the params
-          const params = new URLSearchParams();
-          params.append('wiki', draftResponse.data.wikiID);
-          const url = `./create-wiki.html?${params.toString()}`;
-          window.location.href = url;
-        } catch(error) {
-          window.location.href = './fail.html';
-        }
-      }
-    } catch(error) {
-      localStorage.setItem('isAuth', 'false');
-      window.location.reload();
-    }
+const doDraft = async () => {
+  try {
+    const editorData = await editor.save();
+    const payload = { article: editorData };
+    const draftResponse = await onPostDraft(payload);
+    //reload page with the wikiID in the params
+    const params = new URLSearchParams();
+    params.append('wiki', draftResponse.data.wikiID);
+    const url = `./create-wiki.html?${params.toString()}`;
+    window.location.href = url;
+  } catch {
+    window.location.href = './fail.html';
+  }
 }
+
+const initializePage = async () => {
+  if (!isAuth) {
+    window.location.href = './login.html';
+  } else { //double check there's a cookie
+      try {
+        await checkForCookie();
+        if (wikiID) { //user is editing an existing draft
+          //configure navbar
+          setSources();
+          setNav();
+          try {
+            //load the data
+            const { data } = await getCreateWikiData(wikiID);
+            loadCountries(data.countryOptions);
+            loadSectors(data.sectorOptions);
+            countryInput.value = data.country;
+            sectorInput.value = data.sector;
+            titleInput.value = data.title;
+            await editor.isReady;
+            editor.render({
+              time: data.contentTime,
+              blocks: data.contentBlocks,
+              version: data.contentVersion
+            });
+            //show page to the user
+            setNotLoading(
+              document.getElementById('spinner'), 
+              document.getElementById('main-container'), 
+              document.getElementById('navbar'), 
+              document.getElementById('footer')
+            );
+          } catch(error) {
+            handleGetWikiError(error);
+          }
+        } else { //User is creating a new draft
+          try {
+            //create draft in database
+            await editor.isReady;
+            await doDraft();
+          } catch(error) {
+            window.location.href = './fail.html';
+          }
+        }
+      } catch(error) {
+        localStorage.setItem('isAuth', 'false');
+        window.location.reload();
+      }
+  }
+}
+
+initializePage();
 
 /************************************************************
  * All other JavaScript
