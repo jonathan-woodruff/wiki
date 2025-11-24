@@ -202,10 +202,14 @@ if (!isAuth) {
       } else { //User is creating a new draft
         try {
           //create draft in database
+          alert('hi1');
           await editor.isReady;
+          alert('hi2');
           const editorData = await editor.save();
+          alert('hi3');
           const payload = { article: editorData };
           const draftResponse = await onPostDraft(payload);
+          alert('hi4');
           //reload page with the wikiID in the params
           const params = new URLSearchParams();
           params.append('wiki', draftResponse.data.wikiID);
