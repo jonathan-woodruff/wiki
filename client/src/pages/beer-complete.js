@@ -73,7 +73,7 @@ async function setPaymentDetails(intent) {
     const payload = {
       email: urlParams.get('email'),
       subject: 'Thanks for the beer!',
-      body: 'Hey, ' + toName + '!\n\nThank you for the $' + (amount / 100).toFixed(2).toString() + '. If you need to reach out to me for anything, you can just email me back. \n\nCheers, \n\nJonathan | Peace Chickens'
+      body: 'Hey, ' + toName + '!\n\nThank you for the $' + (amount / 100).toFixed(2).toString() + '. If you need to reach out to me for anything, you can just email me back. \n\nCheers, \n\nJonathan | Peace Hens'
     };
     await sendEmail(payload);
   }

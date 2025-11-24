@@ -67,8 +67,8 @@ const sendConfEmail = (user) => {
     const mailOptions = {
         from: EMAIL_ADDRESS,
         to: user.email,
-        subject: 'Finish signing up | Peace Chickens',
-        text: `Hi, ${user.name}.\n\nClick the link to finish signing up to Peace Chickens. If you did not request to sign up, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
+        subject: 'Finish signing up | Peace Hens',
+        text: `Hi, ${user.name}.\n\nClick the link to finish signing up to Peace Hens. If you did not request to sign up, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Hens`
     };
       
     transporter.sendMail(mailOptions, function(error, info){
@@ -205,8 +205,8 @@ const sendPasswordChangeEmail = (user) => {
     const mailOptions = {
         from: EMAIL_ADDRESS,
         to: user.email,
-        subject: 'Your password changed | Peace Chickens',
-        text: 'Hi, ' + user.name + '.\n\nYour Peace Chickens password changed successfully. If you did not change your password, please reply to let me know.\n\nJonathan | Peace Chickens'
+        subject: 'Your password changed | Peace Hens',
+        text: 'Hi, ' + user.name + '.\n\nYour Peace Hens password changed successfully. If you did not change your password, please reply to let me know.\n\nJonathan | Peace Hens'
     };
       
     transporter.sendMail(mailOptions, function(error, info){
@@ -292,8 +292,8 @@ exports.sendPasswordResetEmail = async (req, res) => {
         const mailOptions = {
             from: EMAIL_ADDRESS,
             to: email,
-            subject: 'Your password reset link | Peace Chickens',
-            text: `Hi, ${user.name}.\n\nClick the link to reset your Peace Chickens password. If you did not request to reset your password, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
+            subject: 'Your password reset link | Peace Hens',
+            text: `Hi, ${user.name}.\n\nClick the link to reset your Peace Hens password. If you did not request to reset your password, you can safely ignore this email.\n\nThis link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Hens`
         };
           
         transporter.sendMail(mailOptions, function(error, info){
@@ -582,8 +582,8 @@ exports.sendChangeEmail = async (req, res) => {
         const mailOptions = {
             from: EMAIL_ADDRESS,
             to: toEmail,
-            subject: 'Confirm new email | Peace Chickens',
-            text: `Hi, ${user.name}.\n\nClick the link below to change your Peace Chickens login email to this one (${toEmail}).\n\nThe link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Chickens`
+            subject: 'Confirm new email | Peace Hens',
+            text: `Hi, ${user.name}.\n\nClick the link below to change your Peace Hens login email to this one (${toEmail}).\n\nThe link will expire in 2 hours.\n\n${url}\n\nJonathan | Peace Hens`
         };
         
         transporter.sendMail(mailOptions, function(error, info){
