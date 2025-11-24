@@ -202,6 +202,7 @@ if (!isAuth) {
       } else { //User is creating a new draft
         try {
           //create draft in database
+          await editor.isReady;
           const editorData = await editor.save();
           const payload = { article: editorData };
           const draftResponse = await onPostDraft(payload);
